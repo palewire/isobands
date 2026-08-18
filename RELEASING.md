@@ -15,7 +15,10 @@ Git tags through `setuptools-scm`; do not edit a version file.
 - [ ] Run `make coverage PACKAGE=<import-name>`.
 - [ ] Review `CHANGELOG.md` and move relevant `Unreleased` entries into a
       dated version section.
-- [ ] Choose a major, minor, or patch version according to Semantic Versioning.
+- [ ] Choose a Semantic Versioning release, using a PEP 440 suffix such as
+      `0.1.0a1` for a prerelease.
+- [ ] Confirm the protected `pypi` GitHub environment and matching PyPI Trusted
+      Publisher are configured for `.github/workflows/continuous-deployment.yaml`.
 - [ ] Obtain explicit human approval for the version and release.
 - [ ] Create the matching Git tag and GitHub release.
 - [ ] Confirm the release workflow published the expected package to PyPI.
@@ -38,3 +41,16 @@ source in this repository.
 Agents may update release documentation and run the checklist's validation
 commands. They must not create tags, GitHub releases, documentation
 deployments, or package publications without explicit human approval.
+
+## PyPI Trusted Publishing
+
+The tag-triggered release job publishes with GitHub's OpenID Connect token. It
+does not use a long-lived PyPI API token.
+
+Before the first release:
+
+1. Protect the repository's `pypi` environment.
+2. Register `palewire/isobands` on PyPI as a Trusted Publisher using that
+   environment and `.github/workflows/continuous-deployment.yaml`.
+3. Require approval on the environment if publication should pause for a final
+   maintainer review.

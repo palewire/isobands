@@ -3,33 +3,43 @@ requires = ["setuptools>=84.0.0", "setuptools_scm>=10.2.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "your-package-name"
+name = "isobands"
 dynamic = ["version"]
 requires-python = ">=3.11"
-dependencies = []
-authors = [{ name = "Your Name", email = "you@example.com" }]
-description = "A short description of your package"
-keywords = []
+dependencies = [
+    "GDAL==3.12.2",
+    "geopandas",
+    "numpy",
+    "pyproj",
+    "shapely",
+    "xarray",
+]
+authors = [{ name = "Ben Welsh", email = "b@palewi.re" }]
+description = "Converting xarray rasters into GDAL-backed filled-contour GeoDataFrames."
+keywords = ["contours", "gdal", "geopandas", "geospatial", "gis", "raster", "xarray"]
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Typing :: Typed",
 ]
 
 [project.urls]
-Documentation = "https://example.com/your-package-name"
-Source = "https://github.com/your-org/your-package-name"
-Issues = "https://github.com/your-org/your-package-name/issues"
-
-# [project.scripts]
-# your-command = "your_package_name.cli:main"
+Documentation = "https://github.com/palewire/isobands#readme"
+Source = "https://github.com/palewire/isobands"
+Issues = "https://github.com/palewire/isobands/issues"
+Changelog = "https://github.com/palewire/isobands/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = ["pre-commit", "ruff", "setuptools-scm", "ty", "vulture"]
@@ -45,6 +55,7 @@ test = [
     "pytest-timeout",
     "pytest-vcr",
     "pytest-xdist",
+    "dask",
     "freezegun",
     "hypothesis",
 ]
@@ -67,14 +78,18 @@ notebooks = [
     "altair",
 ]
 
-# Adopt a src/ layout when adding a library:
-# [tool.setuptools.package-dir]
-# "" = "src"
-#
-# [tool.setuptools.packages.find]
-# where = ["src"]
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+isobands = ["py.typed"]
 
 [tool.setuptools_scm]
+fallback_version = "0.1.0a1"
+version_scheme = "no-guess-dev"
 
 [tool.ruff]
 target-version = "py311"
@@ -148,7 +163,7 @@ filterwarnings = [
 ]
 
 [tool.coverage.run]
-# Set source = ["your_package_name"] after adding the library package.
+source = ["isobands"]
 branch = true
 relative_files = true
 omit = ["*/__pycache__/*"]
@@ -157,7 +172,7 @@ omit = ["*/__pycache__/*"]
 python-version = "3.13"
 
 [tool.ty.src]
-# Set include = ["src/your_package_name"] after adding the library package.
+include = ["src/isobands"]
 exclude = [
     "tests/**",
     "build/**",

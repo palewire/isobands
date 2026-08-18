@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   check:
     name: Check project
@@ -23,6 +26,24 @@ jobs:
           version: "0.10.7"
           enable-cache: true
           cache-dependency-glob: "uv.lock"
+
+      - name: Install system GDAL
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+          init-shell: bash
+
+      - name: Configure GDAL build environment
+        shell: bash -el {0}
+        run: |
+          gdal-config --version
+          test "$(gdal-config --version)" = "3.12.2"
+          echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
+          echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
 
       - name: Install Python dependencies
         run: make install-dev
@@ -51,6 +72,24 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
+      - name: Install system GDAL
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+          init-shell: bash
+
+      - name: Configure GDAL build environment
+        shell: bash -el {0}
+        run: |
+          gdal-config --version
+          test "$(gdal-config --version)" = "3.12.2"
+          echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
+          echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
+
       - id: install-python
         name: Install Python
         run: uv python install ${{ matrix.python }}
@@ -64,8 +103,51 @@ jobs:
         run: make test UV_PYTHON=${{ matrix.python }}
 
       - name: Verify package distribution
-        if: matrix.python == '3.13' && vars.PACKAGE_IMPORT_NAME != ''
-        run: make package-verify PACKAGE=${{ vars.PACKAGE_IMPORT_NAME }}
+        if: matrix.python == '3.13'
+        run: make package-verify PACKAGE=isobands
+
+      - name: Prune uv cache
+        run: uv cache prune --ci
+
+  test-macos:
+    name: Smoke test macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install system GDAL
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+          init-shell: bash
+
+      - name: Configure GDAL build environment
+        shell: bash -el {0}
+        run: |
+          gdal-config --version
+          test "$(gdal-config --version)" = "3.12.2"
+          echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
+          echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
+
+      - name: Install Python
+        run: uv python install 3.13
+
+      - name: Install Python dependencies
+        run: make install-test UV_PYTHON=3.13
+
+      - name: Run tests
+        run: make test UV_PYTHON=3.13
 
       - name: Prune uv cache
         run: uv cache prune --ci
@@ -73,7 +155,7 @@ jobs:
   build:
     name: Build release candidate
     runs-on: ubuntu-latest
-    needs: [check, test-python]
+    needs: [check, test-python, test-macos]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -85,6 +167,9 @@ jobs:
           version: "0.10.7"
           enable-cache: true
           cache-dependency-glob: "uv.lock"
+
+      - name: Verify lockfile
+        run: UV_NO_ENV_FILE=1 uv lock --check
 
       - id: build
         name: Build releases
@@ -106,6 +191,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - id: fetch
         name: Fetch artifact
@@ -117,8 +206,3 @@ jobs:
       - id: publish
         name: Publish release
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          verbose: true
-          verify-metadata: false
