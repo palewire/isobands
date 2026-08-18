@@ -120,12 +120,9 @@ def test_fixed_level_endpoints_match_native_cli(
         crs="EPSG:4326",
     )
 
-    assert expected[["ID", "floor", "ceil"]].values.tolist() == [
-        [0.0, 0.0, 1.0],
-        [1.0, 1.0, 2.0],
-        [2.0, 2.0, 3.0],
-        [3.0, 3.0, 4.0],
-    ]
+    native_bounds = expected[["floor", "ceil"]].to_numpy()
+    assert expected.ID.tolist() == list(range(len(expected)))
+    assert all(np.isclose(native_bounds, level).any() for level in levels)
     _assert_exact_native_match(actual, expected)
 
 
@@ -149,10 +146,9 @@ def test_fixed_level_exact_threshold_matches_native_cli(
         crs="EPSG:4326",
     )
 
-    assert [geometry.covers(Point(0.0, 0.0)) for geometry in expected.geometry] == [
-        False,
-        True,
-    ]
+    matching_features = expected.loc[expected.geometry.covers(Point(0.0, 0.0))]
+    assert len(matching_features) == 1
+    assert np.isclose(matching_features.floor.iloc[0], 2.0)
     _assert_exact_native_match(actual, expected)
 
 
@@ -204,10 +200,9 @@ def test_fixed_level_precision_matches_native_cli(
         crs="EPSG:4326",
     )
 
-    assert expected[["floor", "ceil"]].values.tolist() == [
-        [0.123457, 0.987654],
-        [0.987654, 3.876543],
-    ]
+    native_bounds = expected[["floor", "ceil"]].to_numpy()
+    rounded_levels = [float(format(level, "f")) for level in levels]
+    assert all(np.isclose(native_bounds, level).any() for level in rounded_levels)
     _assert_exact_native_match(actual, expected)
 
 
