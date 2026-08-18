@@ -86,3 +86,10 @@ def test_exactly_one_band_definition_is_required() -> None:
         isobands(_raster(), crs="EPSG:4326")
     with pytest.raises(ValueError, match="exactly one"):
         isobands(_raster(), levels=[10.0], interval=5.0, crs="EPSG:4326")
+
+
+def test_levels_reject_nonzero_interval_offset() -> None:
+    """Offsets only apply to interval-derived thresholds."""
+
+    with pytest.raises(ValueError, match="offset can only be used with interval"):
+        isobands(_raster(), levels=[10.0], offset=2.5, crs="EPSG:4326")

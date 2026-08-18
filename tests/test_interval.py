@@ -39,6 +39,52 @@ def test_interval_uses_multiples_and_clips_outer_bands() -> None:
 
 
 @pytest.mark.parametrize(
+    ("offset", "expected"),
+    [
+        (2.5, [[-7.0, -2.5], [-2.5, 2.5], [2.5, 7.5], [7.5, 8.0]]),
+        (-1.0, [[-7.0, -6.0], [-6.0, -1.0], [-1.0, 4.0], [4.0, 8.0]]),
+        (7.5, [[-7.0, -2.5], [-2.5, 2.5], [2.5, 7.5], [7.5, 8.0]]),
+    ],
+)
+def test_interval_offset_aligns_thresholds(
+    offset: float, expected: list[list[float]]
+) -> None:
+    """Offsets align interval thresholds independently of their magnitude."""
+
+    result = isobands(_raster(), interval=5.0, offset=offset, crs="EPSG:4326")
+
+    assert result[["min_value", "max_value"]].values.tolist() == expected
+
+
+def test_zero_interval_offset_preserves_default_output() -> None:
+    """An explicit zero offset retains the legacy interval alignment."""
+
+    default = isobands(_raster(), interval=5.0, crs="EPSG:4326")
+    explicit = isobands(_raster(), interval=5.0, offset=0.0, crs="EPSG:4326")
+
+    assert explicit[["min_value", "max_value"]].equals(
+        default[["min_value", "max_value"]]
+    )
+
+
+def test_interval_offset_excludes_extrema_on_thresholds() -> None:
+    """Extrema matching aligned thresholds remain finite outer-band labels."""
+
+    data = xr.DataArray(
+        [[2.5, 5.0], [7.5, 12.5]],
+        dims=("y", "x"),
+        coords={"x": [0.0, 1.0], "y": [1.0, 0.0]},
+    )
+
+    result = isobands(data, interval=5.0, offset=2.5, crs="EPSG:4326")
+
+    assert result[["min_value", "max_value"]].values.tolist() == [
+        [2.5, 7.5],
+        [7.5, 12.5],
+    ]
+
+
+@pytest.mark.parametrize(
     "interval",
     [0.0, -1.0, math.inf, math.nan, "five", False, np.bool_(True)],
 )
@@ -47,6 +93,14 @@ def test_interval_must_be_positive_and_finite(interval) -> None:  # type: ignore
 
     with pytest.raises(ValueError, match="positive finite"):
         isobands(_raster(), interval=interval, crs="EPSG:4326")
+
+
+@pytest.mark.parametrize("offset", [math.inf, math.nan, "zero", False, np.bool_(True)])
+def test_interval_offset_must_be_finite_number(offset) -> None:  # type: ignore[no-untyped-def]
+    """Invalid offsets receive a focused validation error."""
+
+    with pytest.raises(ValueError, match="offset must be a finite"):
+        isobands(_raster(), interval=5.0, offset=offset, crs="EPSG:4326")
 
 
 def test_interval_rejects_impractical_threshold_count() -> None:
