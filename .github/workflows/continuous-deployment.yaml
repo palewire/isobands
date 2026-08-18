@@ -72,8 +72,14 @@ jobs:
             gdal: "3.10.2"
             gdal_baseline: 310
           - python: "3.13"
+            gdal: "3.11.5"
+            gdal_baseline: 311
+          - python: "3.13"
             gdal: "3.12.2"
             gdal_baseline: 312
+          - python: "3.13"
+            gdal: "3.13.2"
+            gdal_baseline: 313
           - python: "3.14"
             gdal: "3.12.2"
             gdal_baseline: 312
@@ -123,12 +129,12 @@ jobs:
         if: matrix.gdal_baseline == 312
         run: make install-test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
 
-      - id: install-gdal-310-dependencies
-        name: Install GDAL 3.10 Python dependencies
-        if: matrix.gdal_baseline == 310
+      - id: install-conda-gdal-dependencies
+        name: Install conda GDAL Python dependencies
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make install-test GDAL_BASELINE=310
+          make install-test GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - id: tests
@@ -136,23 +142,23 @@ jobs:
         if: matrix.gdal_baseline == 312
         run: make test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
 
-      - id: tests-gdal-310
-        name: Run GDAL 3.10 tests
-        if: matrix.gdal_baseline == 310
+      - id: tests-conda-gdal
+        name: Run conda GDAL tests
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make test GDAL_BASELINE=310
+          make test GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - name: Verify GDAL 3.12 package distribution
         if: matrix.python == '3.13' && matrix.gdal_baseline == 312
         run: make package-verify PACKAGE=isobands GDAL_BASELINE=312
 
-      - name: Verify GDAL 3.10 package distribution
-        if: matrix.gdal_baseline == 310
+      - name: Verify conda GDAL package distribution
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make package-verify PACKAGE=isobands GDAL_BASELINE=310
+          make package-verify PACKAGE=isobands GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
           PACKAGE_CHECK_NO_DEPS=1
           PACKAGE_CHECK_PYTHON="${CONDA_PREFIX}/bin/python"

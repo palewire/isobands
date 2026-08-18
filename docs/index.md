@@ -8,14 +8,24 @@ An easy way to make filled contour maps with Python.
 
 ## Installation
 
-Install GDAL **3.10.2** or **3.12.2** and matching development headers first.
-Follow the [official GDAL installation guide](https://gdal.org/en/stable/download.html)
-for platform-specific instructions, then select the matching binding:
+`isobands` requires an installed, matching `osgeo.gdal` Python binding. In a
+Conda or system-managed environment that already provides a tested binding,
+install `isobands` directly:
 
 ```console
-$ pip install "isobands[gdal310]"  # GDAL 3.10.2
-$ pip install "isobands[gdal312]"  # GDAL 3.12.2
+$ pip install isobands
 ```
+
+For a pip-managed binding, install matching native GDAL 3.13.2 development
+files, then use the recommended tested extra:
+
+```console
+$ pip install "isobands[gdal313]"
+```
+
+The tested exact baselines are GDAL 3.10.2, 3.11.5, 3.12.2, and 3.13.2. GDAL
+3.10.2 and 3.11.5 remain advanced compatibility choices through the `gdal310`
+and `gdal311` extras. GDAL 3.13.3 is not tested or supported.
 ## Quick start
 
 Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
@@ -256,8 +266,8 @@ This function uses GDAL's in-process MEM raster driver and virtual `/vsimem`
 GeoJSON output driver; it does not invoke `gdal_contour` or create temporary
 files. It applies the command's six-decimal fixed-level serialization, and its
 fields, order, and WKB match direct command-line output on the supported GDAL
-3.10.2 and 3.12.2 baselines. The regular-grid validation and finite nodata
-conversion still apply before GDAL receives the raster.
+3.10.2, 3.11.5, 3.12.2, and 3.13.2 baselines. The regular-grid validation and
+finite nodata conversion still apply before GDAL receives the raster.
 
 ## Links
 

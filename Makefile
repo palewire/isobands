@@ -29,11 +29,17 @@ BENCHMARK_RUN = PYTHONPATH="$(CURDIR)/src" $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON
 ifeq ($(GDAL_BASELINE),310)
 GDAL_VERSION := 3.10.2
 GDAL_EXTRA := gdal310
+else ifeq ($(GDAL_BASELINE),311)
+GDAL_VERSION := 3.11.5
+GDAL_EXTRA := gdal311
 else ifeq ($(GDAL_BASELINE),312)
 GDAL_VERSION := 3.12.2
 GDAL_EXTRA := gdal312
+else ifeq ($(GDAL_BASELINE),313)
+GDAL_VERSION := 3.13.2
+GDAL_EXTRA := gdal313
 else
-$(error GDAL_BASELINE must be 310 or 312)
+$(error GDAL_BASELINE must be 310, 311, 312, or 313)
 endif
 
 .PHONY: all help gdal-check install install-all install-dev install-test install-docs install-benchmarks benchmark-smoke benchmark check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
