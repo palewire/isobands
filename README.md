@@ -23,8 +23,8 @@ files, then use the recommended newest tested and installable extra:
 pip install "isobands[gdal313]"
 ```
 
-GDAL 3.10.2 and 3.11.5 remain tested advanced compatibility choices through
-the `gdal310` and `gdal311` extras. See the [installation
+GDAL 3.10.2, 3.11.5, and 3.12.2 remain tested compatibility choices through
+the matching `gdal310`, `gdal311`, and `gdal312` extras. See the [installation
 guide](docs/installation.md) for exact versions and platform instructions.
 ## Quick start
 
