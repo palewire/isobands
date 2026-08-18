@@ -19,6 +19,9 @@ The stable API is intentionally narrow:
 * Data extrema and thresholds must remain distinguishable after safe
   floating-point conditioning. Rescale data whose values span too much of the
   numeric range.
+* Integer samples must be between ``-2**53`` and ``2**53`` inclusive. Values
+  outside Float64's exact consecutive-integer range are rejected before GDAL
+  conversion.
 * Missing values must leave at least one finite valid cell. Explicit finite
   ``nodata`` takes precedence over ``_FillValue`` and ``missing_value``.
 * GDAL **3.12.2** is required at runtime. Install matching system GDAL

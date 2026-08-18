@@ -190,13 +190,29 @@ jobs:
       - name: Build and install wheel
         shell: bash -el {0}
         run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
           uv build --wheel --out-dir dist
-          uv pip install --python python --reinstall --no-deps dist/*.whl
+          uv pip install --python "${python_executable}" --reinstall --no-deps dist/*.whl
 
       - name: Import and contour from installed wheel
         shell: bash -el {0}
         run: |
-          python - <<'PY'
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
+          "${python_executable}" - <<'PY'
           import isobands
           import numpy as np
           import xarray as xr
@@ -341,20 +357,31 @@ jobs:
         env:
           ISOBANDS_VERSION: ${{ github.ref_name }}
         run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
           installed=0
           for attempt in 1 2 3 4 5; do
-            if uv pip install --python python --reinstall --no-deps "isobands==${ISOBANDS_VERSION}"; then
+            if uv pip install --python "${python_executable}" --reinstall --no-deps "isobands==${ISOBANDS_VERSION}"; then
               installed=1
               break
             fi
             sleep "$((attempt * 5))"
           done
           test "$installed" = 1
-          python - <<'PY'
+          "${python_executable}" - <<'PY'
+          import importlib.metadata
           import isobands
+          import os
           import xarray as xr
           from osgeo import gdal
 
+          assert importlib.metadata.version("isobands") == os.environ["ISOBANDS_VERSION"]
           assert gdal.VersionInfo("RELEASE_NAME") == "3.12.2"
           data = xr.DataArray(
               [[0.0, 1.0], [2.0, 3.0]],

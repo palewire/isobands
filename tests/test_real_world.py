@@ -8,12 +8,12 @@ from pathlib import Path
 
 import numpy as np
 import xarray as xr
-from hypothesis import given, settings
+from hypothesis import example, given, settings
 from hypothesis import strategies as st
 from numpy.testing import assert_allclose
 from osgeo import gdal, ogr
 from shapely import from_wkb
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, box
 from shapely.ops import unary_union
 
 from isobands import isobands
@@ -264,6 +264,15 @@ def test_touching_outside_gdal_ring_is_promoted_without_changing_holes() -> None
     assert parts.promoted[0].area == 0.5
 
 
+def test_zero_area_gdal_exterior_is_omitted_without_repairing_topology() -> None:
+    """A collinear GDAL artifact has no domain area and produces no replacement."""
+
+    parts = _normalize_polygon_ring_roles(Polygon([(0, 0), (1, 0), (2, 0), (0, 0)]))
+
+    assert parts.retained == ()
+    assert parts.promoted == ()
+
+
 def test_nodata_component_at_threshold_uses_lower_inclusive_labels() -> None:
     """GDAL must not merge an empty lower band into a threshold-starting island."""
 
@@ -312,6 +321,34 @@ def test_thin_nodata_gradient_preserves_gdal_interpolation() -> None:
     assert_allclose(package_bands[(0.0, 2.0)].bounds[2], 1.2)
 
 
+def test_degenerate_gdal_ring_keeps_positive_area_and_valid_domain() -> None:
+    """A self-touching GDAL exterior preserves its positive shell and nodata holes."""
+
+    values = np.array(
+        [[1.0, 3.0, -1.0, 3.0], [3.0, np.nan, 2.0, np.nan], [3.0, 1.0, np.nan, 0.0]]
+    )
+    data = xr.DataArray(
+        values,
+        dims=("y", "x"),
+        coords={"x": range(4), "y": [2, 1, 0]},
+    )
+    result = isobands(data, levels=[-1.0, 0.0, 1.0], crs="EPSG:4326")
+    combined = unary_union(result.geometry)
+    nodata_domain = unary_union(
+        [box(x - 0.5, y - 0.5, x + 0.5, y + 0.5) for x, y in [(1, 1), (3, 1), (2, 0)]]
+    )
+    valid_domain = box(-0.5, -0.5, 3.5, 2.5).difference(nodata_domain)
+
+    assert all(geometry.is_valid for geometry in result.geometry)
+    assert combined.is_valid
+    assert combined.symmetric_difference(valid_domain).area < 1e-9
+    assert _band_unions(result)[(1.0, 3.0)].area > 7.0
+    for left, right in combinations(result.itertuples(), 2):
+        if (left.min_value, left.max_value) != (right.min_value, right.max_value):
+            assert left.geometry.intersection(right.geometry).area == 0.0
+    _assert_sample_coverage(result, data, (-1.0, 0.0, 1.0))
+
+
 @st.composite
 def _regular_masked_fields(draw: st.DrawFn) -> xr.DataArray:
     """Construct small nonconstant regular fields with optional nodata cells."""
@@ -351,7 +388,14 @@ def _regular_masked_fields(draw: st.DrawFn) -> xr.DataArray:
     )
 
 
-@settings(max_examples=20, deadline=None)
+@settings(max_examples=40, deadline=None)
+@example(
+    data=xr.DataArray(
+        [[1.0, 3.0, -1.0, 3.0], [3.0, np.nan, 2.0, np.nan], [3.0, 1.0, np.nan, 0.0]],
+        dims=("y", "x"),
+        coords={"x": range(4), "y": [2, 1, 0]},
+    )
+)
 @given(data=_regular_masked_fields())
 def test_regular_grids_preserve_labels_masks_and_axis_orientation(
     data: xr.DataArray,

@@ -40,6 +40,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Preserve thin nodata-separated components and their GDAL-interpolated
   threshold geometry.
+- Preserve positive-area contour loops while omitting GDAL's zero-area ring
+  artifacts for valid nodata masks.
+- Reject integers outside GDAL Float64's exact consecutive range instead of
+  silently collapsing distinct values.
 
 ## [0.1.0a1] - 2026-08-18
 

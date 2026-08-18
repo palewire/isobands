@@ -115,10 +115,12 @@ Numeric range and grid limits
 GDAL receives a finite, conditioned numeric raster. Extremely wide dynamic
 ranges can make extrema and thresholds indistinguishable in floating-point
 arithmetic; rescale values before calling the function when validation reports
-that safe conditioning is impossible. Interval mode has the 100,000-threshold
-safety limit. Only regular rectilinear two-dimensional grids are supported;
-this documentation does not promise support for curvilinear, irregular, or
-other grids.
+that safe conditioning is impossible. Integer samples must remain within
+``-2**53`` through ``2**53`` so GDAL's Float64 raster can represent them
+exactly; values outside that range are rejected rather than rounded. Interval
+mode has the 100,000-threshold safety limit. Only regular rectilinear
+two-dimensional grids are supported; this documentation does not promise
+support for curvilinear, irregular, or other grids.
 
 Implementation
 --------------
