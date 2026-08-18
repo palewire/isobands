@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from itertools import pairwise
 from math import ceil, floor, isfinite
-from typing import Any
+from typing import Any, TypeGuard
 
 import geopandas as gpd
 import numpy as np
@@ -16,11 +16,14 @@ from isobands._validation import prepare_raster
 
 _MAX_INTERVAL_THRESHOLDS = 100_000
 
+LevelValues = Sequence[float] | np.ndarray
+LevelTransform = Callable[[np.ndarray], LevelValues]
+
 
 def isobands(
     data: xr.DataArray,
     *,
-    levels: Sequence[float] | None = None,
+    levels: LevelValues | LevelTransform | None = None,
     interval: float | None = None,
     crs: Any | None = None,  # noqa: ANN401
     nodata: float | None = None,
@@ -28,10 +31,11 @@ def isobands(
     """Create finite, filled contour polygons from a two-dimensional raster.
 
     Exactly one of ``levels`` or ``interval`` is required. Explicit levels
-    are interior thresholds; the returned outer bands begin and end at the
-    valid raster extrema. Interval thresholds are integral multiples of the
-    supplied interval. A constant raster returns one covering band whose
-    ``min_value`` and ``max_value`` are necessarily equal.
+    are interior thresholds; a callable receives a one-dimensional array of
+    valid raster values and returns those thresholds. The returned outer bands
+    begin and end at the valid raster extrema. Interval thresholds are integral
+    multiples of the supplied interval. A constant raster returns one covering
+    band whose ``min_value`` and ``max_value`` are necessarily equal.
     Interval requests are limited to 100,000 interior
     thresholds; use a larger interval for wider value ranges.
     Integer samples must be within Float64's exact consecutive-integer range
@@ -40,8 +44,14 @@ def isobands(
 
     _validate_band_definition(levels, interval)
     raster = prepare_raster(data, crs=crs, nodata=nodata)
-    if levels is not None:
+    if _is_explicit_levels(levels):
         thresholds = _explicit_thresholds(levels, raster.min_value, raster.max_value)
+    elif _is_level_transform(levels):
+        thresholds = _explicit_thresholds(
+            levels(raster.valid_values),
+            raster.min_value,
+            raster.max_value,
+        )
     else:
         thresholds = _interval_thresholds(
             interval,
@@ -90,7 +100,7 @@ def gdal_fixed_level_polygons(
 
 
 def _validate_band_definition(
-    levels: Sequence[float] | None,
+    levels: LevelValues | LevelTransform | None,
     interval: float | None,
 ) -> None:
     """Validate the mutually exclusive level and interval parameters."""
@@ -110,8 +120,24 @@ def _validate_band_definition(
             raise ValueError("interval must be a positive finite number.")
 
 
+def _is_level_transform(
+    levels: LevelValues | LevelTransform | None,
+) -> TypeGuard[LevelTransform]:
+    """Return whether levels is a callback rather than explicit thresholds."""
+
+    return callable(levels)
+
+
+def _is_explicit_levels(
+    levels: LevelValues | LevelTransform | None,
+) -> TypeGuard[LevelValues]:
+    """Return whether levels contains explicit thresholds."""
+
+    return levels is not None and (isinstance(levels, Sequence) or not callable(levels))
+
+
 def _explicit_thresholds(
-    levels: Sequence[float],
+    levels: LevelValues,
     minimum: float,
     maximum: float,
 ) -> tuple[float, ...]:

@@ -8,6 +8,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Allow ``levels=`` to accept a callable that derives validated contour
+  thresholds from the raster's valid values.
+
 ### Changed
 
 ### Fixed

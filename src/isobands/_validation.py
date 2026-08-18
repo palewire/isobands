@@ -23,6 +23,7 @@ class RasterSpec:
     """A validated, GDAL-oriented representation of an xarray raster."""
 
     values: np.ndarray
+    valid_values: np.ndarray
     geotransform: tuple[float, float, float, float, float, float]
     crs: pyproj.CRS
     nodata: float | int | None
@@ -316,6 +317,7 @@ def prepare_raster(
     resolved_crs = explicit_crs or _resolve_crs(data, None)
     return RasterSpec(
         values=values,
+        valid_values=valid_values,
         geotransform=geotransform_from_coordinates(x_values, y_values),
         crs=resolved_crs,
         nodata=resolved_nodata,
