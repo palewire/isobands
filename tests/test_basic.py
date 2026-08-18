@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 from itertools import combinations
 
 import numpy as np
@@ -9,17 +10,25 @@ import xarray as xr
 from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
-import isobands as package
-from isobands import isobands
+import isobands
 
 
-def test_public_api_exports_only_isobands() -> None:
+def test_public_api_exports_only_from_raster() -> None:
     """The package keeps its public API intentionally narrow."""
 
-    assert package.__all__ == ["isobands"]
+    assert isobands.__all__ == ["from_raster"]
+    assert not hasattr(isobands, "isobands")
+    assert tuple(inspect.signature(isobands.from_raster).parameters) == (
+        "data",
+        "levels",
+        "interval",
+        "offset",
+        "crs",
+        "nodata",
+    )
 
 
-def test_isobands_returns_valid_non_overlapping_coverage() -> None:
+def test_from_raster_returns_valid_non_overlapping_coverage() -> None:
     """A regular raster produces finite, valid bands covering its domain."""
 
     data = xr.DataArray(
@@ -28,7 +37,7 @@ def test_isobands_returns_valid_non_overlapping_coverage() -> None:
         coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[1.5, 3.0], crs="EPSG:4326")
+    result = isobands.from_raster(data, levels=[1.5, 3.0], crs="EPSG:4326")
 
     assert list(result.columns) == ["min_value", "max_value", "geometry"]
     assert result.crs.to_epsg() == 4326
@@ -50,7 +59,7 @@ def test_isobands_returns_valid_non_overlapping_coverage() -> None:
             assert covered.covers(Point(x_coordinate, y_coordinate))
 
 
-def test_isobands_does_not_create_files(monkeypatch, tmp_path) -> None:  # type: ignore[no-untyped-def]
+def test_from_raster_does_not_create_files(monkeypatch, tmp_path) -> None:  # type: ignore[no-untyped-def]
     """The GDAL bridge uses only in-memory datasets."""
 
     data = xr.DataArray(
@@ -60,6 +69,6 @@ def test_isobands_does_not_create_files(monkeypatch, tmp_path) -> None:  # type:
     )
     monkeypatch.chdir(tmp_path)
 
-    isobands(data, levels=[1.0], crs="EPSG:4326")
+    isobands.from_raster(data, levels=[1.0], crs="EPSG:4326")
 
     assert list(tmp_path.iterdir()) == []

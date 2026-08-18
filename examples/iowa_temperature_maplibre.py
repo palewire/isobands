@@ -18,7 +18,7 @@ import xarray as xr
 from osgeo import gdal
 from shapely import box
 
-from isobands import isobands
+import isobands
 
 DATE = "2020-08-12"
 SOURCE_URL = (
@@ -129,7 +129,7 @@ def color_for(minimum: float) -> str:
 def write_geojson(temperature: xr.DataArray) -> gpd.GeoDataFrame:
     """Convert the temperature field into colored contour bands."""
 
-    bands = isobands(
+    bands = isobands.from_raster(
         temperature,
         levels=TEMPERATURE_LEVELS,
         nodata=NODATA,

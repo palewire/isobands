@@ -1,4 +1,4 @@
-"""Real-world and generative validation for the stable isobands API."""
+"""Real-world and generative validation for the stable from_raster API."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from shapely import from_wkb
 from shapely.geometry import Point, Polygon, box
 from shapely.ops import unary_union
 
-from isobands import isobands
+from isobands import from_raster
 from isobands._gdal import _normalize_polygon_ring_roles
 
 FIXTURE_PATH = Path(__file__).parents[1] / "examples/data/air_temperature_time0.npz"
@@ -197,7 +197,7 @@ def test_real_air_temperature_matches_direct_gdal_summary_and_invariants() -> No
     """Real NMC air data has stable labels, coverage, topology, and CRS."""
 
     data, _ = _air_temperature()
-    result = isobands(data, levels=LEVELS, crs="EPSG:4326")
+    result = from_raster(data, levels=LEVELS, crs="EPSG:4326")
     expected_bounds = [[227.0, 240.0], [240.0, 260.0], [260.0, 280.0], [280.0, 302.6]]
     baseline_areas = _direct_gdal_band_areas(data)
 
@@ -224,8 +224,8 @@ def test_real_air_temperature_axis_orientations_are_equivalent() -> None:
     """Reversing regular latitude and longitude axes preserves all bands."""
 
     data, _ = _air_temperature()
-    forward = isobands(data, levels=LEVELS, crs="EPSG:4326")
-    reversed_axes = isobands(
+    forward = from_raster(data, levels=LEVELS, crs="EPSG:4326")
+    reversed_axes = from_raster(
         data.isel(lat=slice(None, None, -1), lon=slice(None, None, -1)),
         levels=LEVELS,
         crs="EPSG:4326",
@@ -248,7 +248,7 @@ def test_real_air_temperature_derived_nodata_is_excluded() -> None:
     data, _ = _air_temperature()
     masked = data.copy(deep=True)
     masked.values[[4, 12, 18], [8, 26, 42]] = np.nan
-    result = isobands(masked, levels=LEVELS, crs="EPSG:4326")
+    result = from_raster(masked, levels=LEVELS, crs="EPSG:4326")
 
     assert all(geometry.is_valid for geometry in result.geometry)
     _assert_sample_coverage(result, masked, LEVELS)
@@ -288,7 +288,7 @@ def test_nodata_component_at_threshold_uses_lower_inclusive_labels() -> None:
         dims=("y", "x"),
         coords={"x": [10.0, 12.0, 14.0, 16.0], "y": [2.0, 0.0]},
     )
-    result = isobands(data, levels=[-1.0, 0.0, 1.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[-1.0, 0.0, 1.0], crs="EPSG:4326")
 
     assert (-1.0, 1.0) not in set(
         map(tuple, result[["min_value", "max_value"]].to_numpy())
@@ -308,7 +308,7 @@ def test_thin_nodata_gradient_preserves_gdal_interpolation() -> None:
         dims=("y", "x"),
         coords={"x": [0.0, 1.0, 2.0, 3.0], "y": [2.0, 1.0, 0.0]},
     )
-    result = isobands(data, levels=[2.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[2.0], crs="EPSG:4326")
     padded = np.array(
         [[-999.0, -999.0], [0.0, 10.0], [-999.0, -999.0]],
         dtype=float,
@@ -339,7 +339,7 @@ def test_degenerate_gdal_ring_keeps_positive_area_and_valid_domain() -> None:
         dims=("y", "x"),
         coords={"x": range(4), "y": [2, 1, 0]},
     )
-    result = isobands(data, levels=[-1.0, 0.0, 1.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[-1.0, 0.0, 1.0], crs="EPSG:4326")
     combined = unary_union(result.geometry)
     nodata_domain = unary_union(
         [box(x - 0.5, y - 0.5, x + 0.5, y + 0.5) for x, y in [(1, 1), (3, 1), (2, 0)]]
@@ -410,8 +410,8 @@ def test_regular_grids_preserve_labels_masks_and_axis_orientation(
     """Small regular grids retain ordered lower-inclusive bands under reversal."""
 
     thresholds = (-1.0, 0.0, 1.0)
-    result = isobands(data, levels=thresholds, crs="EPSG:4326")
-    reversed_axes = isobands(
+    result = from_raster(data, levels=thresholds, crs="EPSG:4326")
+    reversed_axes = from_raster(
         data.isel(y=slice(None, None, -1), x=slice(None, None, -1)),
         levels=thresholds,
         crs="EPSG:4326",

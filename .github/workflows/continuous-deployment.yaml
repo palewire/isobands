@@ -296,7 +296,7 @@ jobs:
               dims=("lat", "lon"),
               coords={"lon": [0.0, 1.0], "lat": [1.0, 0.0]},
           )
-          result = isobands.isobands(data, levels=[1.5], crs="EPSG:4326")
+          result = isobands.from_raster(data, levels=[1.5], crs="EPSG:4326")
           assert len(result) == 2
           assert result.geometry.is_valid.all()
           PY
@@ -460,7 +460,7 @@ jobs:
               dims=("lat", "lon"),
               coords={"lon": [0.0, 1.0], "lat": [1.0, 0.0]},
           )
-          result = isobands.isobands(data, levels=[1.5], crs="EPSG:4326")
+          result = isobands.from_raster(data, levels=[1.5], crs="EPSG:4326")
           assert len(result) == 2
           assert result.geometry.is_valid.all()
           PY

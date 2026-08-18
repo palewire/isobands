@@ -1,4 +1,4 @@
-"""Compare the in-memory isobands path with GDAL's file-based contour path."""
+"""Compare the in-memory from_raster path with GDAL's file-based contour path."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ import xarray as xr
 from osgeo import gdal, osr
 from shapely.ops import unary_union
 
-from isobands import isobands
+from isobands import from_raster
 
 FULL_SOURCE_URL = "https://github.com/pydata/xarray-data/raw/master/air_temperature.nc"
 FULL_SOURCE_SHA256 = "c606b89c35970a2983b914b76df4adbb409003ef34aa7cfd7f582e41f307482b"
@@ -260,12 +260,12 @@ def _gdal_contour(tiff: Path, output: Path, levels: Sequence[float]) -> None:
         )
 
 
-def _isobands_run(
+def _from_raster_run(
     data: xr.DataArray, levels: Sequence[float], crs: str
 ) -> tuple[gpd.GeoDataFrame, dict[str, float]]:
     start = time.perf_counter()
-    output = isobands(data, levels=levels, crs=crs)
-    return output, {"isobands": time.perf_counter() - start}
+    output = from_raster(data, levels=levels, crs=crs)
+    return output, {"from_raster": time.perf_counter() - start}
 
 
 def _gdal_run(
@@ -451,16 +451,16 @@ def run(mode: str, repeats: int, warmups: int, grid: tuple[int, int]) -> dict[st
     baseline_levels = (float(np.nanmin(values)), *levels, contour_upper_bound)
     cache = _cache_dir()
     with _workdir(cache) as workdir:
-        direct, _ = _isobands_run(prepared.raster, levels, crs)
+        direct, _ = _from_raster_run(prepared.raster, levels, crs)
         baseline, _ = _gdal_run(prepared.raster, baseline_levels, crs, workdir)
         _validate(direct, baseline, prepared.raster)
         for _ in range(warmups):
-            _isobands_run(prepared.raster, levels, crs)
+            _from_raster_run(prepared.raster, levels, crs)
             _gdal_run(prepared.raster, baseline_levels, crs, workdir)
         direct_runs: list[dict[str, float]] = []
         gdal_runs: list[dict[str, float]] = []
         for _ in range(repeats):
-            _, direct_stages = _isobands_run(prepared.raster, levels, crs)
+            _, direct_stages = _from_raster_run(prepared.raster, levels, crs)
             _, gdal_stages = _gdal_run(prepared.raster, baseline_levels, crs, workdir)
             direct_runs.append(direct_stages)
             gdal_runs.append(gdal_stages)
@@ -471,7 +471,7 @@ def run(mode: str, repeats: int, warmups: int, grid: tuple[int, int]) -> dict[st
         "metadata": _metadata(prepared, levels, repeats),
         "validation": {"passed": True},
         "timings": {
-            "xarray_to_isobands_to_geodataframe": {
+            "xarray_to_from_raster_to_geodataframe": {
                 "stages": direct_summary,
                 "total_seconds": direct_total,
             },

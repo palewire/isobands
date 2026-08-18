@@ -20,7 +20,7 @@ import cdsapi
 import geopandas as gpd
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 DATE = "2020-08-16"
 DATASET = "derived-era5-single-levels-daily-statistics"
@@ -105,7 +105,7 @@ def color_for(minimum: float) -> str:
 def write_geojson(temperature: xr.DataArray) -> gpd.GeoDataFrame:
     """Convert the ERA5 field to dissolved, colored five-degree bands."""
 
-    bands = isobands(temperature, interval=5, crs="EPSG:4326")
+    bands = isobands.from_raster(temperature, interval=5, crs="EPSG:4326")
     dissolved = bands.dissolve(by=["min_value", "max_value"], as_index=False)
     dissolved["color"] = dissolved["min_value"].map(color_for)
     GEOJSON_PATH.write_text(dissolved.to_json(), encoding="utf-8")

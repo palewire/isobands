@@ -8,5 +8,5 @@
 
 | Path | Median total seconds | Stages (median; mean/min/max seconds) |
 | --- | ---: | --- |
-| xarray_to_isobands_to_geodataframe | 0.032069 | isobands=0.032069; 0.032216/0.031960/0.032751 |
+| xarray_to_from_raster_to_geodataframe | 0.032069 | from_raster=0.032069; 0.032216/0.031960/0.032751 |
 | xarray_to_geotiff_to_gdal_contour_to_geopandas | 0.238969 | xarray_to_geotiff=0.002728; 0.002824/0.002507/0.003140, gdal_contour_subprocess=0.219598; 0.221966/0.216482/0.231197, geopandas_file_read=0.016751; 0.016695/0.016475/0.016762 |

@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 DATE = "2023-06-07"
 EPA_DATA_URL = "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2023.zip"
@@ -106,7 +106,7 @@ def color_for(minimum: float) -> str:
 def write_geojson(pm25: xr.DataArray) -> gpd.GeoDataFrame:
     """Convert the interpolated field into colored health-category bands."""
 
-    bands = isobands(pm25, levels=HEALTH_LEVELS, crs="EPSG:4326")
+    bands = isobands.from_raster(pm25, levels=HEALTH_LEVELS, crs="EPSG:4326")
     dissolved = bands.dissolve(by=["min_value", "max_value"], as_index=False)
     dissolved["color"] = dissolved["min_value"].map(color_for)
     GEOJSON_PATH.write_text(dissolved.to_json(), encoding="utf-8")

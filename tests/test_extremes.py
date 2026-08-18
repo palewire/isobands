@@ -8,7 +8,7 @@ import xarray as xr
 from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
-from isobands import isobands
+from isobands import from_raster
 
 
 def test_final_band_covers_the_raster_maximum() -> None:
@@ -20,7 +20,7 @@ def test_final_band_covers_the_raster_maximum() -> None:
         coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[1.5, 3.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[1.5, 3.0], crs="EPSG:4326")
 
     final_band = result.iloc[-1]
     assert final_band.min_value == 3.0
@@ -37,7 +37,7 @@ def test_constant_raster_produces_one_full_coverage_band() -> None:
         coords={"x": [0.0, 1.0], "y": [1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[1.0, 9.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[1.0, 9.0], crs="EPSG:4326")
 
     assert result[["min_value", "max_value"]].values.tolist() == [[5.0, 5.0]]
     assert result.geometry.iloc[0].is_valid
@@ -57,7 +57,7 @@ def test_constant_float_extreme_produces_one_full_coverage_band() -> None:
         coords={"x": [0.0, 1.0], "y": [1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[1e307], crs="EPSG:4326")
+    result = from_raster(data, levels=[1e307], crs="EPSG:4326")
 
     assert result[["min_value", "max_value"]].values.tolist() == [[value, value]]
     assert result.geometry.iloc[0].is_valid
@@ -78,7 +78,7 @@ def test_nonconstant_float_maximum_preserves_exact_labels_and_coverage() -> None
     )
     thresholds = [-limit * 0.25, limit * 0.75]
 
-    result = isobands(data, levels=thresholds, crs="EPSG:4326")
+    result = from_raster(data, levels=thresholds, crs="EPSG:4326")
     combined = unary_union(result.geometry)
 
     assert result[["min_value", "max_value"]].values.tolist() == [
@@ -101,7 +101,7 @@ def test_subnormal_range_produces_valid_full_coverage() -> None:
         coords={"x": [0.0, 1.0], "y": [1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[2.5 * unit], crs="EPSG:4326")
+    result = from_raster(data, levels=[2.5 * unit], crs="EPSG:4326")
     combined = unary_union(result.geometry)
 
     assert result[["min_value", "max_value"]].values.tolist() == [
@@ -125,7 +125,7 @@ def test_collapsed_scaled_thresholds_are_rejected_before_gdal() -> None:
     )
 
     with pytest.raises(ValueError, match=r"dynamic range too large.*rescale data"):
-        isobands(data, levels=[1e-320, 2e-320], crs="EPSG:4326")
+        from_raster(data, levels=[1e-320, 2e-320], crs="EPSG:4326")
 
 
 def test_representable_large_range_keeps_distinct_scaled_thresholds() -> None:
@@ -138,7 +138,7 @@ def test_representable_large_range_keeps_distinct_scaled_thresholds() -> None:
         coords={"x": [0.0, 1.0], "y": [1.0, 0.0]},
     )
 
-    result = isobands(
+    result = from_raster(
         data,
         levels=[limit * 0.25, limit * 0.5],
         crs="EPSG:4326",
@@ -164,7 +164,7 @@ def test_disconnected_cells_remain_multipart() -> None:
         coords={"x": range(5), "y": range(4, -1, -1)},
     )
 
-    result = isobands(data, levels=[5.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[5.0], crs="EPSG:4326")
     high_band = result.loc[result.min_value == 5.0].geometry.iloc[0]
 
     assert high_band.geom_type == "MultiPolygon"

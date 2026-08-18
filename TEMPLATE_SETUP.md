@@ -1,8 +1,8 @@
 # Stable setup checklist
 
 This checklist records the repository setup completed for the `isobands`
-release candidate. Items that require maintainer or remote-service
-configuration remain explicitly deferred.
+stable release. Items that require maintainer or remote-service configuration
+remain explicitly deferred.
 
 ## Package
 
@@ -34,8 +34,8 @@ configuration remain explicitly deferred.
 - [x] Document the release plumbing and Trusted Publishing workflow.
 - [x] Publish the alpha package through PyPI Trusted Publishing.
 - [x] Register and verify the PyPI environment and Trusted Publisher.
-- [x] Review the release checklist and prepare the planned `0.1.0` section
-      before the RC.
+- [x] Review the release checklist and prepare the planned version's
+      `CHANGELOG.md` section.
 - [ ] Create and publish the stable release (requires explicit maintainer
       approval).
 

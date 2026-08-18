@@ -20,7 +20,7 @@ LevelValues = Sequence[float] | np.ndarray
 LevelTransform = Callable[[np.ndarray], LevelValues]
 
 
-def isobands(
+def from_raster(
     data: xr.DataArray,
     *,
     levels: LevelValues | LevelTransform | None = None,
