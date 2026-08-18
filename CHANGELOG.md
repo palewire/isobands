@@ -12,6 +12,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   thresholds from the raster's valid values.
 - Add an ``offset`` option for aligning interval-derived contour thresholds to
   a nonzero origin.
+- Add a MapLibre example that derives Hurricane Harvey rainfall bands from
+  callable quintile levels.
 
 ### Changed
 

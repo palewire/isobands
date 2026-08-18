@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hurricane Harvey rainfall quintiles</title>
+    <link href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+      body { margin: 0; }
+      #map { height: 100vh; width: 100vw; }
+      .legend {
+        background: rgba(255, 255, 255, 0.92);
+        bottom: 12px;
+        font: 12px/1.35 sans-serif;
+        padding: 10px 12px;
+        position: absolute;
+        right: 12px;
+        z-index: 1;
+      }
+      .legend-title { font-weight: 700; margin-bottom: 6px; }
+      .legend-row { align-items: center; display: flex; gap: 6px; }
+      .legend-swatch { height: 12px; width: 12px; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="legend" aria-label="Daily rainfall quintile legend">
+      <div class="legend-title">Daily rainfall quintiles</div>
+      <div id="legend-rows"></div>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
+    <script>
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/bright",
+        center: [-94.8, 29.6],
+        zoom: 5.7,
+        interactive: false,
+        attributionControl: false,
+      });
+
+      function formatMillimeters(value) {
+        return `${value < 10 ? value.toFixed(1) : value.toFixed(0)} mm`;
+      }
+
+      function addLegend(features) {
+        const bands = [...features].sort(
+          (left, right) => left.properties.min_value - right.properties.min_value,
+        );
+        const rows = document.getElementById("legend-rows");
+        rows.replaceChildren(...bands.map((band, index) => {
+          const row = document.createElement("div");
+          row.className = "legend-row";
+          const swatch = document.createElement("span");
+          swatch.className = "legend-swatch";
+          swatch.style.background = band.properties.color;
+          const label = document.createElement("span");
+          if (index === 0) {
+            label.textContent = `Below ${formatMillimeters(band.properties.max_value)}`;
+          } else if (index === bands.length - 1) {
+            label.textContent = `${formatMillimeters(band.properties.min_value)} and above`;
+          } else {
+            label.textContent = [
+              formatMillimeters(band.properties.min_value),
+              formatMillimeters(band.properties.max_value),
+            ].join("–");
+          }
+          row.append(swatch, label);
+          return row;
+        }));
+      }
+
+      map.on("load", async () => {
+        const response = await fetch("output/harvey-daily-rainfall-2017-08-27.geojson");
+        const rainfall = await response.json();
+        map.addSource("rainfall", { type: "geojson", data: rainfall });
+        const firstSymbolLayer = map.getStyle().layers.find(
+          (layer) => layer.type === "symbol",
+        );
+        map.addLayer({
+          id: "rainfall-bands",
+          type: "fill",
+          source: "rainfall",
+          paint: {
+            "fill-color": ["get", "color"],
+            "fill-opacity": 0.45,
+          },
+        }, firstSymbolLayer?.id);
+        addLegend(rainfall.features);
+      });
+    </script>
+  </body>
+</html>
