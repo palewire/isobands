@@ -9,7 +9,14 @@ import xarray as xr
 from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
+import isobands as package
 from isobands import isobands
+
+
+def test_public_api_exports_only_isobands() -> None:
+    """The package keeps its public API intentionally narrow."""
+
+    assert package.__all__ == ["isobands"]
 
 
 def test_isobands_returns_valid_non_overlapping_coverage() -> None:

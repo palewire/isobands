@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from itertools import pairwise
 from math import isfinite
 from typing import TYPE_CHECKING, Any
-from uuid import uuid4
 
 import numpy as np
 from shapely import from_wkb
@@ -97,57 +96,6 @@ def generate_polygons(
             ) from error
 
 
-def generate_fixed_level_polygons(
-    raster: RasterSpec,
-    *,
-    levels: Sequence[float],
-) -> list[tuple[np.int32, float, float, BaseGeometry]]:
-    """Generate raw GDAL fixed-level polygons without post-processing results."""
-
-    gdal, ogr = _import_gdal()
-    raster_dataset: Any | None = None
-    vector_dataset: Any | None = None
-    band: Any | None = None
-    layer: Any | None = None
-    vector_path = f"/vsimem/isobands-{uuid4().hex}.geojson"
-    try:
-        with (
-            gdal.ExceptionMgr(useExceptions=True),
-            ogr.ExceptionMgr(useExceptions=True),
-        ):
-            raster_dataset, band = _create_raw_raster_dataset(gdal, raster)
-            vector_dataset, layer = _create_fixed_level_vector_layer(
-                ogr,
-                vector_path,
-            )
-            result = gdal.ContourGenerateEx(
-                band, layer, _fixed_level_options(raster, levels)
-            )
-            if result != gdal.CE_None:
-                raise RuntimeError(
-                    "GDAL could not generate fixed-level filled contour polygons "
-                    f"(error code {result})."
-                )
-            layer = None
-            vector_dataset = None
-            vector_dataset = gdal.OpenEx(vector_path, gdal.OF_VECTOR)
-            if vector_dataset is None:
-                raise RuntimeError("GDAL could not reopen fixed-level contour output.")
-            layer = vector_dataset.GetLayer()
-            if layer is None:
-                raise RuntimeError(
-                    "GDAL could not reopen the fixed-level contour layer."
-                )
-            return _read_fixed_level_features(layer)
-    except RuntimeError as error:
-        raise RuntimeError(
-            f"GDAL failed while generating fixed-level filled contour polygons: {error}"
-        ) from error
-    finally:
-        del layer, band, vector_dataset, raster_dataset
-        gdal.Unlink(vector_path)
-
-
 def _generate_component(
     gdal: Any,  # noqa: ANN401
     ogr: Any,  # noqa: ANN401
@@ -209,21 +157,6 @@ def _create_raster_dataset(
         values=contour_input.values,
         nodata=contour_input.nodata,
         geotransform=geotransform,
-    )
-
-
-def _create_raw_raster_dataset(
-    gdal: Any,  # noqa: ANN401
-    raster: RasterSpec,
-) -> tuple[Any, Any]:
-    """Materialize unconditioned values for native fixed-level contouring."""
-
-    return _create_gdal_raster_dataset(
-        gdal,
-        raster,
-        values=raster.values,
-        nodata=raster.nodata,
-        geotransform=raster.geotransform,
     )
 
 
@@ -479,32 +412,6 @@ def _create_vector_layer(
     return dataset, layer
 
 
-def _create_fixed_level_vector_layer(
-    ogr: Any,  # noqa: ANN401
-    path: str,
-) -> tuple[Any, Any]:
-    """Create native GeoJSON output in GDAL's virtual in-memory filesystem."""
-
-    driver = ogr.GetDriverByName("GeoJSON")
-    if driver is None:
-        raise RuntimeError("GDAL's GeoJSON vector driver is unavailable.")
-    dataset = driver.CreateDataSource(path)
-    if dataset is None:
-        raise RuntimeError("GDAL could not create virtual fixed-level contour output.")
-    layer = dataset.CreateLayer("contour", geom_type=ogr.wkbPolygon)
-    if layer is None:
-        raise RuntimeError("GDAL could not create an in-memory contour layer.")
-    for name, field_type in (
-        ("ID", ogr.OFTInteger),
-        ("floor", ogr.OFTReal),
-        ("ceil", ogr.OFTReal),
-    ):
-        field = ogr.FieldDefn(name, field_type)
-        if layer.CreateField(field) != ogr.OGRERR_NONE:
-            raise RuntimeError(f"GDAL could not create the {name!r} contour field.")
-    return dataset, layer
-
-
 def _create_vector_dataset(
     gdal: Any,  # noqa: ANN401
     ogr: Any,  # noqa: ANN401
@@ -525,7 +432,7 @@ def _create_vector_dataset(
 
 
 def _contour_options(contour_input: _ContourInput) -> list[str]:
-    """Build ContourGenerateEx options for finite fixed-level polygons."""
+    """Build ContourGenerateEx options for finite isoband polygons."""
 
     fixed_levels = ",".join(
         (
@@ -542,43 +449,6 @@ def _contour_options(contour_input: _ContourInput) -> list[str]:
     if contour_input.nodata is not None:
         options.append(f"NODATA={contour_input.nodata:.17g}")
     return options
-
-
-def _fixed_level_options(raster: RasterSpec, levels: Sequence[float]) -> list[str]:
-    """Build options with ``gdal_contour -fl``'s fixed-decimal serialization."""
-
-    options = [
-        "POLYGONIZE=YES",
-        "FIXED_LEVELS=" + ",".join(format(level, "f") for level in levels),
-        "ID_FIELD=0",
-        "ELEV_FIELD_MIN=1",
-        "ELEV_FIELD_MAX=2",
-    ]
-    if raster.nodata is not None:
-        options.append(f"NODATA={float(raster.nodata):.17g}")
-    return options
-
-
-def _read_fixed_level_features(
-    layer: Any,  # noqa: ANN401
-) -> list[tuple[np.int32, float, float, BaseGeometry]]:
-    """Read native contour features in GDAL's emitted order without repair."""
-
-    features: list[tuple[np.int32, float, float, BaseGeometry]] = []
-    layer.ResetReading()
-    for feature in layer:
-        ogr_geometry = feature.GetGeometryRef()
-        if ogr_geometry is None:
-            raise RuntimeError("GDAL produced a contour feature without geometry.")
-        features.append(
-            (
-                np.int32(feature.GetFieldAsInteger(0)),
-                float(feature.GetFieldAsDouble(1)),
-                float(feature.GetFieldAsDouble(2)),
-                from_wkb(bytes(ogr_geometry.ExportToWkb())),
-            )
-        )
-    return features
 
 
 def _read_features(
