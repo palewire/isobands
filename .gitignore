@@ -108,3 +108,10 @@ venv.bak/
 
 # pip and uv
 ./build/
+
+# Benchmark reports and explicitly configured local benchmark caches
+benchmarks/results/*
+!benchmarks/results/
+!benchmarks/results/reference.json
+!benchmarks/results/reference.md
+.benchmark-cache/

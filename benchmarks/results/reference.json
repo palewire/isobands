@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "grid_shape": [
+      500,
+      1000
+    ],
+    "hardware": {
+      "cpu_count": 10,
+      "machine": "arm64",
+      "processor": "arm"
+    },
+    "interpolated": true,
+    "levels": [
+      240.0,
+      250.0,
+      260.0,
+      270.0,
+      280.0,
+      290.0,
+      300.0
+    ],
+    "os": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+    "peak_memory": {
+      "available": false,
+      "reason": "Unavailable: this harness has no isolated cross-platform native RSS sampler."
+    },
+    "python": "3.13.2 (main, Feb 12 2025, 14:59:08) [Clang 19.1.6 ]",
+    "repeats": 5,
+    "source": {
+      "location": "https://github.com/pydata/xarray-data/raw/master/air_temperature.nc",
+      "sha256": "c606b89c35970a2983b914b76df4adbb409003ef34aa7cfd7f582e41f307482b"
+    },
+    "versions": {
+      "gdal": "3.12.2",
+      "geopandas": "1.1.4",
+      "isobands": "0.1.0a1.post1.dev6+g8fa45c558.d20260818",
+      "numpy": "2.5.2",
+      "pyproj": "3.7.2",
+      "scipy": "1.18.0",
+      "shapely": "2.1.2",
+      "xarray": "2026.7.0"
+    }
+  },
+  "timings": {
+    "xarray_to_geotiff_to_gdal_contour_to_geopandas": {
+      "stages": {
+        "gdal_contour_subprocess": {
+          "max_seconds": 0.2311969170041266,
+          "mean_seconds": 0.22196568340004888,
+          "median_seconds": 0.2195982080011163,
+          "min_seconds": 0.21648183400247945
+        },
+        "geopandas_file_read": {
+          "max_seconds": 0.01676216699706856,
+          "mean_seconds": 0.016695366600470152,
+          "median_seconds": 0.016750875001889654,
+          "min_seconds": 0.01647495799988974
+        },
+        "xarray_to_geotiff": {
+          "max_seconds": 0.003139957996609155,
+          "mean_seconds": 0.0028241416002856568,
+          "median_seconds": 0.002727958999457769,
+          "min_seconds": 0.00250725000660168
+        }
+      },
+      "total_seconds": {
+        "max_seconds": 0.2510880830013775,
+        "mean_seconds": 0.24148519160080467,
+        "median_seconds": 0.2389692910001031,
+        "min_seconds": 0.23594741800479824
+      }
+    },
+    "xarray_to_isobands_to_geodataframe": {
+      "stages": {
+        "isobands": {
+          "max_seconds": 0.03275050000229385,
+          "mean_seconds": 0.032215708403964524,
+          "median_seconds": 0.032069125001726206,
+          "min_seconds": 0.03196004200435709
+        }
+      },
+      "total_seconds": {
+        "max_seconds": 0.03275050000229385,
+        "mean_seconds": 0.032215708403964524,
+        "median_seconds": 0.032069125001726206,
+        "min_seconds": 0.03196004200435709
+      }
+    }
+  },
+  "validation": {
+    "passed": true
+  }
+}

@@ -25,7 +25,7 @@ class RasterSpec:
     values: np.ndarray
     geotransform: tuple[float, float, float, float, float, float]
     crs: pyproj.CRS
-    nodata: float | None
+    nodata: float | int | None
     min_value: float
     max_value: float
 
@@ -111,7 +111,7 @@ def _parse_crs(value: Any, label: str) -> pyproj.CRS:  # noqa: ANN401
     return parsed
 
 
-def _metadata_nodata(data: xr.DataArray) -> float | None:
+def _metadata_nodata(data: xr.DataArray) -> float | int | None:
     for source_name, source in (
         ("encoding", data.encoding),
         ("attributes", data.attrs),
@@ -124,7 +124,7 @@ def _metadata_nodata(data: xr.DataArray) -> float | None:
     return None
 
 
-def _coerce_nodata(value: Any, label: str) -> float | None:  # noqa: ANN401
+def _coerce_nodata(value: Any, label: str) -> float | int | None:  # noqa: ANN401
     array = np.asarray(value)
     if array.size != 1:
         raise ValueError(f"{label} must be a scalar numeric value")
@@ -133,6 +133,8 @@ def _coerce_nodata(value: Any, label: str) -> float | None:  # noqa: ANN401
         np.asarray(scalar).dtype, np.number
     ):
         raise TypeError(f"{label} must be a scalar numeric value")
+    if np.issubdtype(np.asarray(scalar).dtype, np.integer):
+        return int(scalar)
     try:
         result = float(scalar)
     except (TypeError, ValueError, OverflowError) as error:
@@ -177,8 +179,8 @@ def _sentinel(values: np.ndarray) -> float:
 
 def _materialize_values(
     data: xr.DataArray,
-    nodata: float | None,
-) -> tuple[np.ndarray, float | None, np.ndarray]:
+    nodata: float | int | None,
+) -> tuple[np.ndarray, float | int | None, np.ndarray]:
     raw = materialize_array(data.data)
     if raw.ndim != 2:
         raise ValueError("Raster data must be two-dimensional after squeezing")
@@ -188,13 +190,18 @@ def _materialize_values(
         or np.issubdtype(raw.dtype, np.bool_)
     ):
         raise TypeError("Raster data must contain numeric real values")
+    if np.issubdtype(raw.dtype, np.integer):
+        valid_integers = np.ones(raw.shape, dtype=bool)
+        if nodata is not None:
+            valid_integers &= raw != nodata
+        _validate_integer_precision(raw[valid_integers])
     values = np.array(raw, copy=True)
     floating = np.issubdtype(values.dtype, np.floating)
     if nodata is not None and np.issubdtype(values.dtype, np.integer):
         integer_info = np.iinfo(values.dtype)
         representable = (
-            nodata.is_integer() and integer_info.min <= nodata <= integer_info.max
-        )
+            isinstance(nodata, int) or float(nodata).is_integer()
+        ) and integer_info.min <= nodata <= integer_info.max
         if not representable:
             values = _cast_integer_values(values, nodata)
     finite_mask = np.isfinite(values) if floating else np.ones(values.shape, dtype=bool)
@@ -227,7 +234,18 @@ def _materialize_values(
     return values, nodata, valid_values
 
 
-def _cast_integer_values(values: np.ndarray, nodata: float) -> np.ndarray:
+def _validate_integer_precision(values: np.ndarray) -> None:
+    """Reject integer samples that Float64 cannot represent consecutively."""
+
+    exact_limit = 2**53
+    if np.any(values < -exact_limit) or np.any(values > exact_limit):
+        raise ValueError(
+            "Integer values exceed GDAL Float64 exact precision; "
+            "rescale or cast intentionally."
+        )
+
+
+def _cast_integer_values(values: np.ndarray, nodata: float | int) -> np.ndarray:
     """Widen integer values before applying an out-of-range nodata value."""
 
     minimum = min(int(np.min(values)), int(nodata))
@@ -257,7 +275,8 @@ def prepare_raster(
     Singleton dimensions are squeezed in a derived DataArray, leaving the
     caller's object unchanged.  Coordinates must be regular to
     ``rtol=1e-9`` and ``atol=1e-12``; geotransform origins refer to pixel
-    corners while coordinate values refer to pixel centers.
+    corners while coordinate values refer to pixel centers. Integer samples
+    must be within Float64's exact consecutive-integer range for GDAL.
     """
 
     if not isinstance(data, xr.DataArray):

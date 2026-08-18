@@ -34,6 +34,8 @@ def isobands(
     ``min_value`` and ``max_value`` are necessarily equal.
     Interval requests are limited to 100,000 interior
     thresholds; use a larger interval for wider value ranges.
+    Integer samples must be within Float64's exact consecutive-integer range
+    because GDAL contours using Float64 values.
     """
 
     _validate_band_definition(levels, interval)

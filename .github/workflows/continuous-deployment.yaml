@@ -41,6 +41,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
@@ -87,6 +88,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
@@ -139,6 +141,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
@@ -155,10 +158,81 @@ jobs:
       - name: Prune uv cache
         run: uv cache prune --ci
 
+  test-windows:
+    name: Smoke test Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install conda-forge runtime dependencies
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+            geopandas
+            numpy
+            pyproj
+            shapely
+            xarray
+          channels: conda-forge
+          init-shell: bash
+
+      - name: Build and install wheel
+        shell: bash -el {0}
+        run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
+          uv build --wheel --out-dir dist
+          uv pip install --python "${python_executable}" --reinstall --no-deps dist/*.whl
+
+      - name: Import and contour from installed wheel
+        shell: bash -el {0}
+        run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
+          "${python_executable}" - <<'PY'
+          import isobands
+          import numpy as np
+          import xarray as xr
+          from osgeo import gdal
+
+          assert gdal.VersionInfo("RELEASE_NAME") == "3.12.2"
+          data = xr.DataArray(
+              [[0.0, 1.0], [2.0, 3.0]],
+              dims=("lat", "lon"),
+              coords={"lon": [0.0, 1.0], "lat": [1.0, 0.0]},
+          )
+          result = isobands.isobands(data, levels=[1.5], crs="EPSG:4326")
+          assert len(result) == 2
+          assert result.geometry.is_valid.all()
+          PY
+
   build:
     name: Build release candidate
     runs-on: ubuntu-latest
-    needs: [check, test-python, test-macos]
+    needs: [check, test-python, test-macos, test-windows]
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -177,6 +251,44 @@ jobs:
       - id: build
         name: Build releases
         run: make build
+
+      - name: Verify artifact versions match tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          EXPECTED_VERSION: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import tarfile
+          import zipfile
+          from email.parser import BytesParser
+          from pathlib import Path
+
+          expected = os.environ["EXPECTED_VERSION"]
+          artifacts = list(Path("dist").glob("*.whl")) + list(Path("dist").glob("*.tar.gz"))
+          if len(artifacts) != 2:
+              raise SystemExit(f"Expected one wheel and one sdist, found: {artifacts}")
+          for artifact in artifacts:
+              if artifact.suffix == ".whl":
+                  with zipfile.ZipFile(artifact) as archive:
+                      metadata_name = next(
+                          name for name in archive.namelist() if name.endswith(".dist-info/METADATA")
+                      )
+                      metadata = archive.read(metadata_name)
+              else:
+                  with tarfile.open(artifact) as archive:
+                      metadata_member = next(
+                          member for member in archive.getmembers() if member.name.endswith("/PKG-INFO")
+                      )
+                      extracted = archive.extractfile(metadata_member)
+                      assert extracted is not None
+                      metadata = extracted.read()
+              version = BytesParser().parsebytes(metadata)["Version"]
+              if version != expected:
+                  raise SystemExit(
+                      f"{artifact} metadata version {version!r} does not match tag {expected!r}."
+                  )
+          PY
 
       - name: Prune uv cache
         run: uv cache prune --ci
@@ -209,3 +321,74 @@ jobs:
       - id: publish
         name: Publish release
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  postpublish-smoke:
+    name: PyPI smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: [release]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+
+      - name: Install matching conda-forge runtime dependencies
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+            geopandas
+            numpy
+            pyproj
+            shapely
+            xarray
+          channels: conda-forge
+          init-shell: bash
+
+      - name: Retry clean PyPI install and smoke test
+        shell: bash -el {0}
+        env:
+          ISOBANDS_VERSION: ${{ github.ref_name }}
+        run: |
+          if [ "${RUNNER_OS}" = "Windows" ]; then
+            python_executable="${CONDA_PREFIX}/python.exe"
+          else
+            python_executable="${CONDA_PREFIX}/bin/python"
+          fi
+          test -x "${python_executable}"
+          printf 'Using interpreter: %s\n' "${python_executable}"
+          "${python_executable}" --version
+          installed=0
+          for attempt in 1 2 3 4 5; do
+            if uv pip install --python "${python_executable}" --reinstall --no-deps "isobands==${ISOBANDS_VERSION}"; then
+              installed=1
+              break
+            fi
+            sleep "$((attempt * 5))"
+          done
+          test "$installed" = 1
+          "${python_executable}" - <<'PY'
+          import importlib.metadata
+          import isobands
+          import os
+          import xarray as xr
+          from osgeo import gdal
+
+          assert importlib.metadata.version("isobands") == os.environ["ISOBANDS_VERSION"]
+          assert gdal.VersionInfo("RELEASE_NAME") == "3.12.2"
+          data = xr.DataArray(
+              [[0.0, 1.0], [2.0, 3.0]],
+              dims=("lat", "lon"),
+              coords={"lon": [0.0, 1.0], "lat": [1.0, 0.0]},
+          )
+          result = isobands.isobands(data, levels=[1.5], crs="EPSG:4326")
+          assert len(result) == 2
+          assert result.geometry.is_valid.all()
+          PY

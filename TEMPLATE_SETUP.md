@@ -1,8 +1,8 @@
-# Alpha setup checklist
+# Stable setup checklist
 
 This checklist records the repository setup completed for the `isobands`
-alpha. Items that require maintainer or remote-service configuration remain
-explicitly deferred.
+release candidate. Items that require maintainer or remote-service
+configuration remain explicitly deferred.
 
 ## Package
 
@@ -31,10 +31,19 @@ explicitly deferred.
 
 ## Release
 
-- [x] Document the alpha release plumbing and Trusted Publishing workflow.
-- [ ] Register the PyPI environment and publisher for Trusted Publishing
-      (deferred; remote configuration is not complete).
-- [x] Review the release checklist and move alpha changes into the
-      `0.1.0a1` dated release section.
-- [ ] Create and publish the first release (deferred; requires explicit
-      maintainer approval).
+- [x] Document the release plumbing and Trusted Publishing workflow.
+- [x] Publish the alpha package through PyPI Trusted Publishing.
+- [x] Register and verify the PyPI environment and Trusted Publisher.
+- [x] Review the release checklist and prepare the planned `0.1.0` section
+      before the RC.
+- [ ] Create and publish the stable release (requires explicit maintainer
+      approval).
+
+## Remaining remote setup
+
+- [ ] Verify and protect the production `docs-production` environment.
+- [ ] Configure the AWS OIDC role, bucket, Cloudflare route, and
+      `DOCS_DEPLOY_ENABLED=true`; these remain incomplete until a maintainer
+      verifies the hosted deployment.
+- [ ] Configure required checks and review rules, including main-branch
+      protection (incomplete; requires repository access).

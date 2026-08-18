@@ -1,48 +1,39 @@
 # isobands
 
-In seconds, `isobands` turns a two-dimensional
-[xarray](https://xarray.dev/) raster into filled contour polygons, using GDAL's
-in-memory raster and vector datasets.
-It is useful when a few lines of Python should turn gridded values into
-analysis-ready [GeoPandas](https://geopandas.org/) geometry—without writing
-intermediate files.
+An easy wasy to make filled contour maps with Python.
 
-> **Alpha:** the public API is small and may change before a stable release.
+`isobands` converts a regular two-dimensional
+[xarray](https://xarray.dev/) raster into filled contour polygons backed by a
+[GeoPandas](https://geopandas.org/) `GeoDataFrame`. It uses GDAL's in-memory
+raster and vector drivers, so a normal call does not create intermediate files.
 
 ## Install
 
-`isobands` requires **GDAL 3.12.2**, including the matching system development
-headers. PyPI's `GDAL` distribution is source-only: it compiles against the
-system library, so `pip` alone cannot install the system GDAL prerequisite.
-
-Install GDAL 3.12.2 with your Unix or macOS package manager (or build that
-version), then verify the development installation:
-
-```sh
-gdal-config --version  # must print 3.12.2
-```
-
-On Windows, [conda-forge](https://conda-forge.org/) is recommended:
+GDAL **3.12.2** and its matching development headers are required. The PyPI
+`GDAL` distribution is source-only; `pip` cannot install the system library for
+you. On Linux, install the exact GDAL 3.12.2 runtime and development packages
+from your distribution or build them from source. On macOS, Homebrew users
+should install matching `gdal` headers and libraries. Windows users should use
+a conda-forge environment:
 
 ```sh
 conda install -c conda-forge gdal=3.12.2
 ```
 
-After the matching GDAL installation is available:
+On Linux and macOS, verify the development installation before installing
+`isobands`:
 
 ```sh
+gdal-config --version  # must print 3.12.2
 pip install isobands
 ```
 
-Contributors can install all locked development and documentation dependencies
-with `make install`; this also checks `gdal-config`.
+See the [installation guide](docs/installation.md) for platform-specific
+details and compiler troubleshooting.
 
 ## Quick start
 
-This complete example uses only an in-memory array:
-
 ```python
-import geopandas as gpd
 import numpy as np
 import xarray as xr
 
@@ -53,37 +44,47 @@ data = xr.DataArray(
     dims=("y", "x"),
     coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
 )
-bands: gpd.GeoDataFrame = isobands(data, levels=[1.5, 2.5], crs="EPSG:4326")
+bands = isobands(data, levels=[1.5, 2.5], crs="EPSG:4326")
 print(bands[["min_value", "max_value", "geometry"]])
 ```
 
-The result has `min_value`, `max_value`, and `geometry` columns. Use
-`levels=[...]` for explicit interior thresholds or `interval=...` for
-thresholds at integral multiples of an interval. Exactly one is required;
-interval mode is limited to 100,000 interior thresholds.
+The result always has the stable `min_value`, `max_value`, and `geometry`
+columns and a GeoPandas CRS. Exactly one of `levels` or `interval` is required.
+Use `levels` for strictly increasing interior thresholds, or `interval` for
+integral thresholds. Values equal to a threshold belong to the upper band.
 
-Disconnected or nodata-separated regions can produce multiple rows with the
-same value bounds. Use ordinary GeoPandas operations if a dissolved band is
-needed.
+## Stable compatibility promise
 
-## Behavior and limits
+The `0.1.x` API is the single `isobands()` function and its documented
+`min_value`/`max_value`/`geometry` output. Compatible `0.1.x` releases keep
+those names and meanings. This promise does not expand the documented grid,
+numeric, dependency, or platform support.
 
-- Input is a numeric `xarray.DataArray` with exactly two nonsingleton
-  dimensions; singleton dimensions may be squeezed.
-- Spatial coordinates must be regular, one-dimensional rectilinear axes.
-  CF metadata is preferred when discovering x/y axes. Ascending and descending
-  axes work; curvilinear, irregular, ambiguous, and missing axes fail clearly.
-- Explicit `crs` wins over registered rioxarray metadata, then recognized
-  CF/grid-mapping/spatial-reference metadata. Coordinate names never imply a
-  CRS.
-- Explicit finite `nodata` wins over `_FillValue`/`missing_value`; otherwise
-  nonfinite floating cells are nodata. An all-nodata raster is invalid.
-- Explicit levels outside the data range are ignored and outer bands use the
-  finite valid extrema. Values equal to a threshold belong to the upper band.
-  Constant rasters produce one full-coverage band with equal labels.
-- Holes, multipart geometry, CRS, and Dask-backed input (materialized eagerly)
-  are preserved.
+Regular one-dimensional rectilinear coordinates are required, and coordinate
+names do not imply a CRS. Pass `crs=` explicitly when metadata is absent or
+ambiguous. Explicit finite `nodata` takes precedence over `_FillValue` and
+`missing_value`; otherwise nonfinite cells are excluded. Dask-backed arrays
+are materialized eagerly for GDAL's in-memory dataset. See the
+[full usage and semantics](docs/usage.md), [limitations](docs/limitations.md),
+and [API reference](docs/api.md).
 
-See the [Sphinx documentation source](docs/index.md) for installation details,
-full API semantics, and limitations. Contributor instructions are in
-[CONTRIBUTING.md](CONTRIBUTING.md).
+## Real-world example
+
+The runnable [NOAA/NCEP example](examples/air_temperature.py) uses the pinned
+fixture in `examples/data/`, calls `isobands` with Kelvin levels and
+`EPSG:4326`, checks the schema, CRS, and geometry validity, and dissolves
+components with GeoPandas:
+
+```sh
+python examples/air_temperature.py
+```
+
+## Documentation and development
+
+The hosted documentation is intended for
+[palewi.re/docs/isobands/](https://palewi.re/docs/isobands/). The source is in
+[`docs/`](docs/), including installation, semantics, neighboring tools, the
+real-world example, benchmark methodology, and deployment notes.
+
+Contributors should read [`CONTRIBUTING.md`](CONTRIBUTING.md). Run
+`make docs-check` and `make linkcheck` for documentation changes.
