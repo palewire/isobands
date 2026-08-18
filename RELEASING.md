@@ -22,6 +22,9 @@ Git tags through `setuptools-scm`; do not edit a version file.
       benchmark smoke/reference result.
 - [ ] Confirm the release workflow published the expected package to PyPI.
 - [ ] Confirm the documentation workflow deployed the matching Sphinx site.
+- [ ] After PyPI and release checks pass, create and publish the matching GitHub
+      Release at the exact tag. Use concise or generated release notes, then
+      confirm it is public, not a draft or prerelease, and links to that tag.
 
 ## Documentation Deployment
 
@@ -44,7 +47,7 @@ deployments, or package publications without explicit human approval.
 ## PyPI Trusted Publishing
 
 The tag-triggered release job publishes with GitHub's OpenID Connect token. It
-does not use a long-lived PyPI API token.
+does not use a long-lived PyPI API token and does not create a GitHub Release.
 
 The alpha publication verified this setup. For a release:
 
@@ -53,3 +56,7 @@ The alpha publication verified this setup. For a release:
    maintainer review.
 3. Publish through the existing Trusted Publisher; do not add a long-lived
    PyPI API token.
+4. After confirming PyPI and release checks pass, create and publish the
+   matching GitHub Release at the exact tag. Add concise notes or use generated
+   notes, then verify the release is public, neither draft nor prerelease, and
+   links to the intended tag.
