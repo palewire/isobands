@@ -11,6 +11,7 @@ import numpy as np
 import pytest
 import xarray as xr
 from geopandas.testing import assert_geodataframe_equal
+from shapely import from_wkb
 from shapely.geometry import Point
 from shapely.ops import unary_union
 
@@ -64,7 +65,36 @@ def _cli_fixed_level_baseline(
     ]
     completed = run(command, capture_output=True, text=True, check=False)  # noqa: S603
     assert completed.returncode == 0, completed.stderr
-    return gpd.read_file(output_path)
+    return _read_cli_output(output_path, raster)
+
+
+def _read_cli_output(path: Path, raster: RasterSpec) -> gpd.GeoDataFrame:
+    """Read CLI GeoJSON with the same GDAL bindings used by the API."""
+
+    gdal, ogr = _import_gdal()
+    with (
+        gdal.ExceptionMgr(useExceptions=True),
+        ogr.ExceptionMgr(useExceptions=True),
+    ):
+        dataset = gdal.OpenEx(str(path), gdal.OF_VECTOR)
+        assert dataset is not None
+        layer = dataset.GetLayer()
+        assert layer is not None
+        records = [
+            (
+                np.int32(feature.GetFieldAsInteger(0)),
+                float(feature.GetFieldAsDouble(1)),
+                float(feature.GetFieldAsDouble(2)),
+                from_wkb(bytes(feature.GetGeometryRef().ExportToWkb())),
+            )
+            for feature in layer
+        ]
+    return gpd.GeoDataFrame(
+        records,
+        columns=["ID", "floor", "ceil", "geometry"],
+        geometry="geometry",
+        crs=raster.crs,
+    )
 
 
 def _write_raster(path: Path, raster: RasterSpec) -> None:
