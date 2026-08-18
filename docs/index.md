@@ -64,6 +64,9 @@ temperature = xr.open_dataarray("west-coast-daily-highs.nc")
 bands = isobands(temperature, interval=5, crs="EPSG:4326")
 ```
 
+Set `offset` when equal-width bands need a nonzero alignment. For example,
+`interval=5, offset=2.5` creates thresholds at 2.5, 7.5, 12.5, and so on.
+
 For this field, the returned GeoDataFrame begins like this:
 
 | min_value | max_value | geometry |

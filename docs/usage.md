@@ -35,9 +35,11 @@ Exactly one of ``levels`` or ``interval`` is required.
   The first band starts at the valid minimum and the last ends at the valid
   maximum.
 * ``interval`` is a positive finite number. Interior thresholds are integral
-  multiples of the interval that fall strictly inside the valid range.
-  Requests producing more than 100,000 interior thresholds fail before
-  allocation.
+  multiples of the interval that fall strictly inside the valid range. Use
+  ``offset`` to align them to a nonzero origin: ``interval=5, offset=2.5``
+  produces thresholds of the form ``2.5 + k * 5``. ``offset`` must be finite
+  and is only available with ``interval``. Requests producing more than
+  100,000 interior thresholds fail before allocation.
 * A value exactly equal to a threshold belongs to the upper band. This is a
   lower-inclusive, upper-exclusive convention for interior boundaries.
 * A constant valid raster produces one full-coverage band with equal
