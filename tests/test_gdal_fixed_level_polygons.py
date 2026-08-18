@@ -108,7 +108,6 @@ def _write_raster(path: Path, raster: RasterSpec) -> None:
         dataset = driver.Create(str(path), width, height, 1, gdal.GDT_Float64)
         assert dataset is not None
         dataset.SetGeoTransform(raster.geotransform)
-        dataset.SetProjection(raster.crs.to_wkt())
         band = dataset.GetRasterBand(1)
         assert band is not None
         values = np.ascontiguousarray(raster.values, dtype=np.float64)
