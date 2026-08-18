@@ -25,7 +25,7 @@ $ pip install "isobands[gdal313]"
 
 The tested exact baselines are GDAL 3.10.2, 3.11.5, 3.12.2, and 3.13.2. GDAL
 3.10.2 and 3.11.5 remain advanced compatibility choices through the `gdal310`
-and `gdal311` extras. GDAL 3.13.3 is not tested or supported.
+and `gdal311` extras.
 ## Quick start
 
 Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
