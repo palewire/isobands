@@ -6,9 +6,10 @@ and keep pull requests focused. Document user-facing behavior changes in
 
 ## Required GDAL installation
 
-Development uses GDAL **3.12.2**, including matching system development
-headers. The PyPI GDAL package is source-only and compiles against the system
-library; pip alone is not enough.
+Development supports the exact GDAL **3.10.2** and **3.12.2** baselines.
+Install matching system development headers and bindings. The PyPI GDAL package
+is source-only and compiles against the system library; do not select bindings
+for a different GDAL release.
 
 Install GDAL 3.12.2 with your Linux/macOS package manager or from source, then
 verify:
@@ -23,26 +24,29 @@ dependency, matching the Windows CI smoke job:
 ```sh
 conda create -n isobands python=3.13
 conda activate isobands
-conda install -c conda-forge gdal=3.12.2
+conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
 ```
 
 ## Development workflow
 
-Install all locked dependency groups:
+For the GDAL 3.10.2 conda-forge baseline, install the test group into the
+active environment:
+
+```sh
+make install-test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
+```
+
+Then run the selected baseline's full test suite:
+
+```sh
+make test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
+```
+
+For the default GDAL 3.12.2 baseline, install all locked dependency groups and
+run the complete local suite:
 
 ```sh
 make install
-```
-
-Run the fast, non-mutating checks:
-
-```sh
-make check
-```
-
-Run the complete local suite, including tests, package build, and strict docs:
-
-```sh
 make verify
 ```
 

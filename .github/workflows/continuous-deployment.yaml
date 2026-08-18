@@ -57,11 +57,26 @@ jobs:
         run: uv cache prune --ci
 
   test-python:
-    name: Test Python code
+    name: Test Python ${{ matrix.python }} / GDAL ${{ matrix.gdal }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.11", "3.12", "3.13", "3.14"]
+        include:
+          - python: "3.11"
+            gdal: "3.12.2"
+            gdal_baseline: 312
+          - python: "3.12"
+            gdal: "3.12.2"
+            gdal_baseline: 312
+          - python: "3.13"
+            gdal: "3.10.2"
+            gdal_baseline: 310
+          - python: "3.13"
+            gdal: "3.12.2"
+            gdal_baseline: 312
+          - python: "3.14"
+            gdal: "3.12.2"
+            gdal_baseline: 312
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -80,14 +95,19 @@ jobs:
           environment-name: gdal
           create-args: >-
             python=3.13
-            gdal=3.12.2
+            gdal=${{ matrix.gdal }}
+            geopandas
+            numpy
+            pyproj
+            shapely
+            xarray
           init-shell: bash
 
       - name: Configure GDAL build environment
         shell: bash -el {0}
         run: |
           gdal-config --version
-          test "$(gdal-config --version)" = "3.12.2"
+          test "$(gdal-config --version)" = "${{ matrix.gdal }}"
           command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
@@ -100,15 +120,42 @@ jobs:
 
       - id: install-python-dependencies
         name: Install Python dependencies
-        run: make install-test UV_PYTHON=${{ matrix.python }}
+        if: matrix.gdal_baseline == 312
+        run: make install-test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
+
+      - id: install-gdal-310-dependencies
+        name: Install GDAL 3.10 Python dependencies
+        if: matrix.gdal_baseline == 310
+        shell: bash -el {0}
+        run: >-
+          make install-test GDAL_BASELINE=310
+          GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - id: tests
         name: Run tests
-        run: make test UV_PYTHON=${{ matrix.python }}
+        if: matrix.gdal_baseline == 312
+        run: make test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
 
-      - name: Verify package distribution
-        if: matrix.python == '3.13'
-        run: make package-verify PACKAGE=isobands
+      - id: tests-gdal-310
+        name: Run GDAL 3.10 tests
+        if: matrix.gdal_baseline == 310
+        shell: bash -el {0}
+        run: >-
+          make test GDAL_BASELINE=310
+          GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
+
+      - name: Verify GDAL 3.12 package distribution
+        if: matrix.python == '3.13' && matrix.gdal_baseline == 312
+        run: make package-verify PACKAGE=isobands GDAL_BASELINE=312
+
+      - name: Verify GDAL 3.10 package distribution
+        if: matrix.gdal_baseline == 310
+        shell: bash -el {0}
+        run: >-
+          make package-verify PACKAGE=isobands GDAL_BASELINE=310
+          GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
+          PACKAGE_CHECK_NO_DEPS=1
+          PACKAGE_CHECK_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - name: Prune uv cache
         run: uv cache prune --ci

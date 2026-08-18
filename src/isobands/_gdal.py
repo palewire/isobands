@@ -137,7 +137,7 @@ def _import_gdal() -> tuple[Any, Any]:
     except ImportError as error:
         raise RuntimeError(
             "GDAL Python bindings are required to generate isobands. "
-            "Install the project's GDAL dependency matching the system GDAL."
+            "Install the matching gdal310/gdal312 extra or conda-forge bindings."
         ) from error
     return gdal, ogr
 
@@ -380,11 +380,14 @@ def _create_vector_layer(
     ogr: Any,  # noqa: ANN401
 ) -> tuple[Any, Any]:
     """Create an in-memory output layer with numeric contour-bound fields."""
-
-    driver = gdal.GetDriverByName("MEM")
-    if driver is None:
-        raise RuntimeError("GDAL's in-memory MEM driver is unavailable.")
-    dataset = driver.Create("", 0, 0, 0, gdal.GDT_Unknown)
+    mem_driver = gdal.GetDriverByName("MEM")
+    if mem_driver is not None and mem_driver.GetMetadataItem("DCAP_VECTOR") == "YES":
+        dataset = mem_driver.Create("", 0, 0, 0, gdal.GDT_Unknown)
+    else:
+        memory_driver = ogr.GetDriverByName("Memory")
+        if memory_driver is None:
+            raise RuntimeError("GDAL's in-memory Memory vector driver is unavailable.")
+        dataset = memory_driver.CreateDataSource("")
     if dataset is None:
         raise RuntimeError("GDAL could not create an in-memory vector dataset.")
     layer = dataset.CreateLayer("isobands", geom_type=ogr.wkbMultiPolygon)

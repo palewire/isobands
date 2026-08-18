@@ -2,11 +2,12 @@
 
 UV ?= uv
 UV_PYTHON ?=
+GDAL_PYTHON ?=
 PACKAGE ?=
 COVERAGE_FAIL_UNDER ?= 80
 TEST_WORKERS ?= 0
 GDAL_CONFIG ?= gdal-config
-GDAL_VERSION ?= 3.12.2
+GDAL_BASELINE ?= 312
 PACKAGE_CHECK_DIR ?= .package-check
 PACKAGE_CHECK_PYTHON ?=
 PACKAGE_CHECK_NO_DEPS ?= 0
@@ -14,9 +15,26 @@ BENCHMARK_REPEATS ?=
 BENCHMARK_WARMUPS ?= 1
 BENCHMARK_GRID ?= 500x1000
 BENCHMARK_RESULTS_DIR ?= benchmarks/results
-UV_ENV = UV_NO_ENV_FILE=1 GDAL_CONFIG="$(GDAL_CONFIG)"
+GDAL_CONFIG_PATH = $(shell command -v "$(GDAL_CONFIG)" 2>/dev/null)
+UV_ENV = UV_NO_ENV_FILE=1 GDAL_CONFIG="$(GDAL_CONFIG_PATH)" PATH="$(dir $(GDAL_CONFIG_PATH)):$$PATH"
+ifeq ($(strip $(GDAL_PYTHON)),)
 RUN = $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run --no-sync
+INSTALL_TEST = $(UV_ENV) $(UV) sync --group test --extra "$(GDAL_EXTRA)" --locked $(if $(UV_PYTHON),--python $(UV_PYTHON))
+else
+RUN = $(UV_ENV) "$(GDAL_PYTHON)" -m
+INSTALL_TEST = $(UV_ENV) $(UV) pip install --python "$(GDAL_PYTHON)" --group test -e .
+endif
 BENCHMARK_RUN = PYTHONPATH="$(CURDIR)/src" $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run --group benchmark --no-sync
+
+ifeq ($(GDAL_BASELINE),310)
+GDAL_VERSION := 3.10.2
+GDAL_EXTRA := gdal310
+else ifeq ($(GDAL_BASELINE),312)
+GDAL_VERSION := 3.12.2
+GDAL_EXTRA := gdal312
+else
+$(error GDAL_BASELINE must be 310 or 312)
+endif
 
 .PHONY: all help gdal-check install install-all install-dev install-test install-docs install-benchmarks benchmark-smoke benchmark check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
 
@@ -25,24 +43,24 @@ help: ## Show available commands
 
 install: install-all ## Install all development dependencies
 
-gdal-check: ## Verify the required GDAL 3.12.2 system development installation
+gdal-check: ## Verify the configured GDAL system development installation
 	@command -v "$(GDAL_CONFIG)" >/dev/null || { echo "Install GDAL $(GDAL_VERSION) and set GDAL_CONFIG to its gdal-config executable."; exit 2; }
 	@test "$$($(GDAL_CONFIG) --version)" = "$(GDAL_VERSION)" || { echo "GDAL $(GDAL_VERSION) is required; found $$($(GDAL_CONFIG) --version)."; exit 2; }
 
 install-all: gdal-check ## Install every optional dependency group
-	$(UV_ENV) $(UV) sync --all-groups --locked
+	$(UV_ENV) $(UV) sync --all-groups --extra "$(GDAL_EXTRA)" --locked
 
 install-dev: gdal-check ## Install dependencies for static checks
-	$(UV_ENV) $(UV) sync --group dev --locked
+	$(UV_ENV) $(UV) sync --group dev --extra "$(GDAL_EXTRA)" --locked
 
 install-test: gdal-check ## Install dependencies for tests
-	$(UV_ENV) $(UV) sync --group test --locked $(if $(UV_PYTHON),--python $(UV_PYTHON))
+	$(INSTALL_TEST)
 
 install-docs: gdal-check ## Install dependencies for documentation
-	$(UV_ENV) $(UV) sync --group docs --locked
+	$(UV_ENV) $(UV) sync --group docs --extra "$(GDAL_EXTRA)" --locked
 
 install-benchmarks: gdal-check ## Install benchmark dependencies
-	$(UV_ENV) $(UV) sync --group benchmark --locked
+	$(UV_ENV) $(UV) sync --group benchmark --extra "$(GDAL_EXTRA)" --locked
 
 all: verify ## Run the complete verification suite
 
@@ -103,7 +121,7 @@ package-check: gdal-check ## Build, install, and import PACKAGE in an isolated e
 		"$(PACKAGE_CHECK_PYTHON)" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
 	else \
 		$(UV_ENV) $(UV) build --wheel --out-dir "$(PACKAGE_CHECK_DIR)/dist"; \
-		UV_PROJECT_ENVIRONMENT="$(PACKAGE_CHECK_DIR)/venv" $(UV_ENV) $(UV) sync --locked --no-default-groups --no-editable; \
+		UV_PROJECT_ENVIRONMENT="$(PACKAGE_CHECK_DIR)/venv" $(UV_ENV) $(UV) sync --extra "$(GDAL_EXTRA)" --locked --no-default-groups --no-editable; \
 		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_DIR)/venv/bin/python" --reinstall --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
 		"$(PACKAGE_CHECK_DIR)/venv/bin/python" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
 	fi; \

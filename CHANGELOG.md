@@ -10,6 +10,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Support exact GDAL 3.10.2 and 3.12.2 baselines with explicit binding
+  selection, and cover both baselines in CI.
+
 ### Fixed
 
 ### Removed

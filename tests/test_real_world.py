@@ -69,9 +69,16 @@ def _direct_gdal_bands(
     band.WriteArray(values)
     if nodata is not None:
         band.SetNoDataValue(nodata)
-    vector = gdal.GetDriverByName("MEM").Create("", 0, 0, 0, gdal.GDT_Unknown)
+    mem_driver = gdal.GetDriverByName("MEM")
+    if mem_driver is not None and mem_driver.GetMetadataItem("DCAP_VECTOR") == "YES":
+        vector = mem_driver.Create("", 0, 0, 0, gdal.GDT_Unknown)
+    else:
+        memory_driver = ogr.GetDriverByName("Memory")
+        if memory_driver is None:
+            raise RuntimeError("GDAL Memory vector driver is unavailable")
+        vector = memory_driver.CreateDataSource("")
     if vector is None:
-        raise RuntimeError("GDAL MEM vector driver is unavailable")
+        raise RuntimeError("GDAL could not create an in-memory baseline vector dataset")
     layer = vector.CreateLayer("bands", geom_type=ogr.wkbMultiPolygon)
     if layer is None:
         raise RuntimeError("GDAL could not create baseline contour layer")
