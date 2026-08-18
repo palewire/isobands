@@ -2,4 +2,13 @@
 
 ## Reporting a Vulnerability
 
-If you have found a vulnerability in this project, please contact the project's maintainers via the email addresses on their GitHub profiles.
+Please do not open a public issue for a suspected vulnerability. Send a
+private report to the maintainer at **b@palewi.re** with:
+
+* a concise description and affected versions;
+* reproduction steps or a minimal proof of concept; and
+* the potential impact and any suggested mitigation.
+
+The maintainer will acknowledge the report, investigate privately, and
+coordinate a fix and disclosure timeline with the reporter. Do not include
+secrets or personal data in the report.

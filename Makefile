@@ -5,26 +5,36 @@ UV_PYTHON ?=
 PACKAGE ?=
 COVERAGE_FAIL_UNDER ?= 80
 TEST_WORKERS ?= 0
-RUN = $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run
+GDAL_CONFIG ?= gdal-config
+GDAL_VERSION ?= 3.12.2
+PACKAGE_CHECK_DIR ?= .package-check
+PACKAGE_CHECK_PYTHON ?=
+PACKAGE_CHECK_NO_DEPS ?= 0
+UV_ENV = UV_NO_ENV_FILE=1 GDAL_CONFIG="$(GDAL_CONFIG)"
+RUN = $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run --no-sync
 
-.PHONY: all help install install-all install-dev install-test install-docs check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
+.PHONY: all help gdal-check install install-all install-dev install-test install-docs check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
 
 help: ## Show available commands
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "%-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 install: install-all ## Install all development dependencies
 
-install-all: ## Install every optional dependency group
-	$(UV) sync --all-groups --locked
+gdal-check: ## Verify the required GDAL 3.12.2 system development installation
+	@command -v "$(GDAL_CONFIG)" >/dev/null || { echo "Install GDAL $(GDAL_VERSION) and set GDAL_CONFIG to its gdal-config executable."; exit 2; }
+	@test "$$($(GDAL_CONFIG) --version)" = "$(GDAL_VERSION)" || { echo "GDAL $(GDAL_VERSION) is required; found $$($(GDAL_CONFIG) --version)."; exit 2; }
 
-install-dev: ## Install dependencies for static checks
-	$(UV) sync --group dev --locked
+install-all: gdal-check ## Install every optional dependency group
+	$(UV_ENV) $(UV) sync --all-groups --locked
 
-install-test: ## Install dependencies for tests
-	$(UV) sync --group test --locked $(if $(UV_PYTHON),--python $(UV_PYTHON))
+install-dev: gdal-check ## Install dependencies for static checks
+	$(UV_ENV) $(UV) sync --group dev --locked
 
-install-docs: ## Install dependencies for documentation
-	$(UV) sync --group docs --locked
+install-test: gdal-check ## Install dependencies for tests
+	$(UV_ENV) $(UV) sync --group test --locked $(if $(UV_PYTHON),--python $(UV_PYTHON))
+
+install-docs: gdal-check ## Install dependencies for documentation
+	$(UV_ENV) $(UV) sync --group docs --locked
 
 all: verify ## Run the complete verification suite
 
@@ -65,15 +75,25 @@ coverage: ## Enforce coverage for PACKAGE
 	$(RUN) pytest -n $(TEST_WORKERS) --cov="$(PACKAGE)" --cov-branch --cov-report=term-missing:skip-covered --cov-fail-under="$(COVERAGE_FAIL_UNDER)" -sv
 
 build: ## Build source and wheel distributions
-	$(UV) build --sdist --wheel
+	$(UV_ENV) $(UV) build --sdist --wheel
 
-package-check: ## Build, install, and import PACKAGE in an isolated environment
+package-check: gdal-check ## Build, install, and import PACKAGE in an isolated environment
 	@test -n "$(PACKAGE)" || { echo "Set PACKAGE to the library import name."; exit 2; }
-	@temp_dir=$$(mktemp -d); trap 'rm -rf "$$temp_dir"' EXIT; \
-	$(UV) build --wheel --out-dir "$$temp_dir/dist"; \
-	$(UV) venv --no-project "$$temp_dir/venv"; \
-	$(UV) pip install --python "$$temp_dir/venv/bin/python" "$$temp_dir"/dist/*.whl; \
-	cd "$$temp_dir" && "$$temp_dir/venv/bin/python" -c 'import importlib; importlib.import_module("$(PACKAGE)")'
+	@test "$(PACKAGE_CHECK_NO_DEPS)" = 0 -o "$(PACKAGE_CHECK_NO_DEPS)" = 1 || { echo "PACKAGE_CHECK_NO_DEPS must be 0 or 1."; exit 2; }
+	@set -e; rm -rf "$(PACKAGE_CHECK_DIR)"; trap 'rm -rf "$(PACKAGE_CHECK_DIR)"' EXIT; mkdir -p "$(PACKAGE_CHECK_DIR)/dist"; \
+	if test "$(PACKAGE_CHECK_NO_DEPS)" = 1; then \
+		test -n "$(PACKAGE_CHECK_PYTHON)" || { echo "Set PACKAGE_CHECK_PYTHON to an environment with all runtime dependencies when PACKAGE_CHECK_NO_DEPS=1."; exit 2; }; \
+		"$(PACKAGE_CHECK_PYTHON)" -c 'import geopandas, numpy, pyproj, shapely, xarray; from osgeo import gdal; assert gdal.VersionInfo("RELEASE_NAME") == "$(GDAL_VERSION)"'; \
+		$(UV_ENV) $(UV) build --wheel --out-dir "$(PACKAGE_CHECK_DIR)/dist"; \
+		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_PYTHON)" --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
+		"$(PACKAGE_CHECK_PYTHON)" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
+	else \
+		$(UV_ENV) $(UV) build --wheel --out-dir "$(PACKAGE_CHECK_DIR)/dist"; \
+		UV_PROJECT_ENVIRONMENT="$(PACKAGE_CHECK_DIR)/venv" $(UV_ENV) $(UV) sync --locked --no-default-groups --no-editable; \
+		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_DIR)/venv/bin/python" --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
+		"$(PACKAGE_CHECK_DIR)/venv/bin/python" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
+	fi; \
+	rm -rf "$(PACKAGE_CHECK_DIR)"
 
 package-verify: package-check coverage ## Run package import and coverage checks
 

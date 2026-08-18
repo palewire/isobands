@@ -1,28 +1,40 @@
-# Instantiating This Template
+# Alpha setup checklist
 
-Complete this checklist before the first release.
+This checklist records the repository setup completed for the `isobands`
+alpha. Items that require maintainer or remote-service configuration remain
+explicitly deferred.
 
 ## Package
 
-- [ ] Replace placeholder metadata in `pyproject.toml`.
-- [ ] Create `src/<package_name>/` and enable setuptools package discovery.
-- [ ] Set coverage source, ty include path, and the Click entry point if needed.
-- [ ] Add `py.typed` when the package exposes typed public APIs.
+- [x] Replace placeholder metadata in `pyproject.toml`.
+- [x] Create `src/isobands/` and enable setuptools package discovery.
+- [x] Set coverage source and ty include path.
+- [x] Add `py.typed` for the typed public API.
+- [x] Confirm no Click entry point is needed.
 
 ## Documentation
 
-- [ ] Replace the distribution placeholder and production URLs in `docs/conf.py`.
-- [ ] Add an autosummary-based API reference for public modules.
-- [ ] Configure S3 deployment through the protected `docs-production`
-      environment, AWS OIDC variables, and `DOCS_DEPLOY_ENABLED=true`.
+- [x] Replace the distribution placeholder in `docs/conf.py`.
+- [x] Add an autosummary-based API reference for the public function.
+- [x] Document installation, API semantics, CRS, nodata, coordinates,
+      thresholds, limitations, and the in-memory example.
+- [ ] Configure production Sphinx hosting (deferred).
+- [ ] Protect the remote `docs-production` environment and configure its AWS
+      OIDC role and `DOCS_DEPLOY_ENABLED=true` (deferred).
 
-## Continuous Integration
+## Continuous integration and repository settings
 
-- [ ] Set the `PACKAGE_IMPORT_NAME` repository variable to the package import
-      name. This enables wheel-import and coverage checks in CI.
-- [ ] Configure required checks and review rules for the default branch.
+- [x] Enable unconditional wheel installation, import, and coverage verification
+      for `isobands` in CI.
+- [ ] Configure required checks and review rules for the default branch
+      (deferred; requires repository access).
 
 ## Release
 
-- [ ] Review `RELEASING.md` and verify the PyPI publication configuration.
-- [ ] Confirm `CHANGELOG.md` and issue/PR templates match the project workflow.
+- [x] Document the alpha release plumbing and Trusted Publishing workflow.
+- [ ] Register the PyPI environment and publisher for Trusted Publishing
+      (deferred; remote configuration is not complete).
+- [x] Review the release checklist and move alpha changes into the
+      `0.1.0a1` dated release section.
+- [ ] Create and publish the first release (deferred; requires explicit
+      maintainer approval).
