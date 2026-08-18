@@ -10,6 +10,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Support GDAL 3.10.2 through 3.12.x, with CI coverage for the 3.10.2 and
+  3.12.2 baselines.
+
 ### Fixed
 
 ### Removed

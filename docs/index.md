@@ -14,15 +14,16 @@ raster and vector drivers, so a normal call does not create intermediate files.
 
 ## Installation
 
-GDAL **3.12.2** and its matching development headers are required. The PyPI
-`GDAL` distribution is source-only; `pip` cannot install the system library.
+GDAL **3.10.2 through 3.12.x** and matching development headers are supported.
+The PyPI `GDAL` distribution is source-only; `pip` cannot install the system
+library.
 
-**Linux** — install the exact 3.12.2 runtime and development package from your
-distribution's repository or build GDAL 3.12.2 from source:
+**Linux** — install a supported GDAL runtime and development package from your
+distribution's repository or build it from source:
 
 ```console
 $ gdal-config --version
-3.12.2
+3.10.2
 $ pip install isobands
 ```
 
@@ -48,7 +49,7 @@ headers, and libraries are resolved as one compatible set:
 ```console
 conda create -n isobands python=3.13
 conda activate isobands
-conda install -c conda-forge gdal=3.12.2
+conda install -c conda-forge gdal=3.10.2
 pip install isobands
 ```
 

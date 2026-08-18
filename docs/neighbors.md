@@ -5,8 +5,8 @@ Neighboring tools
 filled contour polygons. These neighboring projects solve adjacent problems:
 
 * **GDAL** is the native geospatial engine used by ``isobands``. Its
-  ``ContourGenerateEx`` implementation creates the polygons, and GDAL 3.12.2
-  is an exact runtime prerequisite.
+  ``ContourGenerateEx`` implementation creates the polygons. GDAL 3.10.2
+  through 3.12.x is supported at runtime.
 * **xarray** provides labeled N-dimensional arrays, coordinates, metadata, and
   lazy Dask-backed data. ``isobands`` accepts one two-dimensional
   ``DataArray`` and materializes it before calling GDAL.

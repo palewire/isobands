@@ -25,7 +25,7 @@ help: ## Show available commands
 
 install: install-all ## Install all development dependencies
 
-gdal-check: ## Verify the required GDAL 3.12.2 system development installation
+gdal-check: ## Verify the configured GDAL system development installation
 	@command -v "$(GDAL_CONFIG)" >/dev/null || { echo "Install GDAL $(GDAL_VERSION) and set GDAL_CONFIG to its gdal-config executable."; exit 2; }
 	@test "$$($(GDAL_CONFIG) --version)" = "$(GDAL_VERSION)" || { echo "GDAL $(GDAL_VERSION) is required; found $$($(GDAL_CONFIG) --version)."; exit 2; }
 

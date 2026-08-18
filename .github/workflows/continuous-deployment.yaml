@@ -57,11 +57,21 @@ jobs:
         run: uv cache prune --ci
 
   test-python:
-    name: Test Python code
+    name: Test Python ${{ matrix.python }} / GDAL ${{ matrix.gdal }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.11", "3.12", "3.13", "3.14"]
+        include:
+          - python: "3.11"
+            gdal: "3.12.2"
+          - python: "3.12"
+            gdal: "3.12.2"
+          - python: "3.13"
+            gdal: "3.10.2"
+          - python: "3.13"
+            gdal: "3.12.2"
+          - python: "3.14"
+            gdal: "3.12.2"
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -80,14 +90,14 @@ jobs:
           environment-name: gdal
           create-args: >-
             python=3.13
-            gdal=3.12.2
+            gdal=${{ matrix.gdal }}
           init-shell: bash
 
       - name: Configure GDAL build environment
         shell: bash -el {0}
         run: |
           gdal-config --version
-          test "$(gdal-config --version)" = "3.12.2"
+          test "$(gdal-config --version)" = "${{ matrix.gdal }}"
           command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
@@ -100,14 +110,32 @@ jobs:
 
       - id: install-python-dependencies
         name: Install Python dependencies
+        if: matrix.gdal != '3.10.2'
         run: make install-test UV_PYTHON=${{ matrix.python }}
+
+      - name: Install GDAL 3.10 test dependencies
+        if: matrix.gdal == '3.10.2'
+        shell: bash -el {0}
+        run: >-
+          micromamba install --yes --name gdal --channel conda-forge
+          geopandas numpy pyproj shapely xarray
+          pytest pytest-cov pytest-env pytest-ordering pytest-randomly
+          pytest-rerunfailures pytest-runner pytest-sugar pytest-timeout
+          pytest-vcr pytest-xdist dask freezegun hypothesis
+
+      - id: tests-gdal-310
+        name: Run GDAL 3.10 tests
+        if: matrix.gdal == '3.10.2'
+        shell: bash -el {0}
+        run: PYTHONPATH=src "${CONDA_PREFIX}/bin/python" -m pytest -n 0 -sv
 
       - id: tests
         name: Run tests
+        if: matrix.gdal != '3.10.2'
         run: make test UV_PYTHON=${{ matrix.python }}
 
       - name: Verify package distribution
-        if: matrix.python == '3.13'
+        if: matrix.python == '3.13' && matrix.gdal == '3.12.2'
         run: make package-verify PACKAGE=isobands
 
       - name: Prune uv cache

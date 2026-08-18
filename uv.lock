@@ -1079,7 +1079,7 @@ test = [
 
 [package.metadata]
 requires-dist = [
-    { name = "gdal", specifier = "==3.12.2" },
+    { name = "gdal", specifier = ">=3.10.2,<3.13" },
     { name = "geopandas" },
     { name = "numpy" },
     { name = "pyproj" },

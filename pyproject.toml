@@ -7,7 +7,7 @@ name = "isobands"
 dynamic = ["version"]
 requires-python = ">=3.11"
 dependencies = [
-    "GDAL==3.12.2",
+    "GDAL>=3.10.2,<3.13",
     "geopandas",
     "numpy",
     "pyproj",

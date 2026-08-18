@@ -9,22 +9,22 @@ raster and vector drivers, so a normal call does not create intermediate files.
 
 ## Install
 
-GDAL **3.12.2** and its matching development headers are required. The PyPI
-`GDAL` distribution is source-only; `pip` cannot install the system library for
-you. On Linux, install the exact GDAL 3.12.2 runtime and development packages
-from your distribution or build them from source. On macOS, Homebrew users
-should install matching `gdal` headers and libraries. Windows users should use
-a conda-forge environment:
+GDAL **3.10.2 through 3.12.x** and its matching development headers are
+supported. The PyPI `GDAL` distribution is source-only; `pip` cannot install
+the system library for you. On Linux, install matching GDAL runtime and
+development packages from your distribution or build them from source. On
+macOS, Homebrew users should install matching `gdal` headers and libraries.
+Windows users should use a conda-forge environment:
 
 ```sh
-conda install -c conda-forge gdal=3.12.2
+conda install -c conda-forge gdal=3.10.2
 ```
 
 On Linux and macOS, verify the development installation before installing
 `isobands`:
 
 ```sh
-gdal-config --version  # must print 3.12.2
+gdal-config --version  # must print the installed supported version
 pip install isobands
 ```
 

@@ -6,9 +6,10 @@ and keep pull requests focused. Document user-facing behavior changes in
 
 ## Required GDAL installation
 
-Development uses GDAL **3.12.2**, including matching system development
-headers. The PyPI GDAL package is source-only and compiles against the system
-library; pip alone is not enough.
+Development defaults to GDAL **3.12.2** and also supports the GDAL 3.10.2
+compatibility baseline. Install matching system development headers. The PyPI
+GDAL package is source-only and compiles against the system library; pip alone
+is not enough.
 
 Install GDAL 3.12.2 with your Linux/macOS package manager or from source, then
 verify:
@@ -23,7 +24,7 @@ dependency, matching the Windows CI smoke job:
 ```sh
 conda create -n isobands python=3.13
 conda activate isobands
-conda install -c conda-forge gdal=3.12.2
+conda install -c conda-forge gdal=3.10.2
 ```
 
 ## Development workflow
