@@ -22,6 +22,7 @@ exclude_patterns = [
     "api.md",
     "benchmarks.md",
     "deployment.md",
+    "guide.md",
     "installation.md",
     "limitations.md",
     "neighbors.md",
