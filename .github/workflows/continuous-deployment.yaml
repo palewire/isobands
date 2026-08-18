@@ -74,12 +74,14 @@ jobs:
           - python: "3.13"
             gdal: "3.11.5"
             gdal_baseline: 311
+            pip_extra: true
           - python: "3.13"
             gdal: "3.12.2"
             gdal_baseline: 312
           - python: "3.13"
             gdal: "3.13.2"
             gdal_baseline: 313
+            pip_extra: true
           - python: "3.14"
             gdal: "3.12.2"
             gdal_baseline: 312
@@ -162,6 +164,23 @@ jobs:
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
           PACKAGE_CHECK_NO_DEPS=1
           PACKAGE_CHECK_PYTHON="${CONDA_PREFIX}/bin/python"
+
+      - name: Install compiler for GDAL pip binding
+        if: matrix.pip_extra
+        shell: bash -el {0}
+        run: micromamba install -y -n gdal -c conda-forge compilers
+
+      - name: Build matching GDAL pip binding extra
+        if: matrix.pip_extra
+        run: >-
+          make install-test GDAL_BASELINE=${{ matrix.gdal_baseline }}
+          UV_PYTHON=${{ matrix.python }}
+
+      - name: Verify matching GDAL pip binding extra
+        if: matrix.pip_extra
+        run: >-
+          uv run --no-sync python -c
+          'from osgeo import gdal; assert gdal.VersionInfo("RELEASE_NAME") == "${{ matrix.gdal }}"'
 
       - name: Prune uv cache
         run: uv cache prune --ci

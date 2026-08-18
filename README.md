@@ -17,7 +17,7 @@ pip install isobands
 ```
 
 For a pip-managed binding, install matching native GDAL 3.13.2 development
-files, then use the recommended tested extra:
+files, then use the recommended newest tested and installable extra:
 
 ```sh
 pip install "isobands[gdal313]"

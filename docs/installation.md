@@ -6,8 +6,8 @@ GDAL prerequisite
 
 The supported exact baselines are **GDAL 3.10.2**, **3.11.5**, **3.12.2**, and
 **3.13.2**. Each requires a matching ``osgeo.gdal`` Python binding. GDAL 3.13.2
-is the recommended tested baseline for a pip-managed binding. GDAL 3.13.3 is
-not tested or supported.
+is the recommended newest tested and installable baseline for a pip-managed
+binding. GDAL 3.13.3 is not tested or supported.
 
 If a Conda or system-managed environment already provides one of these
 bindings, install isobands without an extra:
