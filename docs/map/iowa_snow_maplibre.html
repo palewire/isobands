@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iowa snow cover after the Groundhog Day Blizzard</title>
+    <link href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+      body { margin: 0; }
+      #map { height: 100vh; width: 100vw; }
+      .legend {
+        background: rgba(255, 255, 255, 0.92);
+        bottom: 12px;
+        font: 12px/1.35 sans-serif;
+        padding: 10px 12px;
+        position: absolute;
+        right: 12px;
+        z-index: 1;
+      }
+      .legend-title { font-weight: 700; margin-bottom: 6px; }
+      .legend-row { align-items: center; display: flex; gap: 6px; }
+      .legend-swatch { height: 12px; width: 12px; }
+      .legend-swatch.nodata {
+        background: #e6eaec;
+        border: 1px solid #d8dfe2;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="legend" aria-label="Snow cover legend">
+      <div class="legend-title">Snow cover</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #deebf7"></span>0–20%</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #9ecae1"></span>20–50%</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #3182bd"></span>50–80%</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #08519c"></span>80–100%</div>
+      <div class="legend-row"><span class="legend-swatch nodata"></span>Unavailable: no data</div>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
+    <script>
+      const cedarRapidsAirport = [-91.709, 41.884];
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/bright",
+        center: [-93.5, 42.7],
+        zoom: 5.4,
+        interactive: false,
+        attributionControl: false,
+      });
+
+      map.on("load", () => {
+        map.addSource("snow-cover", {
+          type: "geojson",
+          data: "iowa-snow-cover-2011-02-04.geojson",
+        });
+        map.addSource("snow-no-data", {
+          type: "geojson",
+          data: "iowa-snow-no-data-2011-02-04.geojson",
+        });
+        const firstSymbolLayer = map.getStyle().layers.find(
+          (layer) => layer.type === "symbol",
+        );
+        map.addLayer({
+          id: "snow-no-data-background",
+          type: "fill",
+          source: "snow-no-data",
+          paint: {
+            "fill-color": "#dce3e6",
+            "fill-opacity": 0.6,
+          },
+        }, firstSymbolLayer?.id);
+        map.addLayer({
+          id: "snow-cover-bands",
+          type: "fill",
+          source: "snow-cover",
+          paint: {
+            "fill-color": ["get", "color"],
+            "fill-opacity": 0.35,
+          },
+        }, firstSymbolLayer?.id);
+
+        new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 25,
+        })
+          .setLngLat(cedarRapidsAirport)
+          .setHTML("<strong>Cedar Rapids Airport</strong><br>63% snow cover")
+          .addTo(map);
+      });
+    </script>
+  </body>
+</html>

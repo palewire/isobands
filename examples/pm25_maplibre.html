@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New York PM2.5 during Canadian wildfire smoke</title>
+    <link href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+      body { margin: 0; }
+      #map { height: 100vh; width: 100vw; }
+      .legend {
+        background: rgba(255, 255, 255, 0.92);
+        bottom: 12px;
+        font: 12px/1.35 sans-serif;
+        padding: 10px 12px;
+        position: absolute;
+        right: 12px;
+        z-index: 1;
+      }
+      .legend-title { font-weight: 700; margin-bottom: 6px; }
+      .legend-row { align-items: center; display: flex; gap: 6px; }
+      .legend-swatch { height: 12px; width: 12px; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="legend" aria-label="PM2.5 health category legend">
+      <div class="legend-title">Daily mean PM2.5 (μg/m³)</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #00e400"></span>Good</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ffff00"></span>Moderate</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ff7e00"></span>Sensitive groups</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ff0000"></span>Unhealthy</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #8f3f97"></span>Very unhealthy</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #7e0023"></span>Hazardous</div>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
+    <script>
+      const queens = [-73.822, 40.736];
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/bright",
+        center: [-73.85, 40.9],
+        zoom: 4.4,
+        interactive: false,
+        attributionControl: false,
+      });
+      map.on("load", () => {
+        map.addSource("pm25", {
+          type: "geojson",
+          data: "output/nyc-pm25-2023-06-07.geojson",
+        });
+        const firstSymbolLayer = map.getStyle().layers.find(
+          (layer) => layer.type === "symbol",
+        );
+        map.addLayer({
+          id: "pm25-bands",
+          type: "fill",
+          source: "pm25",
+          paint: {
+            "fill-color": ["get", "color"],
+            "fill-opacity": 0.35,
+          },
+        }, firstSymbolLayer?.id);
+
+        new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 25,
+        })
+          .setLngLat(queens)
+          .setHTML("<strong>Queens, New York</strong><br>203.5 μg/m³ daily mean")
+          .addTo(map);
+      });
+    </script>
+  </body>
+</html>

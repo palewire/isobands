@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A MapLibre example that downloads ERA5 daily high temperatures, creates
+  filled isobands, and exports colored GeoJSON for a simple interactive map.
+- A MapLibre example that turns EPA PM2.5 monitor readings into health-category
+  contour bands during New York City's June 2023 wildfire smoke event.
+- A MapLibre example that uses missing cells to preserve unavailable areas in
+  NASA MODIS snow-cover contour bands across Iowa.
+
 ### Changed
 
 - Support exact GDAL 3.10.2 and 3.12.2 baselines with explicit binding

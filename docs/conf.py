@@ -68,6 +68,8 @@ linkcheck_retries = 2
 
 html_theme = "palewire"
 html_baseurl = "https://palewi.re/docs/isobands/"
+html_extra_path = ["map"]
+html_sidebars = {"**": []}
 html_theme_options = {
     "canonical_url": html_baseurl,
 }
