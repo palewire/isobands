@@ -132,6 +132,51 @@ when Canadian wildfire smoke blanketed the region.
 </div>
 ```
 
+## Data-derived breaks
+
+Pass a callable to `levels` when the data distribution should determine the
+breaks. The callable receives a one-dimensional array of valid values and
+returns the interior thresholds.
+
+```python
+import numpy as np
+import xarray as xr
+
+from isobands import isobands
+
+
+def quintiles(values):
+    return np.quantile(values, [0.2, 0.4, 0.6, 0.8])
+
+
+rainfall = xr.open_dataarray("harvey-daily-rainfall.nc")
+bands = isobands(rainfall, levels=quintiles, crs="EPSG:4326")
+```
+
+For this field, the returned GeoDataFrame begins like this:
+
+| min_value | max_value | geometry |
+| ---: | ---: | --- |
+| 0.0 | 0.1 | `MULTIPOLYGON (...)` |
+| 0.1 | 0.9 | `MULTIPOLYGON (...)` |
+| 0.9 | 4.3 | `MULTIPOLYGON (...)` |
+
+The map shows ERA5 daily rainfall across Texas and the surrounding Gulf Coast
+on August 27, 2017, as Hurricane Harvey stalled over the region. Rainfall
+totals are strongly skewed: quintiles make relative variation visible across
+the field, but do not represent externally defined severity categories.
+
+```{raw} html
+<div style="width: 100%; height: 466px;">
+  <iframe
+    src="harvey_rainfall_maplibre.html"
+    title="Hurricane Harvey rainfall quintiles"
+    loading="lazy"
+    style="width: 100%; height: 100%; border: 0; display: block;"
+  ></iframe>
+</div>
+```
+
 ## No-data cells
 
 Use `nodata` to leave unavailable cells out of the contours instead of treating

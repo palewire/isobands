@@ -39,6 +39,21 @@ python -m http.server --directory examples 8000
 Open <http://localhost:8000/pm25_maplibre.html>. The script writes its
 downloaded EPA archive and generated GeoJSON to `examples/output/`.
 
+## Hurricane Harvey rainfall MapLibre contour map
+
+Configure a [Copernicus Climate Data Store API key](https://cds.climate.copernicus.eu/how-to-api),
+then download ERA5 daily rainfall during Hurricane Harvey and create
+quintile-derived contour bands:
+
+```sh
+uv run --with cdsapi --with h5netcdf --with h5py \
+  python examples/harvey_rainfall_maplibre.py
+python -m http.server --directory examples 8000
+```
+
+Open <http://localhost:8000/harvey_rainfall_maplibre.html>. The script writes
+its downloaded NetCDF file and generated GeoJSON to `examples/output/`.
+
 ## Iowa land-surface-temperature MapLibre contour map
 
 Download NASA MODIS land-surface temperatures for Iowa after the August 2020
