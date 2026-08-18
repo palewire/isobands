@@ -34,14 +34,14 @@ Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
 import numpy as np
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 data = xr.DataArray(
     np.array([[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0]]),
     dims=("y", "x"),
     coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
 )
-bands = isobands(data, levels=[1.5, 2.5], crs="EPSG:4326")
+bands = isobands.from_raster(data, levels=[1.5, 2.5], crs="EPSG:4326")
 print(bands[["min_value", "max_value", "geometry"]])
 ```
 
@@ -68,10 +68,10 @@ bands and
 ```python
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 temperature = xr.open_dataarray("west-coast-daily-highs.nc")
-bands = isobands(temperature, interval=5, crs="EPSG:4326")
+bands = isobands.from_raster(temperature, interval=5, crs="EPSG:4326")
 ```
 
 Set `offset` when equal-width bands need a nonzero alignment. For example,
@@ -109,10 +109,10 @@ intervals. This example uses the U.S. EPA's PM2.5 health-category boundaries.
 ```python
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 pm25 = xr.open_dataarray("nyc-smoke-pm25.nc")
-bands = isobands(
+bands = isobands.from_raster(
     pm25,
     levels=[12.0, 35.4, 55.4, 125.4, 225.4],
     crs="EPSG:4326",
@@ -152,7 +152,7 @@ returns the interior thresholds.
 import numpy as np
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 
 def quintiles(values):
@@ -160,7 +160,7 @@ def quintiles(values):
 
 
 rainfall = xr.open_dataarray("harvey-daily-rainfall.nc")
-bands = isobands(rainfall, levels=quintiles, crs="EPSG:4326")
+bands = isobands.from_raster(rainfall, levels=quintiles, crs="EPSG:4326")
 ```
 
 For this field, the returned GeoDataFrame begins like this:
@@ -195,10 +195,10 @@ them as measured values.
 ```python
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 temperature = xr.open_dataarray("iowa-land-surface-temperature.nc")
-bands = isobands(
+bands = isobands.from_raster(
     temperature,
     levels=[20, 25, 30, 35],
     nodata=-9999,
@@ -232,7 +232,7 @@ satellite temperature retrieval, commonly because of clouds or quality flags.
 ## API reference
 
 ```{eval-rst}
-.. autofunction:: isobands.isobands
+.. autofunction:: isobands.from_raster
 ```
 
 ## Links

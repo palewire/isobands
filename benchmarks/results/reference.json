@@ -70,9 +70,9 @@
         "min_seconds": 0.23594741800479824
       }
     },
-    "xarray_to_isobands_to_geodataframe": {
+    "xarray_to_from_raster_to_geodataframe": {
       "stages": {
-        "isobands": {
+        "from_raster": {
           "max_seconds": 0.03275050000229385,
           "mean_seconds": 0.032215708403964524,
           "median_seconds": 0.032069125001726206,

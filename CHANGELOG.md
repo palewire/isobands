@@ -19,6 +19,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Before the first stable release, rename the high-level public function from
+  ``isobands()`` to ``from_raster()``. This deliberate breaking change retains
+  its two-dimensional xarray input, band-definition validation, finite-band
+  behavior, CRS and nodata handling, and
+  ``min_value``/``max_value``/``geometry`` GeoDataFrame schema.
 - Recommend the tested GDAL 3.13.2 pip extra while documenting installation
   with a pre-existing matching GDAL Python binding.
 - Replace the Iowa snow-cover map with a continuous MODIS land-surface-
@@ -28,7 +33,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Removed
 
 - Remove the temporary pre-release native fixed-level compatibility API. The
-  package's public API remains ``isobands()``.
+  package root now exposes only ``from_raster()`` as its runtime public
+  function.
 
 ### Security
 

@@ -16,7 +16,7 @@ import geopandas as gpd
 import numpy as np
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 FIXTURE = Path(__file__).resolve().parent / "data" / "air_temperature_time0.npz"
 LEVELS_KELVIN = (240.0, 260.0, 280.0)
@@ -47,7 +47,7 @@ def main() -> None:
     """Generate, validate, and dissolve the example's filled bands."""
 
     data, metadata = load_fixture()
-    bands = isobands(data, levels=LEVELS_KELVIN, crs="EPSG:4326")
+    bands = isobands.from_raster(data, levels=LEVELS_KELVIN, crs="EPSG:4326")
     expected_columns = {"min_value", "max_value", "geometry"}
     if set(bands.columns) != expected_columns:
         raise RuntimeError(f"Unexpected output schema: {list(bands.columns)!r}")

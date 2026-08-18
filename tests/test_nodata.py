@@ -10,7 +10,7 @@ import xarray as xr
 from shapely.geometry import Point, box
 from shapely.ops import unary_union
 
-from isobands import isobands
+from isobands import from_raster
 from isobands._gdal import (
     _condition_contour_input,
     _iter_component_windows,
@@ -49,7 +49,7 @@ def test_nodata_cell_remains_an_uncovered_hole() -> None:
         coords={"x": range(5), "y": range(4, -1, -1)},
     )
 
-    result = isobands(data, levels=[0.5], crs="EPSG:4326", nodata=-999.0)
+    result = from_raster(data, levels=[0.5], crs="EPSG:4326", nodata=-999.0)
     covered = unary_union(result.geometry)
 
     assert not covered.covers(Point(2.0, 2.0))
@@ -68,7 +68,7 @@ def test_nan_cells_are_normalized_to_gdal_nodata() -> None:
         coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
     )
 
-    result = isobands(data, levels=[2.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[2.0], crs="EPSG:4326")
 
     assert not unary_union(result.geometry).covers(Point(1.0, 1.0))
 
@@ -84,7 +84,7 @@ def test_seeded_nan_raster_returns_valid_unionable_geometries() -> None:
         coords={"x": range(3), "y": range(2, -1, -1)},
     )
 
-    result = isobands(data, levels=[0.25, 0.5, 0.75], crs="EPSG:4326")
+    result = from_raster(data, levels=[0.25, 0.5, 0.75], crs="EPSG:4326")
     combined = unary_union(result.geometry)
 
     assert all(geometry.is_valid for geometry in result.geometry)
@@ -103,7 +103,7 @@ def test_zero_nodata_with_float_extremes_stays_finite_and_valid() -> None:
     )
     thresholds = [-limit * 0.5, 0.0, limit * 0.5]
 
-    result = isobands(
+    result = from_raster(
         data,
         levels=thresholds,
         crs="EPSG:4326",
@@ -137,7 +137,7 @@ def test_large_nodata_with_subnormal_values_is_warning_free() -> None:
 
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        result = isobands(
+        result = from_raster(
             data,
             levels=[2 * unit],
             crs="EPSG:4326",
@@ -163,7 +163,7 @@ def test_antidiagonal_nodata_components_remain_valid_and_covered() -> None:
         coords={"x": range(3), "y": range(2, -1, -1)},
     )
 
-    result = isobands(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
 
     assert set(map(tuple, result[["min_value", "max_value"]].to_numpy())) == {
         (-0.8897067453338636, -0.5),
@@ -194,7 +194,7 @@ def test_adjacent_and_multiple_nodata_masks_preserve_valid_domain(
         coords={"x": range(4), "y": range(3, -1, -1)},
     )
 
-    result = isobands(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
 
     _assert_valid_domain_coverage(result, values)
 
@@ -211,7 +211,7 @@ def test_constant_nodata_separated_components_all_receive_global_labels() -> Non
         coords={"x": range(3), "y": range(2, -1, -1)},
     )
 
-    result = isobands(data, levels=[1.0, 9.0], crs="EPSG:4326")
+    result = from_raster(data, levels=[1.0, 9.0], crs="EPSG:4326")
 
     assert result[["min_value", "max_value"]].values.tolist() == [[5.0, 5.0]] * 4
     _assert_valid_domain_coverage(result, values)
@@ -270,7 +270,7 @@ def test_gdal_outside_interior_ring_is_promoted_without_losing_coverage() -> Non
         coords={"x": range(3), "y": range(2, -1, -1)},
     )
 
-    result = isobands(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
 
     assert set(map(tuple, result[["min_value", "max_value"]].to_numpy())) == {
         (-0.66476523, -0.5),
@@ -318,7 +318,7 @@ def test_legitimate_nodata_hole_remains_a_hole() -> None:
         coords={"x": range(5), "y": range(4, -1, -1)},
     )
 
-    result = isobands(data, levels=[0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[0.5], crs="EPSG:4326")
     interiors = [
         interior
         for geometry in result.geometry
@@ -350,7 +350,7 @@ def test_deferred_promotions_do_not_duplicate_other_gdal_bands() -> None:
         coords={"x": range(4), "y": range(3, -1, -1)},
     )
 
-    result = isobands(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
 
     assert set(map(tuple, result[["min_value", "max_value"]].to_numpy())) == {
         (-1.70274505, -0.5),
@@ -415,7 +415,7 @@ def test_isolated_constant_components_use_lower_inclusive_global_bands(
         coords={"x": range(5), "y": range(4, -1, -1)},
     )
 
-    result = isobands(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
+    result = from_raster(data, levels=[-0.5, 0.0, 0.5], crs="EPSG:4326")
     point = Point(float(index), float(4 - index))
     covered = [
         (row.min_value, row.max_value)

@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 import xarray as xr
 
-from isobands import isobands
+from isobands import from_raster
 from isobands._validation import prepare_raster
 
 EXACT_INTEGER_LIMIT = 2**53
@@ -72,7 +72,7 @@ def test_adjacent_unrepresentable_integers_are_rejected(values: np.ndarray) -> N
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         with pytest.raises(ValueError, match="exceed GDAL Float64 exact precision"):
-            isobands(_data(values), interval=1.0, crs="EPSG:4326")
+            from_raster(_data(values), interval=1.0, crs="EPSG:4326")
 
 
 @pytest.mark.parametrize("metadata", [False, True])

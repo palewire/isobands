@@ -20,7 +20,7 @@ it is not a native upstream resolution. Use `BENCHMARK_GRID=250x500`,
 `BENCHMARK_REPEATS=10`, or `BENCHMARK_WARMUPS=2` to configure a run.
 
 The harness validates CRS, labels, bounds, valid geometry, and polygon coverage
-between `xarray -> isobands -> GeoDataFrame` and the equivalent file-based
+between `xarray -> from_raster -> GeoDataFrame` and the equivalent file-based
 `xarray -> GeoTIFF -> GDAL polygon contour -> GeoJSON -> GeoPandas` path before
 warming or timing either implementation. It writes JSON and Markdown reports
 under `benchmarks/results/` by default. Reports contain environment, dependency,

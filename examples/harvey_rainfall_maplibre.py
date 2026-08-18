@@ -18,7 +18,7 @@ import geopandas as gpd
 import numpy as np
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 DATE = "2017-08-27"
 DATASET = "derived-era5-single-levels-daily-statistics"
@@ -78,7 +78,7 @@ def write_geojson(rainfall: xr.DataArray) -> gpd.GeoDataFrame:
     """Convert rainfall into dissolved, colored quintile bands."""
 
     thresholds = quintiles(rainfall.to_numpy().ravel())
-    bands = isobands(rainfall, levels=quintiles, crs="EPSG:4326")
+    bands = isobands.from_raster(rainfall, levels=quintiles, crs="EPSG:4326")
     dissolved = bands.dissolve(by=["min_value", "max_value"], as_index=False)
     dissolved["color"] = dissolved["min_value"].map(
         lambda minimum: color_for(minimum, thresholds),

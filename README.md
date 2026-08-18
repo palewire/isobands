@@ -32,14 +32,14 @@ guide](docs/installation.md) for exact versions and platform instructions.
 import numpy as np
 import xarray as xr
 
-from isobands import isobands
+import isobands
 
 data = xr.DataArray(
     np.array([[0.0, 1.0, 2.0], [1.0, 2.0, 3.0], [2.0, 3.0, 4.0]]),
     dims=("y", "x"),
     coords={"x": [0.0, 1.0, 2.0], "y": [2.0, 1.0, 0.0]},
 )
-bands = isobands(data, levels=[1.5, 2.5], crs="EPSG:4326")
+bands = isobands.from_raster(data, levels=[1.5, 2.5], crs="EPSG:4326")
 print(bands[["min_value", "max_value", "geometry"]])
 ```
 
@@ -58,7 +58,7 @@ are materialized eagerly for GDAL's in-memory dataset. See the
 ## Real-world example
 
 The runnable [NOAA/NCEP example](examples/air_temperature.py) uses the pinned
-fixture in `examples/data/`, calls `isobands` with Kelvin levels and
+fixture in `examples/data/`, calls `from_raster()` with Kelvin levels and
 `EPSG:4326`, checks the schema, CRS, and geometry validity, and dissolves
 components with GeoPandas:
 
