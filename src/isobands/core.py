@@ -25,6 +25,7 @@ def isobands(
     *,
     levels: LevelValues | LevelTransform | None = None,
     interval: float | None = None,
+    offset: float = 0.0,
     crs: Any | None = None,  # noqa: ANN401
     nodata: float | None = None,
 ) -> gpd.GeoDataFrame:
@@ -34,15 +35,16 @@ def isobands(
     are interior thresholds; a callable receives a one-dimensional array of
     valid raster values and returns those thresholds. The returned outer bands
     begin and end at the valid raster extrema. Interval thresholds are integral
-    multiples of the supplied interval. A constant raster returns one covering
-    band whose ``min_value`` and ``max_value`` are necessarily equal.
+    multiples of the supplied interval, optionally shifted by ``offset``. A constant raster
+    returns one covering band whose ``min_value`` and ``max_value`` are
+    necessarily equal.
     Interval requests are limited to 100,000 interior
     thresholds; use a larger interval for wider value ranges.
     Integer samples must be within Float64's exact consecutive-integer range
     because GDAL contours using Float64 values.
     """
 
-    _validate_band_definition(levels, interval)
+    validated_offset = _validate_band_definition(levels, interval, offset)
     raster = prepare_raster(data, crs=crs, nodata=nodata)
     if _is_explicit_levels(levels):
         thresholds = _explicit_thresholds(levels, raster.min_value, raster.max_value)
@@ -57,6 +59,7 @@ def isobands(
             interval,
             raster.min_value,
             raster.max_value,
+            validated_offset,
         )
     records = generate_polygons(raster, thresholds=thresholds)
     return gpd.GeoDataFrame(
@@ -102,11 +105,15 @@ def gdal_fixed_level_polygons(
 def _validate_band_definition(
     levels: LevelValues | LevelTransform | None,
     interval: float | None,
-) -> None:
+    offset: float,
+) -> float:
     """Validate the mutually exclusive level and interval parameters."""
 
+    validated_offset = _validate_offset(offset)
     if (levels is None) == (interval is None):
         raise ValueError("Specify exactly one of levels or interval.")
+    if levels is not None and validated_offset != 0.0:
+        raise ValueError("offset can only be used with interval.")
     if interval is not None:
         if isinstance(interval, (bool, np.bool_)):
             raise ValueError(
@@ -118,6 +125,21 @@ def _validate_band_definition(
             raise ValueError("interval must be a positive finite number.") from error
         if not isfinite(value) or value <= 0:
             raise ValueError("interval must be a positive finite number.")
+    return validated_offset
+
+
+def _validate_offset(offset: float) -> float:
+    """Validate and normalize an interval threshold offset."""
+
+    if isinstance(offset, (bool, np.bool_)):
+        raise ValueError("offset must be a finite number, not a boolean.")
+    try:
+        value = float(offset)
+    except (TypeError, ValueError) as error:
+        raise ValueError("offset must be a finite number.") from error
+    if not isfinite(value):
+        raise ValueError("offset must be a finite number.")
+    return value
 
 
 def _is_level_transform(
@@ -194,23 +216,24 @@ def _interval_thresholds(
     interval: float | None,
     minimum: float,
     maximum: float,
+    offset: float = 0.0,
 ) -> tuple[float, ...]:
-    """Return the open-interval integral multiples of an interval."""
+    """Return open-interval thresholds aligned to an interval and offset."""
 
     assert interval is not None
     step = float(interval)
     try:
-        first_multiple = floor(minimum / step) + 1
-        last_multiple = ceil(maximum / step) - 1
+        first_multiple = floor((minimum - offset) / step) + 1
+        last_multiple = ceil((maximum - offset) / step) - 1
     except (OverflowError, ZeroDivisionError) as error:
         raise ValueError("interval is too small for the raster value range.") from error
     if first_multiple > last_multiple:
         return ()
     _interval_threshold_count(first_multiple, last_multiple)
     thresholds = tuple(
-        float(multiplier * step)
+        float(offset + multiplier * step)
         for multiplier in range(first_multiple, last_multiple + 1)
-        if minimum < multiplier * step < maximum
+        if minimum < offset + multiplier * step < maximum
     )
     if not thresholds:
         return ()

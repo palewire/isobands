@@ -64,6 +64,9 @@ temperature = xr.open_dataarray("west-coast-daily-highs.nc")
 bands = isobands(temperature, interval=5, crs="EPSG:4326")
 ```
 
+Set `offset` when equal-width bands need a nonzero alignment. For example,
+`interval=5, offset=2.5` creates thresholds at 2.5, 7.5, 12.5, and so on.
+
 For this field, the returned GeoDataFrame begins like this:
 
 | min_value | max_value | geometry |
@@ -139,10 +142,10 @@ import xarray as xr
 
 from isobands import isobands
 
-snow_cover = xr.open_dataarray("iowa-snow-cover.nc")
+temperature = xr.open_dataarray("iowa-land-surface-temperature.nc")
 bands = isobands(
-    snow_cover,
-    levels=[20, 50, 80],
+    temperature,
+    levels=[20, 25, 30, 35],
     nodata=-9999,
     crs="EPSG:4326",
 )
@@ -152,20 +155,19 @@ For this field, the returned GeoDataFrame begins like this:
 
 | min_value | max_value | geometry |
 | ---: | ---: | --- |
-| 46.0 | 50.0 | `MULTIPOLYGON (...)` |
-| 50.0 | 80.0 | `MULTIPOLYGON (...)` |
-| 80.0 | 100.0 | `MULTIPOLYGON (...)` |
+| 12.1 | 20.0 | `MULTIPOLYGON (...)` |
+| 20.0 | 25.0 | `MULTIPOLYGON (...)` |
+| 25.0 | 30.0 | `MULTIPOLYGON (...)` |
 
-The map shows NASA MODIS snow-cover observations across Iowa on February 4,
-2011, two days after the Groundhog Day Blizzard.
-The no-data cells can indicate clouds, fill values, water, or other MODIS
-status flags.
+The map shows NASA MODIS land-surface temperatures across Iowa on August 12,
+2020, two days after the derecho. The no-data cells mark pixels without a valid
+satellite temperature retrieval, commonly because of clouds or quality flags.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
   <iframe
-    src="iowa_snow_maplibre.html"
-    title="Iowa snow cover after the Groundhog Day Blizzard"
+    src="iowa_temperature_maplibre.html"
+    title="Iowa land-surface temperature after the 2020 derecho"
     loading="lazy"
     style="width: 100%; height: 100%; border: 0; display: block;"
   ></iframe>
