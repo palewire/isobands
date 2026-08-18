@@ -41,6 +41,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
           echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
@@ -86,6 +87,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "LD_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
           echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
@@ -137,6 +139,7 @@ jobs:
         run: |
           gdal-config --version
           test "$(gdal-config --version)" = "3.12.2"
+          echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
           echo "DYLD_FALLBACK_LIBRARY_PATH=${CONDA_PREFIX}/lib" >> "$GITHUB_ENV"
 
