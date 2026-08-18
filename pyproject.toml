@@ -15,7 +15,7 @@ dependencies = [
     "xarray",
 ]
 authors = [{ name = "Ben Welsh", email = "b@palewi.re" }]
-description = "Converting xarray rasters into GDAL-backed filled-contour GeoDataFrames."
+description = "An easy wasy to make filled contour maps with Python"
 keywords = ["contours", "gdal", "geopandas", "geospatial", "gis", "raster", "xarray"]
 license = "MIT"
 license-files = ["LICENSE"]
