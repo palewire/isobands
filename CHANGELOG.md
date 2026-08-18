@@ -14,9 +14,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   a nonzero origin.
 - Add a MapLibre example that derives Hurricane Harvey rainfall bands from
   callable quintile levels.
+- Add tested exact GDAL 3.11.5 and 3.13.2 binding extras and CI full-suite
+  lanes, including direct fixed-level command-line parity coverage.
 
 ### Changed
 
+- Recommend the tested GDAL 3.13.2 pip extra while documenting installation
+  with a pre-existing matching GDAL Python binding.
 - Replace the Iowa snow-cover map with a continuous MODIS land-surface-
   temperature contour example that preserves unavailable satellite pixels.
 ### Fixed

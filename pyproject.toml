@@ -42,10 +42,19 @@ Changelog = "https://github.com/palewire/isobands/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 gdal310 = ["GDAL==3.10.2"]
+gdal311 = ["GDAL==3.11.5"]
 gdal312 = ["GDAL==3.12.2"]
+gdal313 = ["GDAL==3.13.2"]
 
 [tool.uv]
-conflicts = [[{ extra = "gdal310" }, { extra = "gdal312" }]]
+conflicts = [
+    [{ extra = "gdal310" }, { extra = "gdal311" }],
+    [{ extra = "gdal310" }, { extra = "gdal312" }],
+    [{ extra = "gdal310" }, { extra = "gdal313" }],
+    [{ extra = "gdal311" }, { extra = "gdal312" }],
+    [{ extra = "gdal311" }, { extra = "gdal313" }],
+    [{ extra = "gdal312" }, { extra = "gdal313" }],
+]
 
 [dependency-groups]
 dev = ["pre-commit", "ruff", "setuptools-scm", "ty", "vulture"]

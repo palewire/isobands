@@ -24,9 +24,11 @@ The stable API is intentionally narrow:
   conversion.
 * Missing values must leave at least one finite valid cell. Explicit finite
   ``nodata`` takes precedence over ``_FillValue`` and ``missing_value``.
-* GDAL **3.10.2** and **3.12.2** are supported exact runtime baselines. Install
-  matching system GDAL development files and select the corresponding
-  ``gdal310`` or ``gdal312`` extra; pip alone cannot provide the system library.
+* GDAL **3.10.2**, **3.11.5**, **3.12.2**, and **3.13.2** are supported exact
+  runtime baselines. A pre-existing matching ``osgeo.gdal`` binding works with
+  ``pip install isobands``. To build a binding through pip, install matching
+  native GDAL development files and select its corresponding extra.
+* GDAL 3.13.3 is not a tested or supported baseline.
 
 The stable convenience promise covers the documented ``isobands()`` API and its
 ``min_value``, ``max_value``, and ``geometry`` output. The separate

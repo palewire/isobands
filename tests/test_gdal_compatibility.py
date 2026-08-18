@@ -1,9 +1,24 @@
 """GDAL-version compatibility tests."""
 
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
-from isobands._gdal import _create_vector_layer
+import pytest
+
+from isobands._gdal import _create_vector_layer, _import_gdal
+
+
+def test_missing_gdal_bindings_lists_all_supported_extras() -> None:
+    """Missing-binding guidance names every exact GDAL extra."""
+
+    with (
+        patch("builtins.__import__", side_effect=ImportError),
+        pytest.raises(
+            RuntimeError,
+            match="gdal310/gdal311/gdal312/gdal313",
+        ),
+    ):
+        _import_gdal()
 
 
 def test_vector_layer_falls_back_to_ogr_memory_driver() -> None:

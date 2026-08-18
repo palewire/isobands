@@ -8,15 +8,24 @@ An easy way to make filled contour maps with Python.
 
 ## Install
 
-Install GDAL **3.10.2** or **3.12.2** and matching development headers using
-the [official GDAL installation guide](https://gdal.org/en/stable/download.html).
-Then install the matching binding:
+`isobands` needs an installed, matching `osgeo.gdal` Python binding. If your
+Conda or system-managed environment already provides one of the
+[tested baselines](docs/installation.md), install the package directly:
 
 ```sh
-pip install "isobands[gdal310]"  # native GDAL 3.10.2
-# or
-pip install "isobands[gdal312]"  # native GDAL 3.12.2
+pip install isobands
 ```
+
+For a pip-managed binding, install matching native GDAL 3.13.2 development
+files, then use the recommended newest tested and installable extra:
+
+```sh
+pip install "isobands[gdal313]"
+```
+
+GDAL 3.10.2 and 3.11.5 remain tested advanced compatibility choices through
+the `gdal310` and `gdal311` extras. See the [installation
+guide](docs/installation.md) for exact versions and platform instructions.
 ## Quick start
 
 ```python

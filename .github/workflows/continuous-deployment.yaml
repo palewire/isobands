@@ -33,14 +33,14 @@ jobs:
           environment-name: gdal
           create-args: >-
             python=3.13
-            gdal=3.12.2
+            gdal=3.13.2
           init-shell: bash
 
       - name: Configure GDAL build environment
         shell: bash -el {0}
         run: |
           gdal-config --version
-          test "$(gdal-config --version)" = "3.12.2"
+          test "$(gdal-config --version)" = "3.13.2"
           command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
@@ -72,8 +72,16 @@ jobs:
             gdal: "3.10.2"
             gdal_baseline: 310
           - python: "3.13"
+            gdal: "3.11.5"
+            gdal_baseline: 311
+            pip_extra: true
+          - python: "3.13"
             gdal: "3.12.2"
             gdal_baseline: 312
+          - python: "3.13"
+            gdal: "3.13.2"
+            gdal_baseline: 313
+            pip_extra: true
           - python: "3.14"
             gdal: "3.12.2"
             gdal_baseline: 312
@@ -123,12 +131,12 @@ jobs:
         if: matrix.gdal_baseline == 312
         run: make install-test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
 
-      - id: install-gdal-310-dependencies
-        name: Install GDAL 3.10 Python dependencies
-        if: matrix.gdal_baseline == 310
+      - id: install-conda-gdal-dependencies
+        name: Install conda GDAL Python dependencies
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make install-test GDAL_BASELINE=310
+          make install-test GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - id: tests
@@ -136,26 +144,43 @@ jobs:
         if: matrix.gdal_baseline == 312
         run: make test GDAL_BASELINE=312 UV_PYTHON=${{ matrix.python }}
 
-      - id: tests-gdal-310
-        name: Run GDAL 3.10 tests
-        if: matrix.gdal_baseline == 310
+      - id: tests-conda-gdal
+        name: Run conda GDAL tests
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make test GDAL_BASELINE=310
+          make test GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
 
       - name: Verify GDAL 3.12 package distribution
         if: matrix.python == '3.13' && matrix.gdal_baseline == 312
         run: make package-verify PACKAGE=isobands GDAL_BASELINE=312
 
-      - name: Verify GDAL 3.10 package distribution
-        if: matrix.gdal_baseline == 310
+      - name: Verify conda GDAL package distribution
+        if: matrix.gdal_baseline != 312
         shell: bash -el {0}
         run: >-
-          make package-verify PACKAGE=isobands GDAL_BASELINE=310
+          make package-verify PACKAGE=isobands GDAL_BASELINE=${{ matrix.gdal_baseline }}
           GDAL_PYTHON="${CONDA_PREFIX}/bin/python"
           PACKAGE_CHECK_NO_DEPS=1
           PACKAGE_CHECK_PYTHON="${CONDA_PREFIX}/bin/python"
+
+      - name: Install compiler for GDAL pip binding
+        if: matrix.pip_extra
+        shell: bash -el {0}
+        run: micromamba install -y -n gdal -c conda-forge compilers
+
+      - name: Build matching GDAL pip binding extra
+        if: matrix.pip_extra
+        run: >-
+          make install-test GDAL_BASELINE=${{ matrix.gdal_baseline }}
+          UV_PYTHON=${{ matrix.python }}
+
+      - name: Verify matching GDAL pip binding extra
+        if: matrix.pip_extra
+        run: >-
+          uv run --no-sync python -c
+          'from osgeo import gdal; assert gdal.VersionInfo("RELEASE_NAME") == "${{ matrix.gdal }}"'
 
       - name: Prune uv cache
         run: uv cache prune --ci
@@ -180,14 +205,14 @@ jobs:
           environment-name: gdal
           create-args: >-
             python=3.13
-            gdal=3.12.2
+            gdal=3.13.2
           init-shell: bash
 
       - name: Configure GDAL build environment
         shell: bash -el {0}
         run: |
           gdal-config --version
-          test "$(gdal-config --version)" = "3.12.2"
+          test "$(gdal-config --version)" = "3.13.2"
           command -v gdal_contour
           echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
           echo "GDAL_CONFIG=${CONDA_PREFIX}/bin/gdal-config" >> "$GITHUB_ENV"
@@ -225,7 +250,7 @@ jobs:
           environment-name: gdal
           create-args: >-
             python=3.13
-            gdal=3.12.2
+            gdal=3.13.2
             geopandas
             numpy
             pyproj
@@ -265,7 +290,7 @@ jobs:
           import xarray as xr
           from osgeo import gdal
 
-          assert gdal.VersionInfo("RELEASE_NAME") == "3.12.2"
+          assert gdal.VersionInfo("RELEASE_NAME") == "3.13.2"
           data = xr.DataArray(
               [[0.0, 1.0], [2.0, 3.0]],
               dims=("lat", "lon"),

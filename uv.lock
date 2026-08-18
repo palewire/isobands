@@ -14,7 +14,22 @@ resolution-markers = [
 ]
 conflicts = [[
     { package = "isobands", extra = "gdal310" },
+    { package = "isobands", extra = "gdal311" },
+], [
+    { package = "isobands", extra = "gdal310" },
     { package = "isobands", extra = "gdal312" },
+], [
+    { package = "isobands", extra = "gdal310" },
+    { package = "isobands", extra = "gdal313" },
+], [
+    { package = "isobands", extra = "gdal311" },
+    { package = "isobands", extra = "gdal312" },
+], [
+    { package = "isobands", extra = "gdal311" },
+    { package = "isobands", extra = "gdal313" },
+], [
+    { package = "isobands", extra = "gdal312" },
+    { package = "isobands", extra = "gdal313" },
 ]]
 
 [[package]]
@@ -35,7 +50,7 @@ dependencies = [
     { name = "jsonschema" },
     { name = "narwhals" },
     { name = "packaging" },
-    { name = "typing-extensions", marker = "python_full_version < '3.15' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.15' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/06/a1/5e6cc638a66da48cfc89a79c2f4810dfec00b63385f9b009ab1f069779bb/altair-6.2.2.tar.gz", hash = "sha256:a1ff9d9cfe81c75414641826312b9471780e19d39293ba0b012933f6b6cba0fe", size = 766606, upload-time = "2026-06-23T12:47:13.384Z" }
 wheels = [
@@ -48,7 +63,7 @@ version = "4.14.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "idna" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/61/cc/a381afa6efea9f496eff839d4a6a1aed3bfafc7b3ab4b0d1b243a12573dd/anyio-4.14.2.tar.gz", hash = "sha256:cfa139f3ed1a23ee8f88a145ddb5ac7605b8bbfd8592baacd7ce3d8bb4313c7f", size = 260176, upload-time = "2026-07-12T20:29:07.082Z" }
 wheels = [
@@ -200,7 +215,7 @@ name = "cffi"
 version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pycparser", marker = "implementation_name != 'PyPy' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "pycparser", marker = "implementation_name != 'PyPy' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9e/ef/008a1939e372c06329a3fce4279c02f328488f3526744906eeec3da7ad5f/cffi-2.1.1.tar.gz", hash = "sha256:dd31f52ea1086513bb9df30f8fcee9b8918323ae067a3d5b78bc826a000712be", size = 530807, upload-time = "2026-08-03T21:21:18.939Z" }
 wheels = [
@@ -454,7 +469,7 @@ name = "click"
 version = "8.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/76/d4/81420972a676e8ffea40450d8c8c92943e7218a78fe9b64359836cc9876b/click-8.4.2.tar.gz", hash = "sha256:9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6", size = 338000, upload-time = "2026-06-24T17:45:15.148Z" }
 wheels = [
@@ -604,7 +619,7 @@ wheels = [
 
 [package.optional-dependencies]
 toml = [
-    { name = "tomli", marker = "python_full_version <= '3.11' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "tomli", marker = "python_full_version <= '3.11' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 
 [[package]]
@@ -615,7 +630,7 @@ dependencies = [
     { name = "click" },
     { name = "cloudpickle" },
     { name = "fsspec" },
-    { name = "importlib-metadata", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "importlib-metadata", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "packaging" },
     { name = "partd" },
     { name = "pyyaml" },
@@ -772,6 +787,23 @@ sdist = { url = "https://files.pythonhosted.org/packages/30/db/6417c83f6e9c4169e
 
 [[package]]
 name = "gdal"
+version = "3.11.5"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.12' and sys_platform == 'win32'",
+    "python_full_version < '3.12' and sys_platform == 'emscripten'",
+    "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6b/c7/5b65caf1a6945a7c0815bd63a9905a33886846a41a5dd762fcf4ef172a41/gdal-3.11.5.tar.gz", hash = "sha256:20c26a250b0cacfb541779292fcd65169293102c5b96e30fe60e1c4f4afce0b1", size = 878380, upload-time = "2025-11-04T11:10:51.167Z" }
+
+[[package]]
+name = "gdal"
 version = "3.12.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
@@ -788,12 +820,29 @@ resolution-markers = [
 sdist = { url = "https://files.pythonhosted.org/packages/b7/73/52753654d259cae674b7d4f2167d421382d9aa2ee510f047338381ae175b/gdal-3.12.2.tar.gz", hash = "sha256:a5afa8e55a19b296a004a15d38fe3ad60cc380f1f090e2aab5d35331008c970f", size = 899232, upload-time = "2026-02-09T17:53:29.78Z" }
 
 [[package]]
+name = "gdal"
+version = "3.13.2"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'win32'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.12' and sys_platform == 'win32'",
+    "python_full_version < '3.12' and sys_platform == 'emscripten'",
+    "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8e/da/b29ca833b2dab4f58451ab4f89dc0d29610de7089a8a3fd0d1676a9bde02/gdal-3.13.2.tar.gz", hash = "sha256:495acc5162636068ee151fc699fbaf702ac0849da1956f55566b771d00c8ee42", size = 940413, upload-time = "2026-07-22T12:42:45.178Z" }
+
+[[package]]
 name = "geopandas"
 version = "1.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "packaging" },
     { name = "pandas" },
     { name = "pyogrio" },
@@ -958,7 +1007,7 @@ name = "importlib-metadata"
 version = "9.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "zipp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "zipp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a9/01/15bb152d77b21318514a96f43af312635eb2500c96b55398d020c93d86ea/importlib_metadata-9.0.0.tar.gz", hash = "sha256:a4f57ab599e6a2e3016d7595cfd72eb4661a5106e787a95bcc90c7105b831efc", size = 56405, upload-time = "2026-03-20T06:42:56.999Z" }
 wheels = [
@@ -979,7 +1028,7 @@ name = "ipykernel"
 version = "7.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appnope", marker = "sys_platform == 'darwin' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "appnope", marker = "sys_platform == 'darwin' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "comm" },
     { name = "debugpy" },
     { name = "ipython" },
@@ -1003,17 +1052,17 @@ name = "ipython"
 version = "9.16.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "ipython-pygments-lexers" },
     { name = "jedi" },
     { name = "matplotlib-inline" },
-    { name = "pexpect", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "pexpect", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "prompt-toolkit" },
-    { name = "psutil", marker = "(sys_platform != 'cygwin' and sys_platform != 'emscripten') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "psutil", marker = "(sys_platform != 'cygwin' and sys_platform != 'emscripten') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'cygwin' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "pygments" },
     { name = "stack-data" },
     { name = "traitlets" },
-    { name = "typing-extensions", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/06/96/b150fe7e25a5a29ae9ac1374e71488639605d39a1ea4abb74c9ce33af235/ipython-9.16.1.tar.gz", hash = "sha256:5a3d1f9a47ff216d6cf9cf863124f6a2c1a198d1354c546a4d24a370a283b64c", size = 4515302, upload-time = "2026-08-03T08:36:15.571Z" }
 wheels = [
@@ -1053,8 +1102,8 @@ name = "isobands"
 source = { editable = "." }
 dependencies = [
     { name = "geopandas" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "pyproj" },
     { name = "shapely" },
     { name = "xarray" },
@@ -1064,14 +1113,20 @@ dependencies = [
 gdal310 = [
     { name = "gdal", version = "3.10.2", source = { registry = "https://pypi.org/simple" } },
 ]
+gdal311 = [
+    { name = "gdal", version = "3.11.5", source = { registry = "https://pypi.org/simple" } },
+]
 gdal312 = [
     { name = "gdal", version = "3.12.2", source = { registry = "https://pypi.org/simple" } },
+]
+gdal313 = [
+    { name = "gdal", version = "3.13.2", source = { registry = "https://pypi.org/simple" } },
 ]
 
 [package.dev-dependencies]
 benchmark = [
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "scipy", version = "1.18.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "scipy", version = "1.18.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 dev = [
     { name = "pre-commit" },
@@ -1082,8 +1137,8 @@ dev = [
 ]
 docs = [
     { name = "myst-parser" },
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "sphinx-autobuild" },
     { name = "sphinx-copybutton" },
     { name = "sphinx-palewire-theme" },
@@ -1119,14 +1174,16 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "gdal", marker = "extra == 'gdal310'", specifier = "==3.10.2" },
+    { name = "gdal", marker = "extra == 'gdal311'", specifier = "==3.11.5" },
     { name = "gdal", marker = "extra == 'gdal312'", specifier = "==3.12.2" },
+    { name = "gdal", marker = "extra == 'gdal313'", specifier = "==3.13.2" },
     { name = "geopandas" },
     { name = "numpy" },
     { name = "pyproj" },
     { name = "shapely" },
     { name = "xarray" },
 ]
-provides-extras = ["gdal310", "gdal312"]
+provides-extras = ["gdal310", "gdal311", "gdal312", "gdal313"]
 
 [package.metadata.requires-dev]
 benchmark = [{ name = "scipy" }]
@@ -1354,10 +1411,10 @@ dependencies = [
     { name = "jupyter-server-terminals" },
     { name = "nbconvert" },
     { name = "nbformat" },
-    { name = "overrides", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "overrides", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "packaging" },
     { name = "prometheus-client" },
-    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "pyzmq" },
     { name = "send2trash" },
     { name = "terminado" },
@@ -1375,7 +1432,7 @@ name = "jupyter-server-terminals"
 version = "0.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "terminado" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f4/a7/bcd0a9b0cbba88986fe944aaaf91bfda603e5a50bda8ed15123f381a3b2f/jupyter_server_terminals-0.5.4.tar.gz", hash = "sha256:bbda128ed41d0be9020349f9f1f2a4ab9952a73ed5f5ac9f1419794761fb87f5", size = 31770, upload-time = "2026-01-14T16:53:20.213Z" }
@@ -1401,7 +1458,7 @@ dependencies = [
     { name = "packaging" },
     { name = "tornado" },
     { name = "traitlets" },
-    { name = "typing-extensions", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/00/c0/45934229995d4c6e38192ca118d93185f60808f64157e3df3c5c28f8c5fd/jupyterlab-4.6.3.tar.gz", hash = "sha256:2e3db6e3a12495ebd188276e985bf5ac502fbde3d1e8628819920210008de498", size = 28319771, upload-time = "2026-08-10T18:50:57.947Z" }
 wheels = [
@@ -1600,8 +1657,8 @@ dependencies = [
     { name = "markdown-it-py" },
     { name = "mdit-py-plugins" },
     { name = "pyyaml" },
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/21/dc/603751677fff302f34396e206b610f556a59d7fe58b9a2145f54e96b48e8/myst_parser-5.1.0.tar.gz", hash = "sha256:ab69322dc6719dcc7f296479dbb70181b66df6ed315064f92dbc85c0e1bf2f02", size = 101182, upload-time = "2026-05-13T09:38:19.361Z" }
 wheels = [
@@ -1902,10 +1959,10 @@ name = "pandas"
 version = "3.0.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "python-dateutil" },
-    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/be/4f/5f3422a2afec5ffc46308b79e53291365a93748b498ac2e58bead0197916/pandas-3.0.5.tar.gz", hash = "sha256:dca3734d6ab7c906e6730f0788b0a1dbb9f2467731f9711f77995c8e9d62d712", size = 4658219, upload-time = "2026-07-22T22:19:28.819Z" }
 wheels = [
@@ -1988,7 +2045,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "ptyprocess", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'emscripten' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform == 'win32' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2163,8 +2220,8 @@ version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "packaging" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/de/3c/d2268615e8b749ba59f278b14a495883562e961fa3ad55a9def222bfbd4a/pyogrio-0.13.0.tar.gz", hash = "sha256:9614f27a1891113f80653e0b76b4233ea1fb3beeb1ac46d118ab22e1670f8f13", size = 313103, upload-time = "2026-06-26T15:30:17.375Z" }
@@ -2253,7 +2310,7 @@ name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
@@ -2510,7 +2567,7 @@ name = "pyzmq"
 version = "27.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cffi", marker = "implementation_name == 'pypy' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "cffi", marker = "implementation_name == 'pypy' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/04/0b/3c9baedbdf613ecaa7aa07027780b8867f57b6293b6ee50de316c9f3222b/pyzmq-27.1.0.tar.gz", hash = "sha256:ac0765e3d44455adb6ddbf4417dcce460fc40a05978c08efdf2948072f6db540", size = 281750, upload-time = "2025-09-08T23:10:18.157Z" }
 wheels = [
@@ -2570,7 +2627,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
     { name = "rpds-py" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/22/f5/df4e9027acead3ecc63e50fe1e36aca1523e1719559c499951bb4b53188f/referencing-0.37.0.tar.gz", hash = "sha256:44aefc3142c5b842538163acb373e24cce6632bd54bdb01b21ad5863489f50d8", size = 78036, upload-time = "2025-10-13T15:30:48.871Z" }
 wheels = [
@@ -2805,7 +2862,7 @@ resolution-markers = [
     "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/7a/97/5a3609c4f8d58b039179648e62dd220f89864f56f7357f5d4f45c29eb2cc/scipy-1.17.1.tar.gz", hash = "sha256:95d8e012d8cb8816c226aef832200b1d45109ed4464303e997c5b13122b297c0", size = 30573822, upload-time = "2026-02-23T00:26:24.851Z" }
 wheels = [
@@ -2884,7 +2941,7 @@ resolution-markers = [
     "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/a7/25/c2700dfaf6442b4effaa91af24ebce5dc9d31bb4a69706313aae70d72cd0/scipy-1.18.0.tar.gz", hash = "sha256:67b2ad2ad54c72ca6d04975a9b2df8c3638c34ddd5b28738e94fc2b57929d378", size = 30774447, upload-time = "2026-06-19T15:01:43.456Z" }
 wheels = [
@@ -2967,8 +3024,8 @@ name = "shapely"
 version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/4d/bc/0989043118a27cccb4e906a46b7565ce36ca7b57f5a18b78f4f1b0f72d9d/shapely-2.1.2.tar.gz", hash = "sha256:2ed4ecb28320a433db18a5bf029986aa8afcfd740745e78847e330d5d94922a9", size = 315489, upload-time = "2025-09-24T13:51:41.432Z" }
 wheels = [
@@ -3068,23 +3125,23 @@ resolution-markers = [
     "python_full_version < '3.12' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "alabaster", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "babel", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "colorama", marker = "(python_full_version < '3.12' and sys_platform == 'win32') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "docutils", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "imagesize", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "jinja2", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "packaging", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "pygments", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "requests", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "roman-numerals", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "snowballstemmer", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-applehelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-devhelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-htmlhelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-jsmath", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-qthelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-serializinghtml", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "alabaster", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "babel", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "colorama", marker = "(python_full_version < '3.12' and sys_platform == 'win32') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (python_full_version >= '3.12' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "docutils", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "imagesize", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "jinja2", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "packaging", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "pygments", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "requests", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "roman-numerals", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "snowballstemmer", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-applehelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-devhelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-htmlhelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-jsmath", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-qthelp", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-serializinghtml", marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/50/a8c6ccc36d5eacdfd7913ddccd15a9cee03ecafc5ee2bc40e1f168d85022/sphinx-9.0.4.tar.gz", hash = "sha256:594ef59d042972abbc581d8baa577404abe4e6c3b04ef61bd7fc2acbd51f3fa3", size = 8710502, upload-time = "2025-12-04T07:45:27.343Z" }
 wheels = [
@@ -3104,23 +3161,23 @@ resolution-markers = [
     "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "alabaster", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "babel", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "colorama", marker = "(python_full_version >= '3.12' and sys_platform == 'win32') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "docutils", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "imagesize", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "jinja2", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "packaging", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "pygments", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "requests", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "roman-numerals", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "snowballstemmer", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-applehelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-devhelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-htmlhelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-jsmath", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-qthelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinxcontrib-serializinghtml", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "alabaster", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "babel", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "colorama", marker = "(python_full_version >= '3.12' and sys_platform == 'win32') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (python_full_version < '3.12' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (sys_platform != 'win32' and extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "docutils", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "imagesize", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "jinja2", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "packaging", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "pygments", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "requests", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "roman-numerals", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "snowballstemmer", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-applehelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-devhelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-htmlhelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-jsmath", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-qthelp", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinxcontrib-serializinghtml", marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/cd/bd/f08eb0f4eed5c83f1ba2a3bd18f7745a2b1525fad70660a1c00224ec468a/sphinx-9.1.0.tar.gz", hash = "sha256:7741722357dd75f8190766926071fed3bdc211c74dd2d7d4df5404da95930ddb", size = 8718324, upload-time = "2025-12-31T15:09:27.646Z" }
 wheels = [
@@ -3133,8 +3190,8 @@ version = "2025.8.25"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama" },
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "starlette" },
     { name = "uvicorn" },
     { name = "watchfiles" },
@@ -3150,8 +3207,8 @@ name = "sphinx-copybutton"
 version = "0.5.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/fc/2b/a964715e7f5295f77509e59309959f4125122d648f86b4fe7d70ca1d882c/sphinx-copybutton-0.5.2.tar.gz", hash = "sha256:4cf17c82fb9646d1bc9ca92ac280813a3b605d8c421225fd9913154103ee1fbd", size = 23039, upload-time = "2023-04-14T08:10:22.998Z" }
 wheels = [
@@ -3163,8 +3220,8 @@ name = "sphinx-palewire-theme"
 version = "0.1.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/62/3c/85c0e4beaaab9c4135be304878ca484ba230558b00f30a2778af925f4909/sphinx_palewire_theme-0.1.3.tar.gz", hash = "sha256:d02cfdc4b6f857de398477a85af4a7844c5eadfba252a632458ec1298e387ab8", size = 12638, upload-time = "2026-02-17T01:08:49.247Z" }
 
@@ -3211,8 +3268,8 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
     { name = "pyyaml" },
-    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "sphinx", version = "9.0.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "sphinx", version = "9.1.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/07/9d/bf3a48a657682c7e0445c71d916bca7ab8194454276cc22b16e7f974e502/sphinxcontrib_mermaid-2.1.0.tar.gz", hash = "sha256:13c5f9ac395cb6abf403eca34e228dc9fb3a30c9d960dbf3e40e9a8cef969549", size = 21695, upload-time = "2026-07-18T23:08:11.265Z" }
 wheels = [
@@ -3257,7 +3314,7 @@ version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
-    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/b5/b4/205b0d5241d934e8add0c38aa924c4f9fb7330834ff11e5444db964ec3f9/starlette-1.6.0.tar.gz", hash = "sha256:d4e3ac5e546444960c710297a3c9fc3f7ebae1b7e963f3d36173b49da535be9b", size = 2716969, upload-time = "2026-08-08T18:27:57.512Z" }
 wheels = [
@@ -3278,8 +3335,8 @@ name = "terminado"
 version = "0.18.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "os_name != 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "ptyprocess", marker = "os_name != 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "pywinpty", marker = "os_name == 'nt' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "tornado" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/8a/11/965c6fd8e5cc254f1fe142d547387da17a8ebfd75a3455f637c663fb38a0/terminado-0.18.1.tar.gz", hash = "sha256:de09f2c4b85de4765f7714688fff57d3e75bad1f909b589fde880460c753fd2e", size = 32701, upload-time = "2024-03-12T14:34:39.026Z" }
@@ -3855,8 +3912,8 @@ name = "xarray"
 version = "2026.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
-    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312')" },
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12' or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal311') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal310' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal312') or (extra == 'extra-8-isobands-gdal311' and extra == 'extra-8-isobands-gdal313') or (extra == 'extra-8-isobands-gdal312' and extra == 'extra-8-isobands-gdal313')" },
     { name = "packaging" },
     { name = "pandas" },
 ]
