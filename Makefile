@@ -115,7 +115,7 @@ docs: ## Build HTML documentation
 	$(RUN) sphinx-build -M html docs docs/_build
 
 docs-check: ## Build documentation and fail on warnings
-	$(RUN) sphinx-build -M html docs docs/_build -W --keep-going
+	$(RUN) sphinx-build -M html docs docs/_build -W --keep-going -E
 
 linkcheck: ## Check documentation links and fail on warnings
 	$(RUN) sphinx-build -M linkcheck docs docs/_build -W --keep-going

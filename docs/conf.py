@@ -15,7 +15,19 @@ copyright = f"{year}, {author}"
 language = "en"
 templates_path = ["_templates"]
 html_static_path = []
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "api.md",
+    "benchmarks.md",
+    "deployment.md",
+    "installation.md",
+    "limitations.md",
+    "neighbors.md",
+    "real-world.md",
+    "usage.md",
+]
 pygments_style = "sphinx"
 
 extensions = [
@@ -26,6 +38,10 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
+]
+
+myst_enable_extensions = [
+    "colon_fence",
 ]
 
 autodoc_member_order = "bysource"
