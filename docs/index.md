@@ -1,81 +1,21 @@
 # isobands
 
+An easy way to make filled contour maps with Python.
+
 `isobands` converts a regular two-dimensional [xarray](https://xarray.dev/)
 `DataArray` into filled contour polygons backed by a
-[GeoPandas](https://geopandas.org/) `GeoDataFrame`. It uses GDAL's in-memory
-raster and vector drivers, so a normal call does not create intermediate files.
-
-```{contents} Contents
-:local:
-:depth: 2
-```
-
----
+[GeoPandas](https://geopandas.org/) `GeoDataFrame`.
 
 ## Installation
 
-GDAL **3.10.2** and **3.12.2** are supported exact baselines. The PyPI `GDAL`
-distribution is source-only, so select the binding extra that matches the
-installed native library:
+Install GDAL **3.10.2** or **3.12.2** and matching development headers first.
+Follow the [official GDAL installation guide](https://gdal.org/en/stable/download.html)
+for platform-specific instructions, then select the matching binding:
 
 ```console
 $ pip install "isobands[gdal310]"  # GDAL 3.10.2
 $ pip install "isobands[gdal312]"  # GDAL 3.12.2
 ```
-
-Do not select an extra that differs from the native GDAL runtime and headers.
-
-**Linux** — install the matching GDAL runtime and development package before
-the selected extra:
-
-```console
-$ gdal-config --version
-3.10.2
-$ pip install "isobands[gdal310]"
-```
-
-If multiple GDAL installations exist, put the matching `gdal-config` first on
-`PATH` or set `GDAL_CONFIG` to its absolute path.
-
-**macOS** — Homebrew users can install GDAL and then the package:
-
-```console
-$ brew install gdal
-$ "$(brew --prefix gdal)/bin/gdal-config" --version
-3.12.2
-$ pip install "isobands[gdal312]"
-```
-
-Ensure the active Python architecture (for example, arm64) matches the GDAL
-libraries. Reinstalling the Python binding after correcting the prefix is safer
-than mixing cached build artifacts.
-
-**Windows** — use a conda-forge environment so the native GDAL runtime,
-headers, and libraries are resolved as one compatible set:
-
-```console
-conda create -n isobands python=3.13
-conda activate isobands
-conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
-pip install --no-deps isobands
-```
-
-**Contributor setup** — clone the repository and install all locked dependency
-groups for the default GDAL 3.12.2 baseline:
-
-```console
-$ make install
-```
-
-For the GDAL 3.10.2 conda-forge baseline, use its active interpreter:
-
-```console
-$ make install-test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
-$ make test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
-```
-
----
-
 ## Quick start
 
 Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
@@ -98,20 +38,139 @@ print(bands[["min_value", "max_value", "geometry"]])
 The result always has the stable `min_value`, `max_value`, and `geometry`
 columns and a GeoPandas CRS.
 
-### Real-world example
+The `levels` input supplies the interior breakpoints, dividing the data into
+bands at 1.5 and 2.5.
 
-The repository includes a runnable NOAA/NCEP air-temperature example using a
-pinned fixture in `examples/data/`:
+For the small grid above, the returned GeoDataFrame begins like this:
 
-```console
-$ python examples/air_temperature.py
+| min_value | max_value | geometry |
+| ---: | ---: | --- |
+| 0.0 | 1.5 | `MULTIPOLYGON (...)` |
+| 1.5 | 2.5 | `MULTIPOLYGON (...)` |
+| 2.5 | 4.0 | `MULTIPOLYGON (...)` |
+
+## Equal interval breaks
+
+This example uses `interval=5` to create equal-width five-degree temperature
+bands and
+`crs="EPSG:4326"` to identify the input's longitude-latitude coordinates.
+
+```python
+import xarray as xr
+
+from isobands import isobands
+
+temperature = xr.open_dataarray("west-coast-daily-highs.nc")
+bands = isobands(temperature, interval=5, crs="EPSG:4326")
 ```
 
-The script loads a 25×53 Kelvin slice, calls
-`isobands(data, levels=[240.0, 260.0, 280.0], crs="EPSG:4326")`, checks the
-stable schema, CRS, and Shapely validity, and dissolves repeated components.
+For this field, the returned GeoDataFrame begins like this:
 
----
+| min_value | max_value | geometry |
+| ---: | ---: | --- |
+| 12.3 | 15.0 | `MULTIPOLYGON (...)` |
+| 15.0 | 20.0 | `MULTIPOLYGON (...)` |
+| 20.0 | 25.0 | `MULTIPOLYGON (...)` |
+
+The map shows ERA5 daily maximum two-meter temperatures across the U.S. West
+Coast on August 16, 2020, when Furnace Creek, California, in Death Valley
+recorded 54.4°C, as documented by the
+[National Park Service](https://www.nps.gov/deva/learn/news/record-heat-at-death-valley.htm).
+
+```{raw} html
+<div style="width: 100%; height: 466px;">
+  <iframe
+    src="era5_maplibre.html"
+    title="ERA5 daily high temperatures on August 16, 2020"
+    loading="lazy"
+    style="width: 100%; height: 100%; border: 0; display: block;"
+  ></iframe>
+</div>
+```
+
+## Threshold breaks
+
+The `levels` input can also use meaningful external thresholds instead of equal
+intervals. This example uses the U.S. EPA's PM2.5 health-category boundaries.
+
+```python
+import xarray as xr
+
+from isobands import isobands
+
+pm25 = xr.open_dataarray("nyc-smoke-pm25.nc")
+bands = isobands(
+    pm25,
+    levels=[12.0, 35.4, 55.4, 125.4, 225.4],
+    crs="EPSG:4326",
+)
+```
+
+For this field, the returned GeoDataFrame begins like this:
+
+| min_value | max_value | geometry |
+| ---: | ---: | --- |
+| 1.4 | 12.0 | `MULTIPOLYGON (...)` |
+| 12.0 | 35.4 | `MULTIPOLYGON (...)` |
+| 35.4 | 55.4 | `MULTIPOLYGON (...)` |
+
+The map interpolates [EPA AirData](https://www.epa.gov/outdoor-air-quality-data)
+daily mean PM2.5 readings across the eastern United States on June 7, 2023,
+when Canadian wildfire smoke blanketed the region.
+
+```{raw} html
+<div style="width: 100%; height: 466px;">
+  <iframe
+    src="pm25_maplibre.html"
+    title="New York City PM2.5 during Canadian wildfire smoke"
+    loading="lazy"
+    style="width: 100%; height: 100%; border: 0; display: block;"
+  ></iframe>
+</div>
+```
+
+## No-data cells
+
+Use `nodata` to leave unavailable cells out of the contours instead of treating
+them as measured values.
+
+```python
+import xarray as xr
+
+from isobands import isobands
+
+snow_cover = xr.open_dataarray("iowa-snow-cover.nc")
+bands = isobands(
+    snow_cover,
+    levels=[20, 50, 80],
+    nodata=-9999,
+    crs="EPSG:4326",
+)
+```
+
+For this field, the returned GeoDataFrame begins like this:
+
+| min_value | max_value | geometry |
+| ---: | ---: | --- |
+| 46.0 | 50.0 | `MULTIPOLYGON (...)` |
+| 50.0 | 80.0 | `MULTIPOLYGON (...)` |
+| 80.0 | 100.0 | `MULTIPOLYGON (...)` |
+
+The map shows NASA MODIS snow-cover observations across Iowa on February 4,
+2011, two days after the Groundhog Day Blizzard.
+The no-data cells can indicate clouds, fill values, water, or other MODIS
+status flags.
+
+```{raw} html
+<div style="width: 100%; height: 466px;">
+  <iframe
+    src="iowa_snow_maplibre.html"
+    title="Iowa snow cover after the Groundhog Day Blizzard"
+    loading="lazy"
+    style="width: 100%; height: 100%; border: 0; display: block;"
+  ></iframe>
+</div>
+```
 
 ## API reference
 
@@ -119,116 +178,18 @@ stable schema, CRS, and Shapely validity, and dissolves repeated components.
 .. autofunction:: isobands.isobands
 ```
 
-### Dissolving repeated bands
-
-GDAL can return separate polygons for disconnected valid regions. Rows with the
-same `min_value` and `max_value` are therefore valid and expected. Use
-GeoPandas when one feature per interval is useful:
-
-```python
-dissolved = bands.dissolve(by=["min_value", "max_value"], as_index=False)
-```
-
----
-
-## Behavior and limits
-
-### Band definitions
-
-Exactly one of `levels` or `interval` is required.
-
-- `levels` is a nonempty, strictly increasing, finite sequence of interior
-  thresholds. Thresholds outside the finite valid raster range are ignored.
-  The first band starts at the valid minimum and the last ends at the valid
-  maximum.
-- `interval` is a positive finite number. Interior thresholds are integral
-  multiples of the interval that fall strictly inside the valid range.
-  Requests producing more than 100,000 interior thresholds fail before
-  allocation.
-- A value exactly equal to a threshold belongs to the upper band
-  (lower-inclusive, upper-exclusive convention for interior boundaries).
-- A constant valid raster produces one full-coverage band with equal
-  `min_value` and `max_value` labels.
-- Empty outer bands are not emitted.
-
-### Input requirements
-
-- Input must be a numeric `xarray.DataArray` with exactly two nonsingleton
-  dimensions. Squeeze singleton dimensions first.
-- Each spatial axis must be a regular, one-dimensional rectilinear coordinate.
-  Axis discovery checks CF `axis` and `standard_name` metadata before common
-  `x`/`y`, `lon`/`lat`, and `longitude`/`latitude` names. Ascending and
-  descending axes are supported.
-- Curvilinear, irregular, ambiguous, missing, or nonfinite coordinate
-  transforms are rejected.
-- Dask-backed arrays are materialized eagerly before GDAL processing.
-
-### CRS selection
-
-CRS selection uses this precedence:
-
-1. the explicit `crs=` argument;
-2. already-registered rioxarray CRS metadata;
-3. recognized CF/grid-mapping metadata, `spatial_ref`, `crs_wkt`, or `crs`.
-
-If no CRS is available, `isobands` raises an error explaining how to pass
-`crs=`. Coordinate names alone never imply `EPSG:4326` or another CRS.
-
-### Missing data
-
-An explicit finite `nodata=` value overrides metadata `_FillValue` and
-`missing_value`. Without an explicit value, NaN and other nonfinite floating
-cells are nodata. An all-nodata raster fails.
-
-### Numeric and grid limits
-
-- Extremely wide dynamic ranges can make extrema and thresholds
-  indistinguishable in floating-point arithmetic. Rescale values when
-  validation reports that safe conditioning is impossible.
-- Integer samples must remain within `-2**53` through `2**53` so GDAL's Float64
-  raster can represent them exactly; values outside that range are rejected.
-- Interval mode is limited to 100,000 interior thresholds.
-- Only regular rectilinear two-dimensional grids are supported.
-
-### Error guidance
-
-Validation errors are `ValueError` instances. Check, in order:
-
-1. the input is numeric and has two nonsingleton dimensions;
-2. both coordinates are one-dimensional, regular, and finite;
-3. exactly one band definition is supplied and levels are strictly increasing
-   and finite;
-4. at least one finite cell remains after applying nodata;
-5. a CRS is supplied explicitly or present in recognized metadata.
-
----
-
-## Neighboring tools
-
-`isobands` focuses on one conversion: a regular in-memory xarray raster to
-filled contour polygons. These tools solve adjacent problems:
-
-- **GDAL** is the native geospatial engine. Its `ContourGenerateEx`
-  implementation creates the polygons; GDAL 3.12.2 is an exact runtime
-  prerequisite.
-- **xarray** provides labeled N-dimensional arrays, coordinates, metadata, and
-  lazy Dask-backed data.
-- **GeoPandas** stores the returned polygons and CRS, and provides `dissolve`,
-  spatial joins, and file export.
-- **Rasterio** is a useful choice for reading and writing raster files and
-  managing affine transforms. Use it when the workflow starts with files.
-- **xarray-spatial** provides raster analysis algorithms that operate directly
-  on xarray objects. It may be a better fit when contour polygons are not the
-  desired output.
-- **Mapshaper** is a command-line tool for simplifying and transforming vector
-  data; it is complementary after exporting contour polygons.
-
----
-
 ## Links
 
 - [Source code](https://github.com/palewire/isobands)
 - [Issue tracker](https://github.com/palewire/isobands/issues)
 - [Changelog](https://github.com/palewire/isobands/blob/main/CHANGELOG.md)
 - [PyPI package](https://pypi.org/project/isobands/)
-- [Contributing guide](https://github.com/palewire/isobands/blob/main/CONTRIBUTING.md)
+
+## About
+
+Ben Welsh first released this module in August 2026 as an spinoff of the
+[Reuters Climate Monitor](https://www.reuters.com/graphics/CLIMATE-AUTOMATED/MONITOR/akpeykqqapr/).
+GitHub's Copilot, an AI-powered text generator, helped draft this documentation.
+Map examples use [MapLibre](https://maplibre.org/),
+[OpenFreeMap](https://openfreemap.org/), and
+© [OpenStreetMap contributors](https://www.openstreetmap.org/copyright).

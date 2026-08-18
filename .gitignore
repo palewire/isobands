@@ -115,3 +115,6 @@ benchmarks/results/*
 !benchmarks/results/reference.json
 !benchmarks/results/reference.md
 .benchmark-cache/
+
+# Downloaded and generated MapLibre example data
+examples/output/

@@ -14,7 +14,7 @@ dependencies = [
     "xarray",
 ]
 authors = [{ name = "Ben Welsh", email = "b@palewi.re" }]
-description = "An easy wasy to make filled contour maps with Python"
+description = "An easy way to make filled contour maps with Python"
 keywords = ["contours", "gdal", "geopandas", "geospatial", "gis", "raster", "xarray"]
 license = "MIT"
 license-files = ["LICENSE"]
