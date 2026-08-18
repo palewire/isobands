@@ -54,6 +54,7 @@ Exactly one of ``levels`` or ``interval`` is required.
 For example, a named function can calculate quintile thresholds:
 
 .. code-block:: python
+   import numpy as np
 
    def quintiles(values: np.ndarray) -> np.ndarray:
        return np.quantile(values, [0.2, 0.4, 0.6, 0.8])
