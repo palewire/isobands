@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Iowa snow cover after the Groundhog Day Blizzard</title>
+    <title>Iowa land-surface temperature after the 2020 derecho</title>
     <link href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css" rel="stylesheet">
     <style>
       body { margin: 0; }
@@ -29,12 +29,13 @@
   </head>
   <body>
     <div id="map"></div>
-    <div class="legend" aria-label="Snow cover legend">
-      <div class="legend-title">Snow cover</div>
-      <div class="legend-row"><span class="legend-swatch" style="background: #deebf7"></span>0–20%</div>
-      <div class="legend-row"><span class="legend-swatch" style="background: #9ecae1"></span>20–50%</div>
-      <div class="legend-row"><span class="legend-swatch" style="background: #3182bd"></span>50–80%</div>
-      <div class="legend-row"><span class="legend-swatch" style="background: #08519c"></span>80–100%</div>
+    <div class="legend" aria-label="Land-surface temperature legend">
+      <div class="legend-title">Land-surface temperature</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #2c7bb6"></span>Below 20°C</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #abd9e9"></span>20°–25°C</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #fdae61"></span>25°–30°C</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #f46d43"></span>30°–35°C</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #d7191c"></span>35°C and above</div>
       <div class="legend-row"><span class="legend-swatch nodata"></span>Unavailable: no data</div>
     </div>
     <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
@@ -43,37 +44,37 @@
       const map = new maplibregl.Map({
         container: "map",
         style: "https://tiles.openfreemap.org/styles/bright",
-        center: [-93.5, 42.7],
-        zoom: 5.4,
+        center: [-93.8, 42.1],
+        zoom: 5.8,
         interactive: false,
         attributionControl: false,
       });
 
       map.on("load", () => {
-        map.addSource("snow-cover", {
+        map.addSource("temperature", {
           type: "geojson",
-          data: "output/iowa-snow-cover-2011-02-04.geojson",
+          data: "iowa-land-surface-temperature-2020-08-12.geojson",
         });
-        map.addSource("snow-no-data", {
+        map.addSource("temperature-no-data", {
           type: "geojson",
-          data: "output/iowa-snow-no-data-2011-02-04.geojson",
+          data: "iowa-temperature-no-data-2020-08-12.geojson",
         });
         const firstSymbolLayer = map.getStyle().layers.find(
           (layer) => layer.type === "symbol",
         );
         map.addLayer({
-          id: "snow-no-data-background",
+          id: "temperature-no-data",
           type: "fill",
-          source: "snow-no-data",
+          source: "temperature-no-data",
           paint: {
-            "fill-color": "#dce3e6",
-            "fill-opacity": 0.6,
+            "fill-color": "#e6eaec",
+            "fill-opacity": 0.35,
           },
         }, firstSymbolLayer?.id);
         map.addLayer({
-          id: "snow-cover-bands",
+          id: "temperature-bands",
           type: "fill",
-          source: "snow-cover",
+          source: "temperature",
           paint: {
             "fill-color": ["get", "color"],
             "fill-opacity": 0.35,
@@ -86,7 +87,7 @@
           offset: 25,
         })
           .setLngLat(cedarRapidsAirport)
-          .setHTML("<strong>Cedar Rapids Airport</strong><br>63% snow cover")
+          .setHTML("<strong>Cedar Rapids Airport</strong><br>30.7°C")
           .addTo(map);
       });
     </script>
