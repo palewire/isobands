@@ -19,15 +19,6 @@ exclude_patterns = [
     "_build",
     "Thumbs.db",
     ".DS_Store",
-    "api.md",
-    "benchmarks.md",
-    "deployment.md",
-    "guide.md",
-    "installation.md",
-    "limitations.md",
-    "neighbors.md",
-    "real-world.md",
-    "usage.md",
 ]
 pygments_style = "sphinx"
 
