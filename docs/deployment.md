@@ -25,15 +25,24 @@ the `docs-production` environment:
   slash. The prefix should contain the generated `index.html`.
 
 The IAM role's web-identity trust policy must require the GitHub OIDC `sub`
-claim to equal:
+claim for this repository's configured subject prefix. Inspect the prefix with:
+
+```sh
+gh api repos/palewire/isobands/actions/oidc/customization/sub \
+  --jq .sub_claim_prefix
+```
+
+The current result is `repo:palewire@9993/isobands@1338228586`, so the
+required `sub` claim is:
 
 ```text
-repo:palewire/isobands:environment:docs-production
+repo:palewire@9993/isobands@1338228586:environment:docs-production
 ```
 
 It should also use the standard GitHub OIDC audience
-`sts.amazonaws.com`. The workflow uses temporary OIDC credentials; no static
-AWS credentials belong in GitHub.
+`sts.amazonaws.com`. If the configured subject prefix changes, update the
+trust policy to use the new prefix. The workflow uses temporary OIDC
+credentials; no static AWS credentials belong in GitHub.
 
 Grant the role only the S3 access required for the configured bucket and
 prefix. Replace `<bucket>` and `<base-path>` below with the human-owned
