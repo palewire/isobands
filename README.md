@@ -10,7 +10,7 @@ An easy way to make filled contour maps with Python.
 
 `isobands` needs an installed, matching `osgeo.gdal` Python binding. If your
 Conda or system-managed environment already provides one of the
-[tested baselines](docs/installation.md), install the package directly:
+[tested baselines](docs/index.md), install the package directly:
 
 ```sh
 pip install isobands
@@ -25,7 +25,7 @@ pip install "isobands[gdal313]"
 
 GDAL 3.10.2, 3.11.5, and 3.12.2 remain tested compatibility choices through
 the matching `gdal310`, `gdal311`, and `gdal312` extras. See the [installation
-guide](docs/installation.md) for exact versions and platform instructions.
+guide](docs/index.md) for exact versions and platform instructions.
 ## Quick start
 
 ```python

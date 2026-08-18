@@ -6,16 +6,16 @@ and keep pull requests focused. Document user-facing behavior changes in
 
 ## Required GDAL installation
 
-Development supports the exact GDAL **3.10.2** and **3.12.2** baselines.
-Install matching system development headers and bindings. The PyPI GDAL package
-is source-only and compiles against the system library; do not select bindings
-for a different GDAL release.
+Development supports the exact GDAL **3.10.2**, **3.11.5**, **3.12.2**, and
+**3.13.2** baselines. Install matching system development headers and bindings.
+The PyPI GDAL package is source-only and compiles against the system library;
+do not select bindings for a different GDAL release.
 
-Install GDAL 3.12.2 with your Linux/macOS package manager or from source, then
+Install GDAL 3.13.2 with your Linux/macOS package manager or from source, then
 verify:
 
 ```sh
-gdal-config --version  # must print 3.12.2
+gdal-config --version  # must print 3.13.2
 ```
 
 Windows contributors should use a conda-forge environment for the native
@@ -24,25 +24,25 @@ dependency, matching the Windows CI smoke job:
 ```sh
 conda create -n isobands python=3.13
 conda activate isobands
-conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
+conda install -c conda-forge gdal=3.13.2 geopandas numpy pyproj shapely xarray
 ```
 
 ## Development workflow
 
-For the GDAL 3.10.2 conda-forge baseline, install the test group into the
-active environment:
+To test a nondefault 3.10.2, 3.11.5, or 3.12.2 conda-forge baseline, install
+the test group into its matching active environment. This example uses 3.10.2:
 
 ```sh
 make install-test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
 ```
 
-Then run the selected baseline's full test suite:
+Then run that selected baseline's full test suite:
 
 ```sh
 make test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
 ```
 
-For the default GDAL 3.12.2 baseline, install all locked dependency groups and
+For the default GDAL 3.13.2 baseline, install all locked dependency groups and
 run the complete local suite:
 
 ```sh
@@ -65,9 +65,9 @@ debugging shared state.
 ## Documentation and examples
 
 Sphinx source is in `docs/` and uses MyST Markdown. Add public behavior to the
-usage and limitations pages, and keep the autosummary API page current. Build
-strictly with `make docs-check`, then run `make linkcheck`. The hosted URL is
-kept as plain text in source until deployment makes it available.
+single-page guide and keep its API reference current. Build strictly with
+`make docs-check`, then run `make linkcheck`. The hosted URL is kept as plain
+text in source until deployment makes it available.
 
 Run the real-world example without writing tracked files:
 

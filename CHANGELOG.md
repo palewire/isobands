@@ -15,7 +15,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Add a MapLibre example that derives Hurricane Harvey rainfall bands from
   callable quintile levels.
 - Add tested exact GDAL 3.11.5 and 3.13.2 binding extras and CI full-suite
-  lanes, including direct fixed-level command-line parity coverage.
+  lanes.
 
 ### Changed
 
@@ -75,8 +75,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Freeze the stable single-function API and
   `min_value`/`max_value`/`geometry` output contract.
-- Publish stable package metadata and retain the Production/Stable classifier
-  before the release candidate.
+- Publish stable package metadata and retain the Production/Stable classifier.
 - Add Windows conda-forge smoke validation and document the exact GDAL 3.12.2
   requirement.
 
