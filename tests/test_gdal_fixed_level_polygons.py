@@ -111,7 +111,18 @@ def _write_raster(path: Path, raster: RasterSpec) -> None:
         dataset.SetProjection(raster.crs.to_wkt())
         band = dataset.GetRasterBand(1)
         assert band is not None
-        band.WriteArray(raster.values)
+        values = np.ascontiguousarray(raster.values, dtype=np.float64)
+        result = band.WriteRaster(
+            0,
+            0,
+            width,
+            height,
+            values.tobytes(),
+            buf_xsize=width,
+            buf_ysize=height,
+            buf_type=gdal.GDT_Float64,
+        )
+        assert result in (None, gdal.CE_None)
         if raster.nodata is not None:
             band.SetNoDataValue(raster.nodata)
         dataset = None
