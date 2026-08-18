@@ -28,7 +28,7 @@ gdal-config --version  # must print 3.12.2
 pip install isobands
 ```
 
-See the [installation guide](docs/installation.md) for platform-specific
+See the [guide](docs/guide.md) for platform-specific
 details and compiler troubleshooting.
 
 ## Quick start
@@ -65,8 +65,7 @@ names do not imply a CRS. Pass `crs=` explicitly when metadata is absent or
 ambiguous. Explicit finite `nodata` takes precedence over `_FillValue` and
 `missing_value`; otherwise nonfinite cells are excluded. Dask-backed arrays
 are materialized eagerly for GDAL's in-memory dataset. See the
-[full usage and semantics](docs/usage.md), [limitations](docs/limitations.md),
-and [API reference](docs/api.md).
+[guide](docs/guide.md) for full usage, API reference, behavior, and limits.
 
 ## Real-world example
 
@@ -83,8 +82,9 @@ python examples/air_temperature.py
 
 The hosted documentation is intended for
 [palewi.re/docs/isobands/](https://palewi.re/docs/isobands/). The source is in
-[`docs/`](docs/), including installation, semantics, neighboring tools, the
-real-world example, benchmark methodology, and deployment notes.
+[`docs/`](docs/), with a single-page guide covering installation, quick start,
+API reference, behavior, limits, and neighboring tools. Benchmarks and their
+reference data remain in [`benchmarks/`](benchmarks/).
 
 Contributors should read [`CONTRIBUTING.md`](CONTRIBUTING.md). Run
 `make docs-check` and `make linkcheck` for documentation changes.
