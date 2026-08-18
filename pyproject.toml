@@ -21,7 +21,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
@@ -36,7 +36,7 @@ classifiers = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/palewire/isobands#readme"
+Documentation = "https://palewi.re/docs/isobands/"
 Source = "https://github.com/palewire/isobands"
 Issues = "https://github.com/palewire/isobands/issues"
 Changelog = "https://github.com/palewire/isobands/blob/main/CHANGELOG.md"
@@ -67,6 +67,7 @@ docs = [
     "myst-parser",
     "sphinx-palewire-theme",
 ]
+benchmark = ["scipy"]
 notebooks = [
     "jupyterlab",
     "ipywidgets",
@@ -88,7 +89,7 @@ where = ["src"]
 isobands = ["py.typed"]
 
 [tool.setuptools_scm]
-fallback_version = "0.1.0a1"
+fallback_version = "0.1.0"
 version_scheme = "no-guess-dev"
 
 [tool.ruff]

@@ -13,16 +13,36 @@ Git tags through `setuptools-scm`; do not edit a version file.
 - [ ] Run `make verify`.
 - [ ] Run `make package-check PACKAGE=<import-name>`.
 - [ ] Run `make coverage PACKAGE=<import-name>`.
-- [ ] Review `CHANGELOG.md` and move relevant `Unreleased` entries into a
-      dated version section.
-- [ ] Choose a Semantic Versioning release, using a PEP 440 suffix such as
-      `0.1.0a1` for a prerelease.
-- [ ] Confirm the protected `pypi` GitHub environment and matching PyPI Trusted
+- [ ] Confirm the planned stable `0.1.0` section in `CHANGELOG.md` is complete
+      before cutting the release candidate. The RC and stable release must be
+      able to tag the same commit.
+- [x] Confirm the protected `pypi` GitHub environment and matching PyPI Trusted
       Publisher are configured for `.github/workflows/continuous-deployment.yaml`.
-- [ ] Obtain explicit human approval for the version and release.
-- [ ] Create the matching Git tag and GitHub release.
-- [ ] Confirm the release workflow published the expected package to PyPI.
+- [ ] Obtain explicit human approval before any release tag or publication.
+- [ ] Tag `0.1.0rc1` and verify PyPI, installation and the runnable example on
+      Linux, macOS, and Windows, the hosted documentation, and the benchmark
+      smoke/reference result.
+- [ ] If any release-candidate change is needed, make it, verify it, and tag
+      `0.1.0rc2`; every changed RC requires the next RC number.
+- [ ] Once the RC is accepted, tag `0.1.0` on the unchanged RC commit and
+      confirm the release workflow published the expected package to PyPI.
 - [ ] Confirm the documentation workflow deployed the matching Sphinx site.
+
+## Exact RC-to-stable flow
+
+The stable section and all release documentation must be prepared before the
+RC. After explicit maintainer approval:
+
+1. Tag `0.1.0rc1` from the verified commit.
+2. Verify PyPI installation and the example on Linux, macOS, and Windows;
+   verify the hosted docs and the benchmark smoke/reference result.
+3. If anything changes, tag `0.1.0rc2` (and continue with `rc3` if needed) and
+   repeat all verification.
+4. When an RC is accepted without further changes, tag `0.1.0` on that exact
+   unchanged commit.
+
+The `Development Status :: 5 - Production/Stable` classifier is intentionally
+present before the RC so package metadata is stable during this flow.
 
 ## Documentation Deployment
 
@@ -47,10 +67,10 @@ deployments, or package publications without explicit human approval.
 The tag-triggered release job publishes with GitHub's OpenID Connect token. It
 does not use a long-lived PyPI API token.
 
-Before the first release:
+The alpha publication verified this setup. For the stable release:
 
-1. Protect the repository's `pypi` environment.
-2. Register `palewire/isobands` on PyPI as a Trusted Publisher using that
-   environment and `.github/workflows/continuous-deployment.yaml`.
-3. Require approval on the environment if publication should pause for a final
+1. Keep the repository's `pypi` environment protected.
+2. Require approval on the environment if publication should pause for a final
    maintainer review.
+3. Publish through the existing Trusted Publisher; do not add a long-lived
+   PyPI API token.

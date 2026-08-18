@@ -1,0 +1,38 @@
+{
+  "dataset_attrs": {
+    "Conventions": "COARDS",
+    "description": "Data is from NMC initialized reanalysis\n(4x/day).  These are the 0.9950 sigma level values.",
+    "platform": "Model",
+    "references": "http://www.esrl.noaa.gov/psd/data/gridded/data.ncep.reanalysis.html",
+    "title": "4x daily NMC reanalysis (1948)"
+  },
+  "fixture": "air_temperature_time0.npz",
+  "generation_command": "UV_NO_ENV_FILE=1 uv run --no-sync python tests/generate_air_temperature_fixture.py --download",
+  "redistribution_evidence": {
+    "statement": "NOAA/NWS information is in the public domain unless specifically noted otherwise and may be used freely.",
+    "url": "https://www.weather.gov/disclaimer"
+  },
+  "source_dimensions": {
+    "lat": 25,
+    "lon": 53,
+    "time": 2920
+  },
+  "source_sha256": "c606b89c35970a2983b914b76df4adbb409003ef34aa7cfd7f582e41f307482b",
+  "source_title": "4x daily NMC reanalysis (1948)",
+  "source_url": "https://github.com/pydata/xarray-data/raw/master/air_temperature.nc",
+  "variable": "air",
+  "variable_attrs": {
+    "GRIB_id": "11",
+    "GRIB_name": "TMP",
+    "actual_range": "{185.16,322.10001}",
+    "dataset": "NMC Reanalysis",
+    "level_desc": "Surface",
+    "long_name": "4xDaily Air temperature at sigma level 995",
+    "parent_stat": "Other",
+    "precision": "2",
+    "scale_factor": "0.01",
+    "statistic": "Individual Obs",
+    "units": "degK",
+    "var_desc": "Air temperature"
+  }
+}

@@ -1,9 +1,12 @@
 isobands
 ========
 
-``isobands`` converts a two-dimensional xarray raster into filled contour
-polygons backed by a GeoPandas ``GeoDataFrame``. It uses GDAL's in-memory
-datasets, so contour generation does not create intermediate files.
+`isobands` turns a regular two-dimensional xarray raster into filled contour
+polygons backed by a GeoPandas `GeoDataFrame`. It uses GDAL's in-memory raster
+and vector datasets.
+
+The canonical hosted documentation URL is shown here as plain text until the
+site is deployed: `https://palewi.re/docs/isobands/`.
 
 ```{toctree}
 :maxdepth: 2
@@ -11,9 +14,10 @@ datasets, so contour generation does not create intermediate files.
 
 installation
 usage
+real-world
+neighbors
 limitations
+benchmarks
+deployment
 api
 ```
-
-The package is alpha software. The repository README is the public
-documentation landing page while production documentation hosting is deferred.

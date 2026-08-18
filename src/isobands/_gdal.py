@@ -431,6 +431,14 @@ def _read_features(
 
     retained: list[tuple[float, float, BaseGeometry]] = []
     candidates: list[tuple[float, float, Polygon]] = []
+    valid = (
+        np.ones(contour_input.values.shape, dtype=bool)
+        if contour_input.nodata is None
+        else contour_input.values != contour_input.nodata
+    )
+    component_minimum = contour_input.original_bounds[
+        _component_band_index(float(np.min(contour_input.values[valid])), contour_input)
+    ]
     layer.ResetReading()
     for feature in layer:
         ogr_geometry = feature.GetGeometryRef()
@@ -449,6 +457,13 @@ def _read_features(
             index = contour_input.component_band_index
             minimum = contour_input.original_bounds[index]
             upper = contour_input.original_bounds[index + 1]
+        elif minimum < component_minimum:
+            # GDAL emits empty lower bands when a nodata-separated component
+            # starts exactly on a fixed threshold. Clip that extrapolated label
+            # to the component's lower-inclusive band and discard empty bands.
+            minimum = component_minimum
+        if contour_input.component_band_index is None and minimum >= upper:
+            continue
         if geometry.is_empty:
             raise RuntimeError("GDAL generated an empty filled-contour geometry.")
         if geometry.is_valid:

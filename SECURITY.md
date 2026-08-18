@@ -1,5 +1,11 @@
 # Security Policy
 
+## Supported versions
+
+Once `0.1.0` is published, the `0.1.x` line receives security fixes and
+security guidance. Before that stable publication, alpha releases are best
+effort and may not receive fixes for every issue.
+
 ## Reporting a Vulnerability
 
 Please do not open a public issue for a suspected vulnerability. Send a

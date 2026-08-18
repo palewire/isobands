@@ -16,6 +16,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Security
 
+## [0.1.0] - 2026-08-18
+
+### Added
+
+- Real-world NOAA/NCEP air-temperature fixture and a runnable GeoPandas
+  example, with checksum and source metadata.
+- Benchmark smoke/full tooling and an informational reference result covering
+  the in-memory and file-based workflows.
+- Hosted Sphinx documentation and deployment infrastructure, including
+  platform installation guidance and neighboring-tool notes.
+
+### Changed
+
+- Freeze the stable single-function API and
+  `min_value`/`max_value`/`geometry` output contract.
+- Publish stable package metadata and retain the Production/Stable classifier
+  before the release candidate.
+- Add Windows conda-forge smoke validation and document the exact GDAL 3.12.2
+  requirement.
+
+### Fixed
+
+- Preserve thin nodata-separated components and their GDAL-interpolated
+  threshold geometry.
+
 ## [0.1.0a1] - 2026-08-18
 
 ### Added

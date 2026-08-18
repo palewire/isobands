@@ -1,0 +1,42 @@
+name: Benchmark smoke
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Validate benchmark harness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install matching conda-forge GDAL
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: gdal
+          create-args: >-
+            python=3.13
+            gdal=3.12.2
+          channels: conda-forge
+          init-shell: bash
+
+      - name: Run benchmark smoke correctness check
+        shell: bash -el {0}
+        run: |
+          echo "${CONDA_PREFIX}/bin" >> "$GITHUB_PATH"
+          export GDAL_CONFIG="${CONDA_PREFIX}/bin/gdal-config"
+          command -v gdal_contour
+          make benchmark-smoke BENCHMARK_REPEATS=1 BENCHMARK_WARMUPS=0

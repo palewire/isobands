@@ -10,10 +10,15 @@ GDAL_VERSION ?= 3.12.2
 PACKAGE_CHECK_DIR ?= .package-check
 PACKAGE_CHECK_PYTHON ?=
 PACKAGE_CHECK_NO_DEPS ?= 0
+BENCHMARK_REPEATS ?=
+BENCHMARK_WARMUPS ?= 1
+BENCHMARK_GRID ?= 500x1000
+BENCHMARK_RESULTS_DIR ?= benchmarks/results
 UV_ENV = UV_NO_ENV_FILE=1 GDAL_CONFIG="$(GDAL_CONFIG)"
 RUN = $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run --no-sync
+BENCHMARK_RUN = PYTHONPATH="$(CURDIR)/src" $(UV_ENV) $(if $(UV_PYTHON),UV_PYTHON=$(UV_PYTHON)) $(UV) run --group benchmark --no-sync
 
-.PHONY: all help gdal-check install install-all install-dev install-test install-docs check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
+.PHONY: all help gdal-check install install-all install-dev install-test install-docs install-benchmarks benchmark-smoke benchmark check verify diff-check lint format-check format fix type-check test test-serial test-parallel coverage build package-check package-verify docs docs-check linkcheck build-docs serve-docs hooks clean
 
 help: ## Show available commands
 	@awk 'BEGIN {FS = ":.*## "}; /^[a-zA-Z0-9_-]+:.*## / {printf "%-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -35,6 +40,9 @@ install-test: gdal-check ## Install dependencies for tests
 
 install-docs: gdal-check ## Install dependencies for documentation
 	$(UV_ENV) $(UV) sync --group docs --locked
+
+install-benchmarks: gdal-check ## Install benchmark dependencies
+	$(UV_ENV) $(UV) sync --group benchmark --locked
 
 all: verify ## Run the complete verification suite
 
@@ -77,6 +85,12 @@ coverage: ## Enforce coverage for PACKAGE
 build: ## Build source and wheel distributions
 	$(UV_ENV) $(UV) build --sdist --wheel
 
+benchmark-smoke: install-benchmarks ## Run fixture benchmark correctness smoke test
+	$(BENCHMARK_RUN) python -m benchmarks --mode smoke --repeats $(if $(BENCHMARK_REPEATS),$(BENCHMARK_REPEATS),2) --warmups $(BENCHMARK_WARMUPS) --grid $(BENCHMARK_GRID) --json "$(BENCHMARK_RESULTS_DIR)/smoke.json" --markdown "$(BENCHMARK_RESULTS_DIR)/smoke.md"
+
+benchmark: install-benchmarks ## Run full downloaded-data benchmark
+	$(BENCHMARK_RUN) python -m benchmarks --mode full --repeats $(if $(BENCHMARK_REPEATS),$(BENCHMARK_REPEATS),5) --warmups $(BENCHMARK_WARMUPS) --grid $(BENCHMARK_GRID) --json "$(BENCHMARK_RESULTS_DIR)/full.json" --markdown "$(BENCHMARK_RESULTS_DIR)/full.md"
+
 package-check: gdal-check ## Build, install, and import PACKAGE in an isolated environment
 	@test -n "$(PACKAGE)" || { echo "Set PACKAGE to the library import name."; exit 2; }
 	@test "$(PACKAGE_CHECK_NO_DEPS)" = 0 -o "$(PACKAGE_CHECK_NO_DEPS)" = 1 || { echo "PACKAGE_CHECK_NO_DEPS must be 0 or 1."; exit 2; }
@@ -85,12 +99,12 @@ package-check: gdal-check ## Build, install, and import PACKAGE in an isolated e
 		test -n "$(PACKAGE_CHECK_PYTHON)" || { echo "Set PACKAGE_CHECK_PYTHON to an environment with all runtime dependencies when PACKAGE_CHECK_NO_DEPS=1."; exit 2; }; \
 		"$(PACKAGE_CHECK_PYTHON)" -c 'import geopandas, numpy, pyproj, shapely, xarray; from osgeo import gdal; assert gdal.VersionInfo("RELEASE_NAME") == "$(GDAL_VERSION)"'; \
 		$(UV_ENV) $(UV) build --wheel --out-dir "$(PACKAGE_CHECK_DIR)/dist"; \
-		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_PYTHON)" --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
+		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_PYTHON)" --reinstall --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
 		"$(PACKAGE_CHECK_PYTHON)" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
 	else \
 		$(UV_ENV) $(UV) build --wheel --out-dir "$(PACKAGE_CHECK_DIR)/dist"; \
 		UV_PROJECT_ENVIRONMENT="$(PACKAGE_CHECK_DIR)/venv" $(UV_ENV) $(UV) sync --locked --no-default-groups --no-editable; \
-		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_DIR)/venv/bin/python" --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
+		$(UV_ENV) $(UV) pip install --python "$(PACKAGE_CHECK_DIR)/venv/bin/python" --reinstall --no-deps "$(PACKAGE_CHECK_DIR)"/dist/*.whl; \
 		"$(PACKAGE_CHECK_DIR)/venv/bin/python" -c 'import importlib; importlib.import_module("$(PACKAGE)")'; \
 	fi; \
 	rm -rf "$(PACKAGE_CHECK_DIR)"

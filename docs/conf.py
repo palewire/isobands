@@ -50,3 +50,7 @@ linkcheck_timeout = 10
 linkcheck_retries = 2
 
 html_theme = "palewire"
+html_baseurl = "https://palewi.re/docs/isobands/"
+html_theme_options = {
+    "canonical_url": html_baseurl,
+}
