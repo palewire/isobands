@@ -8,6 +8,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+## [0.2.0] - 2026-08-18
+
+### Added
+
 - A MapLibre example that downloads ERA5 daily high temperatures, creates
   filled isobands, and exports colored GeoJSON for a simple interactive map.
 - A MapLibre example that turns EPA PM2.5 monitor readings into health-category
