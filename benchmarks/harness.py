@@ -32,6 +32,7 @@ FULL_SOURCE_URL = "https://github.com/pydata/xarray-data/raw/master/air_temperat
 FULL_SOURCE_SHA256 = "c606b89c35970a2983b914b76df4adbb409003ef34aa7cfd7f582e41f307482b"
 FULL_TIMESTEP = 0
 DEFAULT_LEVELS = (240.0, 250.0, 260.0, 270.0, 280.0, 290.0, 300.0)
+_BAND_COVERAGE_RTOL = 1e-4
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SMOKE_FIXTURE = PROJECT_ROOT / "examples/data/air_temperature_time0.npz"
 
@@ -290,15 +291,23 @@ def _gdal_run(
     }
 
 
-def _normalised_labels(
+def _band_geometries(
     output: gpd.GeoDataFrame, minimum: float, maximum: float
-) -> np.ndarray:
-    labels = output[["min_value", "max_value"]].to_numpy(dtype=float, copy=True)
-    labels[:, 0] = np.where(np.isfinite(labels[:, 0]), labels[:, 0], minimum)
-    labels[:, 1] = np.where(np.isfinite(labels[:, 1]), labels[:, 1], maximum)
-    labels[:, 0] = np.maximum(labels[:, 0], minimum)
-    labels[:, 1] = np.minimum(labels[:, 1], maximum)
-    return labels[np.lexsort((labels[:, 1], labels[:, 0]))]
+) -> dict[tuple[float, float], Any]:
+    """Union records by their finite, clipped band labels."""
+
+    grouped: dict[tuple[float, float], list[Any]] = {}
+    for lower, upper, geometry in zip(
+        output["min_value"],
+        output["max_value"],
+        output.geometry,
+        strict=True,
+    ):
+        finite_lower = float(lower) if np.isfinite(lower) else minimum
+        finite_upper = float(upper) if np.isfinite(upper) else maximum
+        label = (max(finite_lower, minimum), min(finite_upper, maximum))
+        grouped.setdefault(label, []).append(geometry)
+    return {label: unary_union(geometries) for label, geometries in grouped.items()}
 
 
 def _validate(
@@ -317,12 +326,23 @@ def _validate(
     ):
         raise AssertionError("Contour output bounds differ.")
     minimum, maximum = float(np.nanmin(data.values)), float(np.nanmax(data.values))
-    direct_labels = _normalised_labels(direct, minimum, maximum)
-    baseline_labels = _normalised_labels(baseline, minimum, maximum)
-    if direct_labels.shape != baseline_labels.shape or not np.allclose(
-        direct_labels, baseline_labels, rtol=1e-8, atol=1e-8
-    ):
-        raise AssertionError("Contour output labels differ.")
+    direct_bands = _band_geometries(direct, minimum, maximum)
+    baseline_bands = _band_geometries(baseline, minimum, maximum)
+    if direct_bands.keys() != baseline_bands.keys():
+        raise AssertionError(
+            "Contour output label keys differ: "
+            f"direct={sorted(direct_bands)}, baseline={sorted(baseline_bands)}."
+        )
+    for label in direct_bands:
+        direct_band, baseline_band = direct_bands[label], baseline_bands[label]
+        difference = direct_band.symmetric_difference(baseline_band).area
+        scale = max(direct_band.area, baseline_band.area, 1.0)
+        tolerance = scale * _BAND_COVERAGE_RTOL
+        if difference > tolerance:
+            raise AssertionError(
+                f"Contour coverage differs for label {label}: "
+                f"{difference:.6g} exceeds tolerance {tolerance:.6g}."
+            )
     difference = (
         unary_union(direct.geometry)
         .symmetric_difference(unary_union(baseline.geometry))
