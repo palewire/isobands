@@ -9,27 +9,35 @@ raster and vector drivers, so a normal call does not create intermediate files.
 
 ## Install
 
-GDAL **3.10.2 through 3.12.x** and its matching development headers are
-supported. The PyPI `GDAL` distribution is source-only; `pip` cannot install
-the system library for you. On Linux, install matching GDAL runtime and
-development packages from your distribution or build them from source. On
-macOS, Homebrew users should install matching `gdal` headers and libraries.
-Windows users should use a conda-forge environment:
+GDAL **3.10.2** and **3.12.2** are supported exact baselines. Select the
+matching Python binding explicitly: `gdal310` for GDAL 3.10.2 or `gdal312` for
+GDAL 3.12.2. The PyPI `GDAL` distribution is source-only; it compiles against
+the native library, so do not select an extra that differs from your native
+GDAL installation.
 
 ```sh
-conda install -c conda-forge gdal=3.10.2
+pip install "isobands[gdal310]"  # native GDAL 3.10.2
+# or
+pip install "isobands[gdal312]"  # native GDAL 3.12.2
 ```
 
-On Linux and macOS, verify the development installation before installing
-`isobands`:
+On Linux and macOS, install matching GDAL runtime and development packages
+before the selected extra:
 
 ```sh
-gdal-config --version  # must print the installed supported version
-pip install isobands
+gdal-config --version  # must print 3.10.2 or 3.12.2
 ```
 
-See the [guide](docs/index.md) for platform-specific
-details and compiler troubleshooting.
+For conda-forge, install the runtime, binding, and geospatial dependencies as
+one set, then install `isobands` without dependencies:
+
+```sh
+conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
+pip install --no-deps isobands
+```
+
+See the [guide](docs/index.md) for platform-specific details and compiler
+troubleshooting.
 
 ## Quick start
 

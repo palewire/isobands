@@ -4,11 +4,11 @@ Installation
 GDAL prerequisite
 -----------------
 
-The runtime supports **GDAL 3.10.2 through 3.12.x**, including matching system
-development headers and libraries. The PyPI ``GDAL`` distribution is
-source-only: it compiles Python bindings against the system installation, and
-``pip`` alone cannot provide that installation. Do not mix headers, libraries,
-or Python bindings from different GDAL releases.
+The runtime supports the exact **GDAL 3.10.2** and **GDAL 3.12.2** baselines,
+including matching system development headers and libraries. The PyPI
+``GDAL`` distribution is source-only: it compiles Python bindings against the
+system installation. Select the matching ``isobands`` extra; do not mix
+headers, libraries, or Python bindings from different GDAL releases.
 
 Linux
 ~~~~~
@@ -17,16 +17,20 @@ Install a supported GDAL runtime and development package from your
 distribution's supported repository, or build it from source. Package names
 vary by distribution; the important distinction is the runtime package and its
 development package (headers, ``gdal-config``, and linkable libraries). Then
-verify the selected development installation:
+verify the selected development installation and install its matching extra:
 
 .. code-block:: console
 
    $ gdal-config --version
    3.10.2
+   $ python -m pip install "isobands[gdal310]"
 
 If multiple GDAL installations exist, put the matching ``gdal-config`` first on
 ``PATH`` or set ``GDAL_CONFIG`` to its absolute path. ``gdal-config --cflags``
 and ``gdal-config --libs`` should refer to the same GDAL prefix.
+
+Use ``isobands[gdal312]`` only with a native GDAL 3.12.2 installation. Plain
+``pip install isobands`` does not install GDAL bindings.
 
 macOS and Homebrew
 ~~~~~~~~~~~~~~~~~~
@@ -58,8 +62,8 @@ by the Windows CI smoke job:
 
    conda create -n isobands python=3.13
    conda activate isobands
-   conda install -c conda-forge gdal=3.10.2
-   python -m pip install isobands
+   conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
+   python -m pip install --no-deps isobands
 
 Verify the Python environment imports ``osgeo.gdal`` and reports a supported
 release before running the example or your application. Do not combine a
@@ -68,22 +72,24 @@ conda-forge GDAL runtime with unrelated system DLLs.
 Install the package
 -------------------
 
-After the matching GDAL installation is active:
+After the matching GDAL installation is active, choose its exact binding extra:
 
 .. code-block:: console
 
-   $ python -m pip install isobands
+   $ python -m pip install "isobands[gdal310]"
 
 Contributor setup
 -----------------
 
-Clone the repository and install its locked development, test, benchmark, and
-documentation groups:
+Clone the repository, activate a matching GDAL environment, and install its
+development, test, benchmark, and documentation groups:
 
 .. code-block:: console
 
-   $ make install
+   $ make install-test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
+   $ make test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
 
-The ``make`` targets set ``UV_NO_ENV_FILE=1`` and verify ``gdal-config`` before
-syncing dependencies. To install only documentation dependencies, use
-``make install-docs``.
+``GDAL_BASELINE`` is ``310`` or ``312`` and controls the version check.
+``GDAL_PYTHON`` directs test dependencies into an activated conda environment
+that already provides matching GDAL bindings. To install only documentation
+dependencies, use ``make install-docs``.

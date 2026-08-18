@@ -14,17 +14,24 @@ raster and vector drivers, so a normal call does not create intermediate files.
 
 ## Installation
 
-GDAL **3.10.2 through 3.12.x** and matching development headers are supported.
-The PyPI `GDAL` distribution is source-only; `pip` cannot install the system
-library.
+GDAL **3.10.2** and **3.12.2** are supported exact baselines. The PyPI `GDAL`
+distribution is source-only, so select the binding extra that matches the
+installed native library:
 
-**Linux** — install a supported GDAL runtime and development package from your
-distribution's repository or build it from source:
+```console
+$ pip install "isobands[gdal310]"  # GDAL 3.10.2
+$ pip install "isobands[gdal312]"  # GDAL 3.12.2
+```
+
+Do not select an extra that differs from the native GDAL runtime and headers.
+
+**Linux** — install the matching GDAL runtime and development package before
+the selected extra:
 
 ```console
 $ gdal-config --version
 3.10.2
-$ pip install isobands
+$ pip install "isobands[gdal310]"
 ```
 
 If multiple GDAL installations exist, put the matching `gdal-config` first on
@@ -36,7 +43,7 @@ If multiple GDAL installations exist, put the matching `gdal-config` first on
 $ brew install gdal
 $ "$(brew --prefix gdal)/bin/gdal-config" --version
 3.12.2
-$ pip install isobands
+$ pip install "isobands[gdal312]"
 ```
 
 Ensure the active Python architecture (for example, arm64) matches the GDAL
@@ -49,15 +56,22 @@ headers, and libraries are resolved as one compatible set:
 ```console
 conda create -n isobands python=3.13
 conda activate isobands
-conda install -c conda-forge gdal=3.10.2
-pip install isobands
+conda install -c conda-forge gdal=3.10.2 geopandas numpy pyproj shapely xarray
+pip install --no-deps isobands
 ```
 
-**Contributor setup** — clone the repository and install its locked dependency
-groups:
+**Contributor setup** — clone the repository and install all locked dependency
+groups for the default GDAL 3.12.2 baseline:
 
 ```console
 $ make install
+```
+
+For the GDAL 3.10.2 conda-forge baseline, use its active interpreter:
+
+```console
+$ make install-test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
+$ make test GDAL_BASELINE=310 GDAL_PYTHON="$(command -v python)"
 ```
 
 ---

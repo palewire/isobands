@@ -137,7 +137,7 @@ def _import_gdal() -> tuple[Any, Any]:
     except ImportError as error:
         raise RuntimeError(
             "GDAL Python bindings are required to generate isobands. "
-            "Install the project's GDAL dependency matching the system GDAL."
+            "Install the matching gdal310/gdal312 extra or conda-forge bindings."
         ) from error
     return gdal, ogr
 
