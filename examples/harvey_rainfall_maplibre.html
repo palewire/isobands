@@ -30,6 +30,7 @@
     </div>
     <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
     <script>
+      const houston = [-95.3698, 29.7604];
       const map = new maplibregl.Map({
         container: "map",
         style: "https://tiles.openfreemap.org/styles/bright",
@@ -87,6 +88,14 @@
           },
         }, firstSymbolLayer?.id);
         addLegend(rainfall.features);
+        new maplibregl.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 25,
+        })
+          .setLngLat(houston)
+          .setHTML("<strong>Houston</strong><br>109.4 mm")
+          .addTo(map);
       });
     </script>
   </body>
