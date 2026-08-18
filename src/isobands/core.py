@@ -11,7 +11,7 @@ import geopandas as gpd
 import numpy as np
 import xarray as xr
 
-from isobands._gdal import generate_polygons
+from isobands._gdal import generate_fixed_level_polygons, generate_polygons
 from isobands._validation import prepare_raster
 
 _MAX_INTERVAL_THRESHOLDS = 100_000
@@ -52,6 +52,38 @@ def isobands(
     return gpd.GeoDataFrame(
         records,
         columns=["min_value", "max_value", "geometry"],
+        geometry="geometry",
+        crs=raster.crs,
+    )
+
+
+def gdal_fixed_level_polygons(
+    data: xr.DataArray,
+    *,
+    levels: Sequence[float],
+    crs: Any | None = None,  # noqa: ANN401
+    nodata: float | None = None,
+) -> gpd.GeoDataFrame:
+    """Generate raw GDAL ``gdal_contour -p -fl`` compatible polygons.
+
+    This low-level API applies ``gdal_contour -fl``'s six-decimal fixed-level
+    serialization, then returns GDAL's emitted ``ID``, ``floor``, ``ceil``, and
+    ``geometry`` fields in feature order. It does not clip endpoint levels to
+    raster extrema, add outer bands, dissolve components, repair topology, or
+    canonicalize geometry. Use :func:`isobands` for its stable finite-band
+    convenience semantics.
+
+    ``levels`` must be a nonempty finite sequence. Their order, including
+    repeated levels, is preserved and validated by GDAL's fixed-level contour
+    implementation.
+    """
+
+    fixed_levels = _fixed_levels(levels)
+    raster = prepare_raster(data, crs=crs, nodata=nodata)
+    records = generate_fixed_level_polygons(raster, levels=fixed_levels)
+    return gpd.GeoDataFrame(
+        records,
+        columns=["ID", "floor", "ceil", "geometry"],
         geometry="geometry",
         crs=raster.crs,
     )
@@ -106,6 +138,30 @@ def _explicit_thresholds(
     if not np.all(np.diff(values) > 0):
         raise ValueError("levels must be strictly increasing.")
     return tuple(float(value) for value in values if minimum < value < maximum)
+
+
+def _fixed_levels(levels: Sequence[float]) -> tuple[float, ...]:
+    """Validate finite fixed levels without changing their native semantics."""
+
+    try:
+        raw_values = np.asarray(levels, dtype=object)
+    except (TypeError, ValueError) as error:
+        raise ValueError(
+            "levels must be a one-dimensional numeric sequence."
+        ) from error
+    if raw_values.ndim != 1 or raw_values.size == 0:
+        raise ValueError("levels must be a nonempty one-dimensional sequence.")
+    if any(isinstance(value, (bool, np.bool_)) for value in raw_values):
+        raise ValueError("levels must not contain boolean values.")
+    try:
+        values = raw_values.astype(np.float64)
+    except (TypeError, ValueError) as error:
+        raise ValueError(
+            "levels must be a one-dimensional numeric sequence."
+        ) from error
+    if not np.all(np.isfinite(values)):
+        raise ValueError("levels must contain only finite values.")
+    return tuple(float(value) for value in values)
 
 
 def _interval_thresholds(

@@ -39,12 +39,29 @@ columns and a GeoPandas CRS. Exactly one of `levels` or `interval` is required.
 Use `levels` for strictly increasing interior thresholds, or `interval` for
 integral thresholds. Values equal to a threshold belong to the upper band.
 
-## Stable compatibility promise
+## Compatibility APIs
 
-The `0.1.x` API is the single `isobands()` function and its documented
-`min_value`/`max_value`/`geometry` output. Compatible `0.1.x` releases keep
-those names and meanings. This promise does not expand the documented grid,
-numeric, dependency, or platform support.
+`isobands()` is the stable convenience API. Its
+`min_value`/`max_value`/`geometry` schema and finite interior-threshold
+semantics remain unchanged.
+
+Use `gdal_fixed_level_polygons()` when a workflow needs native
+`gdal_contour -p -fl` fixed-level output:
+
+```python
+from isobands import gdal_fixed_level_polygons
+
+native = gdal_fixed_level_polygons(
+    data,
+    levels=[0.0, 1.0, 2.0, 3.0, 4.0],
+    crs="EPSG:4326",
+)
+```
+
+It returns GDAL-style `ID`/`floor`/`ceil`/`geometry` features in native order
+without clipping or post-contour normalization. It uses GDAL's virtual
+in-memory GeoJSON output, not intermediate files. See the [guide](docs/index.md)
+for its exact contract and limits.
 
 Regular one-dimensional rectilinear coordinates are required, and coordinate
 names do not imply a CRS. Pass `crs=` explicitly when metadata is absent or

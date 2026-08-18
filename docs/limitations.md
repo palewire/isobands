@@ -28,6 +28,9 @@ The stable API is intentionally narrow:
   matching system GDAL development files and select the corresponding
   ``gdal310`` or ``gdal312`` extra; pip alone cannot provide the system library.
 
-The compatibility promise covers the documented ``isobands()`` API and its
-``min_value``, ``max_value``, and ``geometry`` output. It does not claim
-support for grids, platforms, or numeric ranges outside these constraints.
+The stable convenience promise covers the documented ``isobands()`` API and its
+``min_value``, ``max_value``, and ``geometry`` output. The separate
+``gdal_fixed_level_polygons()`` API preserves raw fixed-level GDAL feature
+labels, order, and geometry without post-processing; it is not an adapter to
+the stable convenience schema. Neither API claims support for grids, platforms,
+or numeric ranges outside these constraints.
