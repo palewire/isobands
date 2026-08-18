@@ -235,40 +235,6 @@ satellite temperature retrieval, commonly because of clouds or quality flags.
 .. autofunction:: isobands.isobands
 ```
 
-```{eval-rst}
-.. autofunction:: isobands.gdal_fixed_level_polygons
-```
-
-## Raw GDAL fixed-level compatibility
-
-`gdal_fixed_level_polygons()` is a separate low-level API for workflows that
-need native [`gdal_contour -p -fl`](https://gdal.org/programs/gdal_contour.html)
-behavior instead of the stable `isobands()` convenience contract:
-
-```python
-from isobands import gdal_fixed_level_polygons
-
-native = gdal_fixed_level_polygons(
-    data,
-    levels=[0.0, 1.0, 2.0, 3.0, 4.0],
-    crs="EPSG:4326",
-)
-print(native[["ID", "floor", "ceil", "geometry"]])
-```
-
-Every supplied level, including endpoint and out-of-range levels, is retained
-in order. The result uses GDAL's `ID`, `floor`, `ceil`, and `geometry` schema
-and feature order. It deliberately does **not** clip labels to data extrema,
-create missing outer bands, split or dissolve features, repair topology, or
-reorder/canonicalize geometry.
-
-This function uses GDAL's in-process MEM raster driver and virtual `/vsimem`
-GeoJSON output driver; it does not invoke `gdal_contour` or create temporary
-files. It applies the command's six-decimal fixed-level serialization, and its
-fields, order, and WKB match direct command-line output on the supported GDAL
-3.10.2, 3.11.5, 3.12.2, and 3.13.2 baselines. The regular-grid validation and
-finite nodata conversion still apply before GDAL receives the raster.
-
 ## Links
 
 - [Source code](https://github.com/palewire/isobands)

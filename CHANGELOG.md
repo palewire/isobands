@@ -27,6 +27,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
+- Remove the temporary pre-release native fixed-level compatibility API. The
+  package's public API remains ``isobands()``.
+
 ### Security
 
 ## [0.2.0] - 2026-08-18
@@ -39,9 +42,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   contour bands during New York City's June 2023 wildfire smoke event.
 - A MapLibre example that uses missing cells to preserve unavailable areas in
   NASA MODIS snow-cover contour bands across Iowa.
-- Add ``gdal_fixed_level_polygons()`` for in-process raw fixed-level GDAL
-  polygon output with native ``ID``/``floor``/``ceil`` labels and feature
-  ordering, alongside the unchanged ``isobands()`` convenience API.
 
 ### Changed
 
