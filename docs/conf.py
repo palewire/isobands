@@ -60,6 +60,7 @@ nitpicky = True
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "geopandas": ("https://geopandas.org/en/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
     "xarray": ("https://docs.xarray.dev/en/stable/", None),
 }
 

@@ -31,9 +31,12 @@ Band definitions
 Exactly one of ``levels`` or ``interval`` is required.
 
 * ``levels`` is a nonempty, strictly increasing, finite sequence of interior
-  thresholds. Thresholds outside the finite valid raster range are ignored.
-  The first band starts at the valid minimum and the last ends at the valid
-  maximum.
+  thresholds, or a callable that returns one. The callable receives a
+  one-dimensional NumPy array containing only valid raster values after nodata
+  and nonfinite cells are excluded. Its result follows the same validation
+  rules as an explicit sequence. Thresholds outside the finite valid raster
+  range are ignored. The first band starts at the valid minimum and the last
+  ends at the valid maximum.
 * ``interval`` is a positive finite number. Interior thresholds are integral
   multiples of the interval that fall strictly inside the valid range. Use
   ``offset`` to align them to a nonzero origin: ``interval=5, offset=2.5``
@@ -47,6 +50,16 @@ Exactly one of ``levels`` or ``interval`` is required.
 * Empty outer bands are not emitted. For example, levels below or above all
   valid values are ignored; if every requested level is outside the range,
   one extrema-to-extrema band remains.
+
+For example, a named function can calculate quintile thresholds:
+
+.. code-block:: python
+   import numpy as np
+
+   def quintiles(values: np.ndarray) -> np.ndarray:
+       return np.quantile(values, [0.2, 0.4, 0.6, 0.8])
+
+   bands = isobands(data, levels=quintiles, crs="EPSG:4326")
 
 Disconnected and repeated bands
 --------------------------------
