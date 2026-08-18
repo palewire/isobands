@@ -1,0 +1,179 @@
+[build-system]
+requires = ["setuptools>=84.0.0", "setuptools_scm>=10.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "your-package-name"
+dynamic = ["version"]
+requires-python = ">=3.11"
+dependencies = []
+authors = [{ name = "Your Name", email = "you@example.com" }]
+description = "A short description of your package"
+keywords = []
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Documentation = "https://example.com/your-package-name"
+Source = "https://github.com/your-org/your-package-name"
+Issues = "https://github.com/your-org/your-package-name/issues"
+
+# [project.scripts]
+# your-command = "your_package_name.cli:main"
+
+[dependency-groups]
+dev = ["pre-commit", "ruff", "setuptools-scm", "ty", "vulture"]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-env",
+    "pytest-ordering",
+    "pytest-randomly",
+    "pytest-rerunfailures",
+    "pytest-runner",
+    "pytest-sugar",
+    "pytest-timeout",
+    "pytest-vcr",
+    "pytest-xdist",
+    "freezegun",
+    "hypothesis",
+]
+docs = [
+    "sphinx",
+    "sphinx-autobuild",
+    "sphinxcontrib-mermaid",
+    "sphinx_copybutton",
+    "myst-parser",
+    "sphinx-palewire-theme",
+]
+notebooks = [
+    "jupyterlab",
+    "ipywidgets",
+    "rich",
+    "pandas",
+    "pyarrow",
+    "xlrd",
+    "openpyxl",
+    "altair",
+]
+
+# Adopt a src/ layout when adding a library:
+# [tool.setuptools.package-dir]
+# "" = "src"
+#
+# [tool.setuptools.packages.find]
+# where = ["src"]
+
+[tool.setuptools_scm]
+
+[tool.ruff]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "B",    # flake8-bugbear
+    "W",    # pycodestyle warnings
+    "I",    # isort - import sorting
+    "UP",   # pyupgrade - modern Python idioms
+    "N",    # pep8-naming - naming conventions
+    "ANN",  # flake8-annotations - type annotations
+    "YTT",  # flake8-2020 - sys.version_info checks
+    "S",    # flake8-bandit - security issues
+    "BLE",  # flake8-blind-except - blind except statements
+    "FA",   # flake8-future-annotations - future annotations
+    "ICN",  # flake8-import-conventions - import conventions
+    "PIE",  # flake8-pie - misc lints
+    "Q",    # flake8-quotes - quote consistency
+    "RSE",  # flake8-raise - raise statement improvements
+    "RET",  # flake8-return - return statement improvements
+    "SLOT", # flake8-slots - __slots__ usage
+    "SIM",  # flake8-simplify - code simplification
+    "TID",  # flake8-tidy-imports - tidy imports
+    "PTH",  # flake8-use-pathlib - pathlib usage
+    "FLY",  # flynt - f-string conversion
+    "PERF", # perflint - performance improvements
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "E501",    # Line length
+    "F403",    # Star imports
+    "UP046",   # Generic class `Loader` uses `Generic` subclass instead of type parameters
+    "S101",    # Allow assert
+    "SIM103",  # Allow for True/False returns after a test
+    "SIM108",  # Don't force ternary expressions
+    "SIM117",  # Allow for nested with statements
+    "PERF401", # For for appending to a list
+    "RUF001",  # Allow for curly quotes
+    "RUF005",  # Allow for adding lists
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "PLR2004",
+    "ANN",     # Annotations
+    "S105",    # Possible hardcoded password
+    "S108",    # Temp directory
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers", "--durations=10"]
+testpaths = ["tests"]
+python_files = "test_*.py"
+timeout = 60
+markers = [
+    "unit: Unit tests",
+    "component: Component tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:pandas.*",
+    "ignore::FutureWarning:numpy.*",
+    "ignore::DeprecationWarning:dateutil.*",
+]
+
+[tool.coverage.run]
+# Set source = ["your_package_name"] after adding the library package.
+branch = true
+relative_files = true
+omit = ["*/__pycache__/*"]
+
+[tool.ty.environment]
+python-version = "3.13"
+
+[tool.ty.src]
+# Set include = ["src/your_package_name"] after adding the library package.
+exclude = [
+    "tests/**",
+    "build/**",
+    ".venv/**",
+    ".github/**",
+    ".vscode/**",
+    "**/__pycache__",
+]
+
+[tool.ty.rules]
+invalid-argument-type = "error"
+invalid-return-type = "error"
+invalid-key = "error"
+invalid-assignment = "error"
+invalid-method-override = "error"
+unresolved-attribute = "error"
+possibly-missing-attribute = "error"
+no-matching-overload = "ignore"
+unused-ignore-comment = "ignore"
