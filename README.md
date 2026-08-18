@@ -28,7 +28,7 @@ gdal-config --version  # must print 3.12.2
 pip install isobands
 ```
 
-See the [guide](docs/guide.md) for platform-specific
+See the [guide](docs/index.md) for platform-specific
 details and compiler troubleshooting.
 
 ## Quick start
@@ -65,7 +65,7 @@ names do not imply a CRS. Pass `crs=` explicitly when metadata is absent or
 ambiguous. Explicit finite `nodata` takes precedence over `_FillValue` and
 `missing_value`; otherwise nonfinite cells are excluded. Dask-backed arrays
 are materialized eagerly for GDAL's in-memory dataset. See the
-[guide](docs/guide.md) for full usage, API reference, behavior, and limits.
+[guide](docs/index.md) for full usage, API reference, behavior, and limits.
 
 ## Real-world example
 

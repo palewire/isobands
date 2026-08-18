@@ -104,8 +104,8 @@ palewi.re/docs/isobands/*
 
 The Worker should reverse-proxy the path beneath that route to the configured
 S3 bucket and `<base-path>` prefix, mapping the trailing-slash root to
-`index.html` and preserving the remaining path (for example, `guide.html` and
-`_static/...`). Keep the canonical trailing-slash URL and ensure the Worker
+`index.html` and preserving the remaining path (for example, `_static/...`).
+Keep the canonical trailing-slash URL and ensure the Worker
 also handles the no-slash form consistently. The generated links and asset
 URLs are relative so they continue to resolve below this prefix.
 
@@ -115,13 +115,12 @@ After an approved deployment, verify manually through the Cloudflare URL:
 
 1. The index loads at the canonical path
    `https://palewi.re/docs/isobands/`.
-2. The guide page loads at the canonical path followed by `guide.html`.
-3. A stylesheet or other `_static/` asset referenced by the index returns
+2. A stylesheet or other `_static/` asset referenced by the index returns
    successfully.
-4. The HTML canonical link uses the
+3. The HTML canonical link uses the
    `https://palewi.re/docs/isobands/` base (the Palewire theme adds each
    document's generated `.html` path).
-5. The displayed package version matches the intended release.
+4. The displayed package version matches the intended release.
 
 Do not make Cloudflare propagation or public-URL availability a blocking
 workflow check.
