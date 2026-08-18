@@ -54,7 +54,12 @@ values:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:PutObject", "s3:PutObjectAcl"],
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:DeleteObject"
+      ],
       "Resource": "arn:aws:s3:::<bucket>/<base-path>/*"
     },
     {
@@ -71,23 +76,23 @@ values:
 }
 ```
 
-`delivery-deploy-action@v1` checks each destination object with `HeadObject`
-before uploading it, so `s3:GetObject` and the prefix-scoped
-`s3:ListBucket` permission are required. The action does not delete old
-objects. Its `public: true` input sends a `public-read` ACL, which requires
-`s3:PutObjectAcl` and compatible S3 public-access settings.
+The deploy step runs `aws s3 sync --delete` scoped to
+`s3://<bucket>/<base-path>/`. This removes objects within that exact prefix
+that are no longer present in the release candidate, keeping the hosted site
+in sync with the built documentation. `s3:GetObject` and the prefix-scoped
+`s3:ListBucket` are required so the AWS CLI can compute the diff before
+uploading. `s3:DeleteObject` (restricted to `<bucket>/<base-path>/*`) is
+required for the sync to remove stale pages. `s3:PutObjectAcl` is required
+because `--acl public-read` is passed to set each object's access control,
+which requires compatible S3 public-access settings.
 
 ## S3 ownership and ACLs
 
-The current action always sends an object ACL: `public-read` when
-`public: true` and `private` otherwise. Consequently, a bucket configured with S3
-Object Ownership **Bucket owner enforced** rejects this action's uploads with
-`AccessControlListNotSupported`; changing `public` to `false` alone does not
-remove the ACL request. Keep the workflow's `public: true` only with a bucket
-whose ACLs and public-read behavior are deliberately enabled, or update the
-deployment action to omit ACLs before adopting bucket-owner-enforced
-ownership. That action change is outside this repository's deployment
-configuration.
+The deploy step passes `--acl public-read` to `aws s3 sync`. Consequently, a
+bucket configured with S3 Object Ownership **Bucket owner enforced** rejects
+uploads with `AccessControlListNotSupported`. Keep the `--acl public-read`
+flag only with a bucket whose ACLs and public-read behavior are deliberately
+enabled.
 
 ## Cloudflare route
 
@@ -99,7 +104,7 @@ palewi.re/docs/isobands/*
 
 The Worker should reverse-proxy the path beneath that route to the configured
 S3 bucket and `<base-path>` prefix, mapping the trailing-slash root to
-`index.html` and preserving the remaining path (for example, `api.html` and
+`index.html` and preserving the remaining path (for example, `guide.html` and
 `_static/...`). Keep the canonical trailing-slash URL and ensure the Worker
 also handles the no-slash form consistently. The generated links and asset
 URLs are relative so they continue to resolve below this prefix.
@@ -110,7 +115,7 @@ After an approved deployment, verify manually through the Cloudflare URL:
 
 1. The index loads at the canonical path
    `https://palewi.re/docs/isobands/`.
-2. The API page loads at the canonical path followed by `api.html`.
+2. The guide page loads at the canonical path followed by `guide.html`.
 3. A stylesheet or other `_static/` asset referenced by the index returns
    successfully.
 4. The HTML canonical link uses the
