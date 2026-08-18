@@ -22,7 +22,7 @@ from isobands import isobands
 
 DATE = "2017-08-27"
 DATASET = "derived-era5-single-levels-daily-statistics"
-SOUTHEAST_TEXAS_AREA = [32.5, -98.0, 26.0, -91.0]
+GULF_COAST_AREA = [35.0, -103.0, 23.0, -87.0]
 EXAMPLES_DIRECTORY = Path(__file__).resolve().parent
 OUTPUT_DIRECTORY = EXAMPLES_DIRECTORY / "output"
 ERA5_PATH = OUTPUT_DIRECTORY / f"harvey-daily-rainfall-{DATE}.nc"
@@ -46,7 +46,7 @@ def download_era5() -> None:
             "daily_statistic": "daily_sum",
             "time_zone": "utc+00:00",
             "frequency": "1_hourly",
-            "area": SOUTHEAST_TEXAS_AREA,
+            "area": GULF_COAST_AREA,
         },
         str(ERA5_PATH),
     )

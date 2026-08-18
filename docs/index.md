@@ -157,14 +157,14 @@ For this field, the returned GeoDataFrame begins like this:
 
 | min_value | max_value | geometry |
 | ---: | ---: | --- |
-| 0.1 | 8.6 | `MULTIPOLYGON (...)` |
-| 8.6 | 17.3 | `MULTIPOLYGON (...)` |
-| 17.3 | 34.9 | `MULTIPOLYGON (...)` |
+| 0.0 | 0.1 | `MULTIPOLYGON (...)` |
+| 0.1 | 0.9 | `MULTIPOLYGON (...)` |
+| 0.9 | 4.3 | `MULTIPOLYGON (...)` |
 
-The map shows ERA5 daily rainfall across southeast Texas on August 27, 2017,
-as Hurricane Harvey stalled over the region. Rainfall totals are strongly
-skewed: quintiles make relative variation visible across the field, but do not
-represent externally defined severity categories.
+The map shows ERA5 daily rainfall across Texas and the surrounding Gulf Coast
+on August 27, 2017, as Hurricane Harvey stalled over the region. Rainfall
+totals are strongly skewed: quintiles make relative variation visible across
+the field, but do not represent externally defined severity categories.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
