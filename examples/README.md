@@ -39,15 +39,15 @@ python -m http.server --directory examples 8000
 Open <http://localhost:8000/pm25_maplibre.html>. The script writes its
 downloaded EPA archive and generated GeoJSON to `examples/output/`.
 
-## Iowa snow-cover MapLibre contour map
+## Iowa land-surface-temperature MapLibre contour map
 
-Download NASA MODIS snow-cover data for Iowa after the February 2011 Groundhog
-Day Blizzard and create a MapLibre-ready GeoJSON file:
+Download NASA MODIS land-surface temperatures for Iowa after the August 2020
+derecho and create a MapLibre-ready GeoJSON file:
 
 ```sh
-uv run python examples/iowa_snow_maplibre.py
+uv run python examples/iowa_temperature_maplibre.py
 python -m http.server --directory examples 8000
 ```
 
-Open <http://localhost:8000/iowa_snow_maplibre.html>. The script writes the
-generated GeoJSON to `examples/output/`.
+Open <http://localhost:8000/iowa_temperature_maplibre.html>. The script writes
+the generated GeoJSON to `examples/output/`.

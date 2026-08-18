@@ -10,6 +10,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Replace the Iowa snow-cover map with a continuous MODIS land-surface-
+  temperature contour example that preserves unavailable satellite pixels.
 ### Fixed
 
 ### Removed
