@@ -7,7 +7,7 @@ An easy way to make filled contour maps with Python.
 [GeoPandas](https://geopandas.org/) `GeoDataFrame`.
 
 ```{raw} html
-<div style="width: 100%; height: 466px;">
+<div style="width: 100%; height: 600px;">
   <iframe
     src="global_temperature_animation.html"
     title="Global ERA5 daily high temperatures, August 16 through 22, 2020"
