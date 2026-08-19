@@ -48,10 +48,18 @@
         container: "map",
         style: "https://tiles.openfreemap.org/styles/bright",
         center: [0, 18],
-        zoom: 1.25,
+        zoom: 2.5,
         interactive: false,
         attributionControl: false,
       });
+
+      const EARTH_ROTATION_DURATION = 90_000;
+
+      function rotateEarth(startTime) {
+        const elapsed = performance.now() - startTime;
+        const longitude = -360 * (elapsed / EARTH_ROTATION_DURATION);
+        map.jumpTo({ center: [longitude, 18] });
+      }
 
       function showFrame(frames, index) {
         const frame = frames[index];
@@ -67,6 +75,7 @@
       }
 
       map.on("load", async () => {
+        map.setProjection({ type: "globe" });
         const response = await fetch("output/global-temperature-2020-08-16-22.json");
         const { frames } = await response.json();
         map.addSource("temperatures", { type: "geojson", data: frames[0].data });
@@ -89,6 +98,8 @@
             frame = (frame + 1) % frames.length;
             showFrame(frames, frame);
           }, 1_000);
+          const rotationStart = performance.now();
+          window.setInterval(() => rotateEarth(rotationStart), 100);
         }
       });
     </script>

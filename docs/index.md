@@ -6,13 +6,6 @@ An easy way to make filled contour maps with Python.
 `DataArray` into filled contour polygons backed by a
 [GeoPandas](https://geopandas.org/) `GeoDataFrame`.
 
-## Global daily temperatures
-
-Watch seven days of ERA5 daily high temperatures move around the world. The
-animation aggregates the source grid to one degree, smooths it slightly before
-contouring, and simplifies the resulting polygons to keep the embedded data
-lightweight.
-
 ```{raw} html
 <div style="width: 100%; height: 466px;">
   <iframe
