@@ -6,6 +6,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Document that the GDAL extras compile from source and require the matching
+  native GDAL library and headers, name the `gdal-config` failure signature
+  with macOS and Debian/Ubuntu pointers, and say so in the missing-bindings
+  error message.
+
 ### Added
 
 - Add a simplified, animated global ERA5 temperature MapLibre example.

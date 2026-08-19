@@ -16,8 +16,10 @@ Conda or system-managed environment already provides one of the
 pip install isobands
 ```
 
-For a pip-managed binding, install matching native GDAL 3.13.2 development
-files, then use the recommended newest tested and installable extra:
+For a pip-managed binding, first install the matching native GDAL 3.13.2
+development files — the PyPI GDAL package is source-only, and without them
+the build fails with `gdal-config: No such file or directory` — then use the
+recommended newest tested and installable extra:
 
 ```sh
 pip install "isobands[gdal313]"

@@ -27,13 +27,15 @@ install `isobands` directly:
 pip install isobands
 ```
 
-Lacking that, you can let pip install GDAL for you by specifying the GDAL version. The latest tested version is GDAL 3.13.2.
+Lacking that, you can let pip build the binding for you by specifying the GDAL version. The PyPI GDAL package is source-only: it compiles against the native GDAL library, which must already be installed with its development headers at the matching version. The latest tested version is GDAL 3.13.2.
 
 ```console
 pip install "isobands[gdal313]"
 ```
 
 Installers for `gdal310`, `gdal311` and `gdal312` are also available.
+
+If the install fails with `gdal-config: No such file or directory`, the native library is missing. Install it first — for example `brew install gdal` on macOS or `apt install libgdal-dev` on Debian and Ubuntu — then choose the extra matching `gdal-config --version`, or use conda-forge bindings instead.
 
 ## Quick start
 
