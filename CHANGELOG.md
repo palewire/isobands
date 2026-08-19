@@ -8,6 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Add a simplified, animated global ERA5 temperature MapLibre example.
 - Allow ``levels=`` to accept a callable that derives validated contour
   thresholds from the raster's valid values.
 - Add an ``offset`` option for aligning interval-derived contour thresholds to

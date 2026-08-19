@@ -11,6 +11,20 @@ thresholds and explicit `EPSG:4326`, validates the output, and demonstrates a
 GeoPandas dissolve. It does not write files by default. The adjacent
 `.source.json` records the pinned source checksum and fixture provenance.
 
+## Global ERA5 animation
+
+Configure a [Copernicus Climate Data Store API key](https://cds.climate.copernicus.eu/how-to-api),
+then create seven simplified daily global temperature frames:
+
+```sh
+uv run --with cdsapi --with h5netcdf --with h5py \
+  python examples/global_temperature_animation.py
+python -m http.server --directory examples 8000
+```
+
+Open <http://localhost:8000/global_temperature_animation.html>. The script
+writes its downloaded NetCDF file and animation data to `examples/output/`.
+
 ## ERA5 MapLibre contour map
 
 Configure a [Copernicus Climate Data Store API key](https://cds.climate.copernicus.eu/how-to-api),

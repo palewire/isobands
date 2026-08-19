@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Global daily temperatures, August 16–22, 2020</title>
+    <link href="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.css" rel="stylesheet">
+    <style>
+      body { margin: 0; }
+      #map { height: 100vh; width: 100vw; }
+      .date,
+      .legend {
+        background: rgba(255, 255, 255, 0.92);
+        font: 12px/1.35 sans-serif;
+        padding: 10px 12px;
+        position: absolute;
+        z-index: 1;
+      }
+      .date { left: 12px; top: 12px; }
+      .date-title { font-weight: 700; }
+      .legend { bottom: 12px; right: 12px; }
+      .legend-title { font-weight: 700; margin-bottom: 6px; }
+      .legend-row { align-items: center; display: flex; gap: 6px; }
+      .legend-swatch { height: 12px; width: 12px; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="date" aria-live="polite">
+      <div class="date-title">Global daily high</div>
+      <time id="date"></time>
+    </div>
+    <div class="legend" aria-label="Daily high temperature legend">
+      <div class="legend-title">Temperature (°C)</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #23171b"></span>Below −30°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #26bde1"></span>−30°–−20°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #2fe5ad"></span>−20°–−10°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #58fb79"></span>−10°–0°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #96fa50"></span>0°–10°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #d5e336"></span>10°–20°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ffb827"></span>20°–30°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #ff801d"></span>30°–40°</div>
+      <div class="legend-row"><span class="legend-swatch" style="background: #e34613"></span>40° and above</div>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl@5.15.0/dist/maplibre-gl.js"></script>
+    <script>
+      const map = new maplibregl.Map({
+        container: "map",
+        style: "https://tiles.openfreemap.org/styles/bright",
+        center: [0, 18],
+        zoom: 2.4,
+        interactive: false,
+        attributionControl: false,
+      });
+
+      const EARTH_ROTATION_DURATION = 90_000;
+
+      function rotateEarth(startTime) {
+        const elapsed = performance.now() - startTime;
+        const longitude = -360 * (elapsed / EARTH_ROTATION_DURATION);
+        map.jumpTo({ center: [longitude, 18] });
+      }
+
+      function showFrame(frames, index) {
+        const frame = frames[index];
+        map.getSource("temperatures").setData(frame.data);
+        const date = document.getElementById("date");
+        date.dateTime = frame.date;
+        date.textContent = new Intl.DateTimeFormat("en", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          timeZone: "UTC",
+        }).format(new Date(`${frame.date}T00:00:00Z`));
+      }
+
+      map.on("load", async () => {
+        map.setProjection({ type: "globe" });
+        const response = await fetch("global-temperature-2020-08-16-22.json");
+        const { frames } = await response.json();
+        map.addSource("temperatures", { type: "geojson", data: frames[0].data });
+        const firstSymbolLayer = map.getStyle().layers.find(
+          (layer) => layer.type === "symbol",
+        );
+        map.addLayer({
+          id: "temperature-bands",
+          type: "fill",
+          source: "temperatures",
+          paint: {
+            "fill-color": ["get", "color"],
+            "fill-opacity": 0.4,
+          },
+        }, firstSymbolLayer?.id);
+        showFrame(frames, 0);
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          let frame = 0;
+          window.setInterval(() => {
+            frame = (frame + 1) % frames.length;
+            showFrame(frames, frame);
+          }, 1_000);
+          const rotationStart = performance.now();
+          window.setInterval(() => rotateEarth(rotationStart), 100);
+        }
+      });
+    </script>
+  </body>
+</html>
