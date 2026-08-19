@@ -3,7 +3,7 @@
 An easy way to make filled contour maps with Python.
 
 `isobands` converts a regular two-dimensional [xarray](https://xarray.dev/)
-`DataArray` into filled contour polygons backed by a
+`DataArray` into contoured polygons in a
 [GeoPandas](https://geopandas.org/) `GeoDataFrame`.
 
 ```{raw} html
@@ -19,24 +19,22 @@ An easy way to make filled contour maps with Python.
 
 ## Installation
 
-`isobands` requires an installed, matching `osgeo.gdal` Python binding. In a
-Conda or system-managed environment that already provides a tested binding,
+By default, `isobands` requires an installed, matching [`osgeo.gdal`](https://www.osgeo.org/projects/gdal/) Python binding. In a
+Conda or system-managed environment that provides such a binding, you can
 install `isobands` directly:
 
 ```console
-$ pip install isobands
+pip install isobands
 ```
 
-For a pip-managed binding, install matching native GDAL 3.13.2 development
-files, then use the recommended newest tested and installable extra:
+Lacking that, you can let pip install GDAL for you by specifying the GDAL version. The latest tested version is GDAL 3.13.2.
 
 ```console
-$ pip install "isobands[gdal313]"
+pip install "isobands[gdal313]"
 ```
 
-The tested exact baselines are GDAL 3.10.2, 3.11.5, 3.12.2, and 3.13.2. GDAL
-3.10.2, 3.11.5, and 3.12.2 remain compatibility choices through the matching
-`gdal310`, `gdal311`, and `gdal312` extras.
+Installers for `gdal310`, `gdal311` and `gdal312` are also available.
+
 ## Quick start
 
 Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
@@ -56,13 +54,13 @@ bands = isobands.from_raster(data, levels=[1.5, 2.5], crs="EPSG:4326")
 print(bands[["min_value", "max_value", "geometry"]])
 ```
 
-The result always has the stable `min_value`, `max_value`, and `geometry`
-columns and a GeoPandas CRS.
-
 The `levels` input supplies the interior breakpoints, dividing the data into
 bands at 1.5 and 2.5.
 
-For the small grid above, the returned GeoDataFrame begins like this:
+The result always has the stable `min_value`, `max_value`, and `geometry`
+columns and a GeoPandas CRS.
+
+The returned GeoDataFrame of the example above would look like so:
 
 | min_value | max_value | geometry |
 | ---: | ---: | --- |
@@ -72,9 +70,8 @@ For the small grid above, the returned GeoDataFrame begins like this:
 
 ## Equal interval breaks
 
-This example uses `interval=5` to create equal-width five-degree temperature
-bands and
-`crs="EPSG:4326"` to identify the input's longitude-latitude coordinates.
+You can use the `intervals` input to specify uniform threshold breaks. This example uses `interval=5` to create five-degree temperature
+bands.
 
 ```python
 import xarray as xr
@@ -85,9 +82,6 @@ temperature = xr.open_dataarray("west-coast-daily-highs.nc")
 bands = isobands.from_raster(temperature, interval=5, crs="EPSG:4326")
 ```
 
-Set `offset` when equal-width bands need a nonzero alignment. For example,
-`interval=5, offset=2.5` creates thresholds at 2.5, 7.5, 12.5, and so on.
-
 For this field, the returned GeoDataFrame begins like this:
 
 | min_value | max_value | geometry |
@@ -96,10 +90,11 @@ For this field, the returned GeoDataFrame begins like this:
 | 15.0 | 20.0 | `MULTIPOLYGON (...)` |
 | 20.0 | 25.0 | `MULTIPOLYGON (...)` |
 
-The map shows ERA5 daily maximum two-meter temperatures across the U.S. West
-Coast on August 16, 2020, when Furnace Creek, California, in Death Valley
-recorded 54.4°C, as documented by the
-[National Park Service](https://www.nps.gov/deva/learn/news/record-heat-at-death-valley.htm).
+Set `offset` when equal-width bands need a nonzero starting point. For example,
+`interval=5, offset=2.5` creates thresholds at 2.5, 7.5, 12.5, and so on.
+
+The map shows high temperatures on August 16, 2020, when Death Valley
+[recorded](https://www.nps.gov/deva/learn/news/record-heat-at-death-valley.htm) a record high of 54.4°C in Furnace Creek.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
@@ -114,8 +109,7 @@ recorded 54.4°C, as documented by the
 
 ## Threshold breaks
 
-The `levels` input can also use meaningful external thresholds instead of equal
-intervals. This example uses the U.S. EPA's PM2.5 health-category boundaries.
+The `levels` input allows you to specify whatever threshold you like. This example uses the EPA's air quality risk categories for particulate matter.
 
 ```python
 import xarray as xr
@@ -138,9 +132,8 @@ For this field, the returned GeoDataFrame begins like this:
 | 12.0 | 35.4 | `MULTIPOLYGON (...)` |
 | 35.4 | 55.4 | `MULTIPOLYGON (...)` |
 
-The map interpolates [EPA AirData](https://www.epa.gov/outdoor-air-quality-data)
-daily mean PM2.5 readings across the eastern United States on June 7, 2023,
-when Canadian wildfire smoke blanketed the region.
+The map shows [EPA AirData](https://www.epa.gov/outdoor-air-quality-data)
+risk scores on June 7, 2023, when Canadian wildfire smoke blanketed the East Coast.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
@@ -155,9 +148,8 @@ when Canadian wildfire smoke blanketed the region.
 
 ## Data-derived breaks
 
-Pass a callable to `levels` when the data distribution should determine the
-breaks. The callable receives a one-dimensional array of valid values and
-returns the interior thresholds.
+Pass a callable to `levels` to determine breaks based on the data. The function receives a one-dimensional array of valid values and should
+return the interior thresholds. This can be useful for quintiles, natural breaks, Jenks breaks and other data-driven strategies.
 
 ```python
 import numpy as np
@@ -182,10 +174,7 @@ For this field, the returned GeoDataFrame begins like this:
 | 0.1 | 0.9 | `MULTIPOLYGON (...)` |
 | 0.9 | 4.3 | `MULTIPOLYGON (...)` |
 
-The map shows ERA5 daily rainfall across Texas and the surrounding Gulf Coast
-on August 27, 2017, as Hurricane Harvey stalled over the region. Rainfall
-totals are strongly skewed: quintiles make relative variation visible across
-the field, but do not represent externally defined severity categories.
+The map shows rainfall on August 27, 2017, as Hurricane Harvey stalled over Texas.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
@@ -225,9 +214,8 @@ For this field, the returned GeoDataFrame begins like this:
 | 20.0 | 25.0 | `MULTIPOLYGON (...)` |
 | 25.0 | 30.0 | `MULTIPOLYGON (...)` |
 
-The map shows NASA MODIS land-surface temperatures across Iowa on August 12,
-2020, two days after the derecho. The no-data cells mark pixels without a valid
-satellite temperature retrieval, commonly because of clouds or quality flags.
+The map shows land-surface temperatures captured by NASA satellites on August 12,
+2020, two days after a historic derecho swept across Iowa. The no-data cells indicate pixels without valid data, typically due to cloud cover obscuring the satellite's sensors.
 
 ```{raw} html
 <div style="width: 100%; height: 466px;">
@@ -255,7 +243,7 @@ satellite temperature retrieval, commonly because of clouds or quality flags.
 
 ## About
 
-Ben Welsh first released this module in August 2026 as an spinoff of the
+Ben Welsh first released this module in August 2026 as a spinoff of the
 [Reuters Climate Monitor](https://www.reuters.com/graphics/CLIMATE-AUTOMATED/MONITOR/akpeykqqapr/).
 GitHub's Copilot, an AI-powered text generator, helped draft this documentation.
 Map examples use [MapLibre](https://maplibre.org/),
