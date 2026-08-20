@@ -12,6 +12,18 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+### Removed
+
+### Security
+
+## [0.2.2] - 2026-08-19
+
+### Added
+
+### Changed
+
+### Fixed
+
 - Normalize exact self-touching GDAL 3.13.2 exterior rings without losing valid
   interior rings. Valid interiors are retained as holes or promoted when fully
   outside the rebuilt shell; ambiguous or malformed rings continue to raise
