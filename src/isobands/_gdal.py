@@ -598,9 +598,7 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
             # these artifacts next to a valid positive-area component.
             return _RingRoleParts((), ())
         if shell.is_empty or not shell.is_valid:
-            if not polygon.interiors:
-                return _RingRoleParts(_rebuild_self_touching_exterior(polygon), ())
-            raise RuntimeError("GDAL generated an invalid contour exterior ring.")
+            return _rebuild_self_touching_exterior(polygon)
         retained_holes: list[tuple[tuple[float, float], ...]] = []
         promoted: list[Polygon] = []
         for ring in polygon.interiors:
@@ -615,7 +613,7 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
                 # same repeated-vertex splitting used for self-touching
                 # exterior rings. Raise for any other invalid pattern.
                 _split_and_classify_interior_ring(
-                    ring_coordinates, shell, retained_holes, promoted
+                    ring_coordinates, (shell,), (retained_holes,), promoted
                 )
                 continue
             if shell.covers(ring_area):
@@ -640,16 +638,16 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
 
 def _split_and_classify_interior_ring(
     ring_coordinates: tuple[tuple[float, float], ...],
-    shell: Polygon,
-    retained_holes: list[tuple[tuple[float, float], ...]],
+    shells: Sequence[Polygon],
+    retained_holes: Sequence[list[tuple[tuple[float, float], ...]]],
     promoted: list[Polygon],
 ) -> None:
-    """Split a self-touching interior ring and classify its sub-rings.
+    """Split a self-touching interior ring and classify its exact sub-rings.
 
     GDAL 3.13.2 can emit an interior ring that revisits an exact vertex,
     forming a figure-8 (``Ring Self-intersection`` in shapely). Reuse the
-    exterior-ring repeated-vertex splitter, then classify each resulting
-    simple polygon as a retained hole or an outside-promoted polygon.
+    exterior-ring repeated-vertex splitter, then classify each simple
+    sub-polygon as a hole in exactly one shell or an outside-promoted polygon.
 
     Raises ``RuntimeError`` for any interior ring that is not the exact
     repeated-vertex self-touching pattern or produces invalid sub-rings.
@@ -664,13 +662,32 @@ def _split_and_classify_interior_ring(
     if not sub_rings:
         raise RuntimeError("GDAL generated an invalid contour interior ring.")
     for sub_ring in sub_rings:
-        sub_coords = tuple(sub_ring.exterior.coords)
-        if shell.covers(sub_ring):
-            retained_holes.append(sub_coords)
-        elif shell.disjoint(sub_ring) or shell.touches(sub_ring):
-            promoted.append(sub_ring)
-        else:
-            raise RuntimeError("GDAL generated an invalid contour interior ring.")
+        _classify_interior_ring_against_shells(
+            sub_ring,
+            tuple(sub_ring.exterior.coords),
+            shells,
+            retained_holes,
+            promoted,
+        )
+
+
+def _classify_interior_ring_against_shells(
+    ring: Polygon,
+    ring_coordinates: tuple[tuple[float, float], ...],
+    shells: Sequence[Polygon],
+    retained_holes: Sequence[list[tuple[tuple[float, float], ...]]],
+    promoted: list[Polygon],
+) -> None:
+    """Keep a ring in one rebuilt shell or promote it only when fully outside."""
+    containers = [index for index, shell in enumerate(shells) if shell.covers(ring)]
+    if len(containers) > 1:
+        raise RuntimeError("GDAL generated ambiguously nested contour exteriors.")
+    if containers:
+        retained_holes[containers[0]].append(ring_coordinates)
+    elif all(shell.disjoint(ring) or shell.touches(ring) for shell in shells):
+        promoted.append(ring)
+    else:
+        raise RuntimeError("GDAL generated an invalid contour interior ring.")
 
 
 def _split_self_touching_exterior(
@@ -711,8 +728,8 @@ def _split_self_touching_exterior(
     return tuple(polygons)
 
 
-def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
-    """Classify exact repeated-vertex loops as shells or positive-area holes."""
+def _rebuild_self_touching_exterior(polygon: Polygon) -> _RingRoleParts:
+    """Rebuild exact repeated-vertex exteriors without losing valid interiors."""
 
     parts = _split_self_touching_exterior(polygon.exterior.coords)
     for index, left in enumerate(parts):
@@ -748,6 +765,29 @@ def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
             raise RuntimeError("GDAL generated ambiguously nested contour exteriors.")
         holes[containers[0][0]].append(tuple(part.exterior.coords))
 
+    promoted: list[Polygon] = []
+    retained_hole_sets = tuple(holes.values())
+    for ring in polygon.interiors:
+        ring_coordinates = tuple(ring.coords)
+        ring_area = Polygon(ring_coordinates)
+        if ring_area.is_empty or ring_area.area == 0.0:
+            raise RuntimeError("GDAL generated an invalid contour interior ring.")
+        if not ring_area.is_valid:
+            _split_and_classify_interior_ring(
+                ring_coordinates,
+                outer_parts,
+                retained_hole_sets,
+                promoted,
+            )
+        else:
+            _classify_interior_ring_against_shells(
+                ring_area,
+                ring_coordinates,
+                outer_parts,
+                retained_hole_sets,
+                promoted,
+            )
+
     rebuilt: list[Polygon] = []
     for index, outer in enumerate(outer_parts):
         candidate = Polygon(outer.exterior.coords, holes[index])
@@ -760,7 +800,7 @@ def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
         rebuilt.append(candidate)
     if not rebuilt and parts:
         raise RuntimeError("GDAL generated an invalid self-touching contour exterior.")
-    return tuple(rebuilt)
+    return _RingRoleParts(tuple(rebuilt), tuple(promoted))
 
 
 def _contains_full_candidate(geometry: BaseGeometry, candidate: Polygon) -> bool:
