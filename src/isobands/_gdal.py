@@ -598,9 +598,7 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
             # these artifacts next to a valid positive-area component.
             return _RingRoleParts((), ())
         if shell.is_empty or not shell.is_valid:
-            if not polygon.interiors:
-                return _RingRoleParts(_rebuild_self_touching_exterior(polygon), ())
-            raise RuntimeError("GDAL generated an invalid contour exterior ring.")
+            return _rebuild_self_touching_exterior(polygon)
         retained_holes: list[tuple[tuple[float, float], ...]] = []
         promoted: list[Polygon] = []
         for ring in polygon.interiors:
@@ -711,8 +709,8 @@ def _split_self_touching_exterior(
     return tuple(polygons)
 
 
-def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
-    """Classify exact repeated-vertex loops as shells or positive-area holes."""
+def _rebuild_self_touching_exterior(polygon: Polygon) -> _RingRoleParts:
+    """Rebuild exact repeated-vertex exteriors without losing valid interiors."""
 
     parts = _split_self_touching_exterior(polygon.exterior.coords)
     for index, left in enumerate(parts):
@@ -748,6 +746,27 @@ def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
             raise RuntimeError("GDAL generated ambiguously nested contour exteriors.")
         holes[containers[0][0]].append(tuple(part.exterior.coords))
 
+    promoted: list[Polygon] = []
+    for ring in polygon.interiors:
+        ring_coordinates = tuple(ring.coords)
+        ring_area = Polygon(ring_coordinates)
+        if ring_area.is_empty or ring_area.area == 0.0 or not ring_area.is_valid:
+            raise RuntimeError("GDAL generated an invalid contour interior ring.")
+        containers = [
+            index for index, outer in enumerate(outer_parts) if outer.covers(ring_area)
+        ]
+        if len(containers) > 1:
+            raise RuntimeError("GDAL generated ambiguously nested contour exteriors.")
+        if containers:
+            holes[containers[0]].append(ring_coordinates)
+        elif all(
+            outer.disjoint(ring_area) or outer.touches(ring_area)
+            for outer in outer_parts
+        ):
+            promoted.append(ring_area)
+        else:
+            raise RuntimeError("GDAL generated an overlapping contour interior ring.")
+
     rebuilt: list[Polygon] = []
     for index, outer in enumerate(outer_parts):
         candidate = Polygon(outer.exterior.coords, holes[index])
@@ -760,7 +779,7 @@ def _rebuild_self_touching_exterior(polygon: Polygon) -> tuple[Polygon, ...]:
         rebuilt.append(candidate)
     if not rebuilt and parts:
         raise RuntimeError("GDAL generated an invalid self-touching contour exterior.")
-    return tuple(rebuilt)
+    return _RingRoleParts(tuple(rebuilt), tuple(promoted))
 
 
 def _contains_full_candidate(geometry: BaseGeometry, candidate: Polygon) -> bool:
