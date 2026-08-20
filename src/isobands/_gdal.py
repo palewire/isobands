@@ -609,7 +609,15 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
             if ring_area.is_empty or ring_area.area == 0.0:
                 continue
             if not ring_area.is_valid:
-                raise RuntimeError("GDAL generated an invalid contour interior ring.")
+                # GDAL 3.13.2 can emit a self-touching interior ring: a ring
+                # that revisits an exact vertex, forming a figure-8 loop
+                # (shapely reports "Ring Self-intersection[x y]"). Apply the
+                # same repeated-vertex splitting used for self-touching
+                # exterior rings. Raise for any other invalid pattern.
+                _split_and_classify_interior_ring(
+                    ring_coordinates, shell, retained_holes, promoted
+                )
+                continue
             if shell.covers(ring_area):
                 retained_holes.append(ring_coordinates)
             # GDAL's false hole can share a single shell vertex without its
@@ -628,6 +636,41 @@ def _normalize_polygon_ring_roles(polygon: Polygon) -> _RingRoleParts:
     if not rebuilt.is_valid:
         raise RuntimeError("GDAL generated an invalid filled-contour geometry.")
     return _RingRoleParts((rebuilt,), tuple(promoted))
+
+
+def _split_and_classify_interior_ring(
+    ring_coordinates: tuple[tuple[float, float], ...],
+    shell: Polygon,
+    retained_holes: list[tuple[tuple[float, float], ...]],
+    promoted: list[Polygon],
+) -> None:
+    """Split a self-touching interior ring and classify its sub-rings.
+
+    GDAL 3.13.2 can emit an interior ring that revisits an exact vertex,
+    forming a figure-8 (``Ring Self-intersection`` in shapely). Reuse the
+    exterior-ring repeated-vertex splitter, then classify each resulting
+    simple polygon as a retained hole or an outside-promoted polygon.
+
+    Raises ``RuntimeError`` for any interior ring that is not the exact
+    repeated-vertex self-touching pattern or produces invalid sub-rings.
+    """
+
+    try:
+        sub_rings = _split_self_touching_exterior(ring_coordinates)
+    except RuntimeError as error:
+        raise RuntimeError(
+            "GDAL generated an invalid contour interior ring."
+        ) from error
+    if not sub_rings:
+        raise RuntimeError("GDAL generated an invalid contour interior ring.")
+    for sub_ring in sub_rings:
+        sub_coords = tuple(sub_ring.exterior.coords)
+        if shell.covers(sub_ring):
+            retained_holes.append(sub_coords)
+        elif shell.disjoint(sub_ring) or shell.touches(sub_ring):
+            promoted.append(sub_ring)
+        else:
+            raise RuntimeError("GDAL generated an invalid contour interior ring.")
 
 
 def _split_self_touching_exterior(

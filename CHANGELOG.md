@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Normalize GDAL 3.13.2 self-touching interior rings: a ring that revisits an
+  exact vertex (``Ring Self-intersection`` in shapely) is now split into its
+  simple sub-loops using the existing repeated-vertex splitter, with each
+  sub-loop classified as a retained hole or a promoted outside polygon.
+  Ambiguous or malformed invalid interior rings continue to raise
+  ``RuntimeError``.  Resolves a regression in ERA5 weighted-anomaly contour
+  jobs under conda-forge GDAL 3.13.2.
+
 ### Changed
 
 - Document that the GDAL extras compile from source and require the matching
