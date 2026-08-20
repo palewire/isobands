@@ -6,6 +6,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+## [0.2.1] - 2026-08-19
+
+### Added
+
+- Add a simplified, animated global ERA5 temperature MapLibre example.
+- Add a MapLibre example that derives Hurricane Harvey rainfall bands from
+  callable quintile levels.
+
+### Changed
+
+- Document that the GDAL extras compile from source and require the matching
+  native GDAL library and headers, name the `gdal-config` failure signature
+  with macOS and Debian/Ubuntu pointers, and say so in the missing-bindings
+  error message.
+
 ### Fixed
 
 - Normalize GDAL 3.13.2 self-touching interior rings: a ring that revisits an
@@ -16,43 +41,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   ``RuntimeError``.  Resolves a regression in ERA5 weighted-anomaly contour
   jobs under conda-forge GDAL 3.13.2.
 
-### Changed
-
-- Document that the GDAL extras compile from source and require the matching
-  native GDAL library and headers, name the `gdal-config` failure signature
-  with macOS and Debian/Ubuntu pointers, and say so in the missing-bindings
-  error message.
-
-### Added
-
-- Add a simplified, animated global ERA5 temperature MapLibre example.
-- Allow ``levels=`` to accept a callable that derives validated contour
-  thresholds from the raster's valid values.
-- Add an ``offset`` option for aligning interval-derived contour thresholds to
-  a nonzero origin.
-- Add a MapLibre example that derives Hurricane Harvey rainfall bands from
-  callable quintile levels.
-- Add tested exact GDAL 3.11.5 and 3.13.2 binding extras and CI full-suite
-  lanes.
-
-### Changed
-
-- Before the first stable release, rename the high-level public function from
-  ``isobands()`` to ``from_raster()``. This deliberate breaking change retains
-  its two-dimensional xarray input, band-definition validation, finite-band
-  behavior, CRS and nodata handling, and
-  ``min_value``/``max_value``/``geometry`` GeoDataFrame schema.
-- Recommend the tested GDAL 3.13.2 pip extra while documenting installation
-  with a pre-existing matching GDAL Python binding.
-- Replace the Iowa snow-cover map with a continuous MODIS land-surface-
-  temperature contour example that preserves unavailable satellite pixels.
-### Fixed
-
 ### Removed
-
-- Remove the temporary pre-release native fixed-level compatibility API. The
-  package root now exposes only ``from_raster()`` as its runtime public
-  function.
 
 ### Security
 
@@ -66,15 +55,34 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   contour bands during New York City's June 2023 wildfire smoke event.
 - A MapLibre example that uses missing cells to preserve unavailable areas in
   NASA MODIS snow-cover contour bands across Iowa.
+- Allow ``levels=`` to accept a callable that derives validated contour
+  thresholds from the raster's valid values.
+- Add an ``offset`` option for aligning interval-derived contour thresholds to
+  a nonzero origin.
+- Add tested exact GDAL 3.11.5 and 3.13.2 binding extras and CI full-suite
+  lanes.
 
 ### Changed
 
 - Support exact GDAL 3.10.2 and 3.12.2 baselines with explicit binding
   selection, and cover both baselines in CI.
+- Before the first stable release, rename the high-level public function from
+  ``isobands()`` to ``from_raster()``. This deliberate breaking change retains
+  its two-dimensional xarray input, band-definition validation, finite-band
+  behavior, CRS and nodata handling, and
+  ``min_value``/``max_value``/``geometry`` GeoDataFrame schema.
+- Recommend the tested GDAL 3.13.2 pip extra while documenting installation
+  with a pre-existing matching GDAL Python binding.
+- Replace the Iowa snow-cover map with a continuous MODIS land-surface-
+  temperature contour example that preserves unavailable satellite pixels.
 
 ### Fixed
 
 ### Removed
+
+- Remove the temporary pre-release native fixed-level compatibility API. The
+  package root now exposes only ``from_raster()`` as its runtime public
+  function.
 
 ### Security
 
