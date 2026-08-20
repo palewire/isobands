@@ -91,8 +91,13 @@ release sections.
 ## Releases
 
 Follow `RELEASING.md`. Agents may prepare release notes and validate a release,
-but must not create tags, releases, documentation deployments, or package
-publications without explicit human approval.
+but must not create tags, publish packages, create GitHub Releases, or deploy
+documentation without explicit human approval. After the release change is
+merged, the maintainer's approved follow-up is to create the exact version tag,
+wait for the approved package publication to complete, and then create the
+public GitHub Release from that tag with concise notes based on its
+`CHANGELOG.md` section. Verify that the release is not a draft or prerelease
+and points to the expected tag and merge commit.
 
 ## Change Guidelines
 

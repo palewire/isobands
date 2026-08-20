@@ -17,14 +17,16 @@ Git tags through `setuptools-scm`; do not edit a version file.
 - [x] Confirm the protected `pypi` GitHub environment and matching PyPI Trusted
       Publisher are configured for `.github/workflows/continuous-deployment.yaml`.
 - [ ] Obtain explicit human approval before any release tag or publication.
-- [ ] Tag the planned version and verify PyPI, installation and the runnable
-      example on Linux, macOS, and Windows, the hosted documentation, and the
-      benchmark smoke/reference result.
+- [ ] After the release change is merged, create the exact planned version tag
+      and verify PyPI, installation and the runnable example on Linux, macOS,
+      and Windows, the hosted documentation, and the benchmark smoke/reference
+      result.
 - [ ] Confirm the release workflow published the expected package to PyPI.
 - [ ] Confirm the documentation workflow deployed the matching Sphinx site.
-- [ ] After PyPI and release checks pass, create and publish the matching GitHub
-      Release at the exact tag. Use concise or generated release notes, then
-      confirm it is public, not a draft or prerelease, and links to that tag.
+- [ ] After package publication is approved and complete, create and publish the
+      matching GitHub Release at the exact tag. Use concise notes from the
+      matching `CHANGELOG.md` section, then confirm it is public, not a draft or
+      prerelease, and points to the expected tag and merge commit.
 
 ## Documentation Deployment
 
@@ -44,6 +46,28 @@ Agents may update release documentation and run the checklist's validation
 commands. They must not create tags, GitHub releases, documentation
 deployments, or package publications without explicit human approval.
 
+## GitHub Release Follow-up
+
+After the release change is merged, and only after explicit human approval has
+been given for the tag and package publication, the maintainer completes the
+follow-up in this order:
+
+1. Create the exact version tag on the merge commit.
+2. Wait for the protected `pypi` environment approval and tag-triggered package
+   publication to complete.
+3. Prepare concise release notes from the matching `CHANGELOG.md` section.
+4. Create the release from that tag with
+   `gh release create <tag> --verify-tag --title "isobands <tag>" --notes-file <notes-file>`.
+5. Verify it with
+   `gh release view <tag> --json tagName,isDraft,isPrerelease,targetCommitish`.
+   The release must be public, neither a draft nor prerelease, and its tag must
+   resolve to the expected merge commit.
+
+The workflow in `.github/workflows/continuous-deployment.yaml` publishes to
+PyPI but does not create a GitHub Release. Agents may draft the notes and
+verification commands, but must not run the tag, publication, or release
+commands without explicit human approval.
+
 ## PyPI Trusted Publishing
 
 The tag-triggered release job publishes with GitHub's OpenID Connect token. It
@@ -56,7 +80,5 @@ The alpha publication verified this setup. For a release:
    maintainer review.
 3. Publish through the existing Trusted Publisher; do not add a long-lived
    PyPI API token.
-4. After confirming PyPI and release checks pass, create and publish the
-   matching GitHub Release at the exact tag. Add concise notes or use generated
-   notes, then verify the release is public, neither draft nor prerelease, and
-   links to the intended tag.
+4. After package publication is approved and complete, follow the GitHub Release
+   Follow-up above to create and verify the matching release.
