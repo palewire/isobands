@@ -13,10 +13,10 @@ from shapely.ops import unary_union
 import isobands
 
 
-def test_public_api_exports_only_from_raster() -> None:
-    """The package keeps its public API intentionally narrow."""
+def test_public_api_exports_runtime_check_and_from_raster() -> None:
+    """The package exports its contour API and runtime diagnostics."""
 
-    assert isobands.__all__ == ["from_raster"]
+    assert isobands.__all__ == ["CheckReport", "CheckResult", "check", "from_raster"]
     assert not hasattr(isobands, "isobands")
     assert tuple(inspect.signature(isobands.from_raster).parameters) == (
         "data",

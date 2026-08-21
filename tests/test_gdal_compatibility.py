@@ -12,11 +12,27 @@ def test_missing_gdal_bindings_lists_all_supported_extras() -> None:
     """Missing-binding guidance names every exact GDAL extra."""
 
     with (
-        patch("builtins.__import__", side_effect=ImportError),
+        patch(
+            "isobands._gdal.load_gdal_modules",
+            side_effect=ImportError,
+        ),
         pytest.raises(
             RuntimeError,
             match="gdal310/gdal311/gdal312/gdal313",
         ),
+    ):
+        _import_gdal()
+
+
+def test_broken_native_gdal_binding_has_installation_guidance() -> None:
+    """Native loader failures get the same actionable error as missing bindings."""
+
+    with (
+        patch(
+            "isobands._gdal.load_gdal_modules",
+            side_effect=OSError,
+        ),
+        pytest.raises(RuntimeError, match="matching GDAL and Python bindings"),
     ):
         _import_gdal()
 

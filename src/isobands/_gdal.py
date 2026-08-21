@@ -14,6 +14,8 @@ from shapely.errors import GEOSException
 from shapely.geometry import MultiPolygon, Polygon
 from shapely.geometry.base import BaseGeometry
 
+from isobands._diagnostics import GDAL_INSTALL_GUIDANCE, load_gdal_modules
+
 if TYPE_CHECKING:
     from isobands._validation import RasterSpec
 
@@ -133,15 +135,12 @@ def _import_gdal() -> tuple[Any, Any]:
     """Import GDAL lazily so package import does not initialize its bindings."""
 
     try:
-        from osgeo import gdal, ogr
-    except ImportError as error:
+        return load_gdal_modules()
+    except (ImportError, OSError) as error:
         raise RuntimeError(
             "GDAL Python bindings are required to generate isobands. "
-            "Install the matching gdal310/gdal311/gdal312/gdal313 extra — "
-            "the PyPI GDAL package is source-only and needs the native GDAL "
-            "library installed first — or conda-forge bindings."
+            f"{GDAL_INSTALL_GUIDANCE}"
         ) from error
-    return gdal, ogr
 
 
 def _create_raster_dataset(

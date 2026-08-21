@@ -8,9 +8,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Add `isobands.check()` and `python -m isobands check` diagnostics for GDAL
+  bindings, version compatibility, tested-version support, and in-memory
+  contour generation.
+
 ### Changed
 
 ### Fixed
+
+- Give the same actionable installation guidance when GDAL bindings are missing
+  or fail to load their native library.
 
 ### Removed
 
