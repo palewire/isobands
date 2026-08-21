@@ -174,7 +174,7 @@ def _smoke_check() -> CheckResult:
             False,
             {"error": type(exc).__name__},
             "The in-memory contour smoke test failed.",
-            "Reinstall a complete, matching GDAL build, then run the check again.",
+            "Reinstall isobands and a complete, matching GDAL build, then run the check again.",
         )
     return _result(
         "contour_smoke",

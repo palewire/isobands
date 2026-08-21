@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import json
+from importlib.metadata import PackageNotFoundError
 
 import pytest
 
@@ -101,6 +102,29 @@ def test_check_reports_version_mismatch(monkeypatch: pytest.MonkeyPatch) -> None
     assert not report.ok
     assert not report.checks[1].ok
     assert report.checks[-1].message.startswith("Not run:")
+
+
+def test_check_reports_missing_binding_metadata(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Missing distribution metadata becomes an actionable failed result."""
+    monkeypatch.setattr(
+        diagnostics,
+        "load_gdal_modules",
+        lambda: (_FakeGdal(), object()),
+    )
+    monkeypatch.setattr(
+        diagnostics,
+        "_installed_binding_version",
+        lambda: (_ for _ in ()).throw(PackageNotFoundError("GDAL")),
+    )
+
+    report = isobands.check()
+
+    assert not report.ok
+    assert report.checks[1].observed == {"error": "PackageNotFoundError"}
+    assert report.checks[1].guidance == diagnostics.GDAL_INSTALL_GUIDANCE
+    assert json.loads(json.dumps(report.to_dict())) == report.to_dict()
 
 
 def test_check_reports_untested_version(monkeypatch: pytest.MonkeyPatch) -> None:
