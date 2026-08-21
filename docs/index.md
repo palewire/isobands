@@ -37,6 +37,17 @@ Installers for `gdal310`, `gdal311` and `gdal312` are also available.
 
 If the install fails with `gdal-config: No such file or directory`, the native library is missing. Install it first — for example `brew install gdal` on macOS or `apt install libgdal-dev` on Debian and Ubuntu — then choose the extra matching `gdal-config --version`, or use conda-forge bindings instead.
 
+Verify the installed bindings, their native-library version, and in-memory
+contour support after installation:
+
+```console
+python -m isobands check
+```
+
+The command exits nonzero when a check fails and includes installation
+guidance. Add `--json` for machine-readable output, or call
+`isobands.check()` to receive the same structured report in Python.
+
 ## Quick start
 
 Pass an in-memory `xarray.DataArray` and receive a `geopandas.GeoDataFrame`:
@@ -233,6 +244,13 @@ The map shows land-surface temperatures captured by NASA satellites on August 12
 ## API reference
 
 ```{eval-rst}
+.. autofunction:: isobands.check
+
+.. autoclass:: isobands.CheckReport
+   :members:
+
+.. autoclass:: isobands.CheckResult
+
 .. autofunction:: isobands.from_raster
 ```
 

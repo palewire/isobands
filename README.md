@@ -28,6 +28,17 @@ pip install "isobands[gdal313]"
 GDAL 3.10.2, 3.11.5, and 3.12.2 remain tested compatibility choices through
 the matching `gdal310`, `gdal311`, and `gdal312` extras. See the [installation
 guide](docs/index.md) for exact versions and platform instructions.
+
+After installation, verify the active GDAL bindings and run a small in-memory
+contour test:
+
+```sh
+python -m isobands check
+```
+
+Python callers can inspect the same structured report with `isobands.check()`.
+Use `python -m isobands check --json` for machine-readable output.
+
 ## Quick start
 
 ```python
