@@ -133,8 +133,8 @@ def _version_check(gdal: Any, binding_version: str) -> CheckResult:  # noqa: ANN
 
 def _supported_version_check(gdal: Any) -> CheckResult:  # noqa: ANN401
     native = _reported_version(gdal.VersionInfo("RELEASE_NAME") or "unknown")
-    version = _version_parts(native)
-    supported = version in _SUPPORTED_GDAL_VERSIONS
+    native_version_parts = _version_parts(native)
+    supported = native_version_parts in _SUPPORTED_GDAL_VERSIONS
     tested = ", ".join(".".join(map(str, item)) for item in _SUPPORTED_GDAL_VERSIONS)
     return _result(
         "supported_gdal_version",
