@@ -80,7 +80,7 @@ docs = [
     "sphinxcontrib-mermaid",
     "sphinx_copybutton",
     "myst-parser",
-    "sphinx-palewire-theme",
+    "sphinx-palewire-theme>=0.1.10",
 ]
 benchmark = ["scipy"]
 notebooks = [
