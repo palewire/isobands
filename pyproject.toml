@@ -41,10 +41,10 @@ Issues = "https://github.com/palewire/isobands/issues"
 Changelog = "https://github.com/palewire/isobands/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
-gdal310 = ["GDAL==3.10.2"]
-gdal311 = ["GDAL==3.11.5"]
-gdal312 = ["GDAL==3.12.2"]
-gdal313 = ["GDAL==3.13.2"]
+gdal310 = ["GDAL==3.13.3"]
+gdal311 = ["GDAL==3.13.3"]
+gdal312 = ["GDAL==3.13.3"]
+gdal313 = ["GDAL==3.13.3"]
 
 [tool.uv]
 conflicts = [
