@@ -33,7 +33,7 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Install system GDAL
-        uses: mamba-org/setup-micromamba@v2
+        uses: mamba-org/setup-micromamba@v3
         with:
           environment-name: gdal
           create-args: >-
@@ -90,7 +90,7 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Install system GDAL
-        uses: mamba-org/setup-micromamba@v2
+        uses: mamba-org/setup-micromamba@v3
         with:
           environment-name: gdal
           create-args: >-
